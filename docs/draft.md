@@ -61,6 +61,21 @@
 technique-lmul-selection、pattern-wont-vectorize、lang-autovec、
 hw-spacemit-k3-a100、hw-qemu-virt。
 
+## perf 排序（2026-08-23，Config B，profile/perf-*.txt）
+
+readrandom t=8：GetRestartKey<DecodeKeyV4> **12.5%**、libc memcmp
+**6.7%**(+plt 1.5%)、ParseNextKey<DecodeEntry> 3.8%、XXH3_hashLong
+3.7%、FastLocalBloomBitsReader::MayMatch 3.5%、BinarySeekRestartPoint
+2.6%。fillrandom t=1：InlineSkipList::FindSpliceForLevel **13.9%**
+（内嵌 key 比较）、memcmp 合计 ~7%、MemTable::KeyComparator 3.2%、
+CRC ExtendImpl **仅 1.3%**、XXH3 1.4%。
+
+**结论**：CRC 的 db_bench 端到端收益有限（cache 命中主导读路径、
+压缩关闭时写侧 CRC 占比小）——仍先做（硬性清单 + 工件就绪 + 快），
+但 +30% 主要靠 memcmp/比较器（读写通吃）+ varint/key 解码
+（GetRestartKey/DecodeEntry，读侧 16%+）+ bloom + xxhash 叠加。
+候选顺序调整为：CRC → memcmp → **varint/解码提前** → xxhash → bloom。
+
 ## 候选 1 设计：crc32c-rvv（kernel-crc32c-rvv, verified/benchmarked）
 
 wiki 页：kernel-crc32c-rvv（9.39x@K3）、technique-clmul-folding、

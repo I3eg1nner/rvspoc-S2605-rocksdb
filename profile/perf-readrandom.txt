@@ -1,0 +1,735 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 198K of event 'cycles:P'
+# Event count (approx.): 949828656483
+#
+# Overhead  Command       Shared Object        Symbol                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+# ........  ............  ...................  ........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+#
+    12.51%  db_bench      db_bench             [.] bool rocksdb::BlockIter<rocksdb::IndexValue>::GetRestartKey<rocksdb::DecodeKeyV4>(unsigned int, rocksdb::Slice*)
+     6.67%  db_bench      libc.so.6            [.] memcmp
+     3.79%  db_bench      db_bench             [.] bool rocksdb::BlockIter<rocksdb::Slice>::ParseNextKey<rocksdb::DecodeEntry, false>(bool*)
+     3.71%  db_bench      db_bench             [.] XXH3_hashLong_64b_default.constprop.0
+     3.52%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::FastLocalBloomBitsReader::MayMatch(rocksdb::Slice const&)
+     2.64%  db_bench      db_bench             [.] bool rocksdb::BlockIter<rocksdb::Slice>::BinarySeekRestartPointIndex<rocksdb::DecodeKey>(rocksdb::Slice const&, unsigned int*, bool*)
+     2.59%  db_bench      db_bench             [.] rocksdb::clock_cache::AutoHyperClockTable::Evict(unsigned long, rocksdb::clock_cache::AutoHyperClockTable::InsertState&, rocksdb::clock_cache::BaseClockTable::EvictionData*)
+     2.55%  db_bench      db_bench             [.] rocksdb::clock_cache::AutoHyperClockTable::Lookup(std::array<unsigned long, 2ul> const&)
+     2.49%  db_bench      [kernel.kallsyms]    [k] __asm_vector_usercopy_sum_enabled
+     2.43%  db_bench      db_bench             [.] rocksdb::BlockBasedTable::Get(rocksdb::ReadOptions const&, rocksdb::Slice const&, rocksdb::GetContext*, rocksdb::SliceTransform const*, bool)
+     2.04%  db_bench      db_bench             [.] rocksdb::TableCache::Get(rocksdb::ReadOptions const&, rocksdb::InternalKeyComparator const&, rocksdb::FileMetaData const&, rocksdb::Slice const&, rocksdb::GetContext*, rocksdb::MutableCFOptions const&, rocksdb::HistogramImpl*, bool, int, unsigned long)
+     1.48%  db_bench      db_bench             [.] memcmp@plt
+     1.42%  db_bench      db_bench             [.] rocksdb::Version::Get(rocksdb::ReadOptions const&, rocksdb::LookupKey const&, rocksdb::PinnableSlice*, rocksdb::PinnableWideColumns*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, rocksdb::Status*, rocksdb::MergeContext*, unsigned long*, rocksdb::PinnedIteratorsManager*, bool*, bool*, unsigned long*, rocksdb::ReadCallback*, bool*, bool)
+     1.39%  db_bench      db_bench             [.] rocksdb::Block::NewDataIterator(rocksdb::Comparator const*, unsigned long, rocksdb::DataBlockIter*, rocksdb::Statistics*, bool, bool)
+     1.38%  db_bench      db_bench             [.] rocksdb::FullFilterBlockReader::MayMatch(rocksdb::Slice const&, rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*, rocksdb::ReadOptions const&) const
+     1.27%  db_bench      db_bench             [.] rocksdb::DBImpl::GetImpl(rocksdb::ReadOptions const&, rocksdb::Slice const&, rocksdb::DBImpl::GetImplOptions&)
+     1.16%  db_bench      db_bench             [.] rocksdb::IndexBlockIter::SeekImpl(rocksdb::Slice const&)
+     1.15%  db_bench      db_bench             [.] rocksdb::BlockBasedTable::FullFilterKeyMayMatch(rocksdb::FilterBlockReader*, rocksdb::Slice const&, rocksdb::SliceTransform const*, rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*, rocksdb::ReadOptions const&) const
+     1.14%  db_bench      db_bench             [.] non-virtual thunk to rocksdb::(anonymous namespace)::BytewiseComparatorImpl::Compare(rocksdb::Slice const&, rocksdb::Slice const&) const
+     1.11%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::FindFileInRange(rocksdb::InternalKeyComparator const&, rocksdb::LevelFilesBrief const&, rocksdb::Slice const&, unsigned int, unsigned int)
+     1.04%  db_bench      db_bench             [.] rocksdb::TableCache::FindTable(rocksdb::ReadOptions const&, rocksdb::FileOptions const&, rocksdb::InternalKeyComparator const&, rocksdb::FileMetaData const&, rocksdb::BasicTypedCacheInterface<rocksdb::TableReader, (rocksdb::CacheEntryRole)13, rocksdb::Cache*>::TypedHandle**, rocksdb::MutableCFOptions const&, rocksdb::TableReader**, bool, rocksdb::HistogramImpl*, bool, int, bool, unsigned long, rocksdb::Temperature, bool)
+     1.02%  db_bench      db_bench             [.] rocksdb::Benchmark::ReadRandom(rocksdb::ThreadState*)
+     0.99%  db_bench      libc.so.6            [.] free
+     0.97%  db_bench      [kernel.kallsyms]    [k] xas_load
+     0.89%  db_bench      db_bench             [.] std::enable_if<(rocksdb::Block_kData::kCacheEntryRole==((rocksdb::CacheEntryRole)13))||(true), rocksdb::Status>::type rocksdb::BlockBasedTable::MaybeReadBlockAndLoadToCache<rocksdb::Block_kData>(rocksdb::FilePrefetchBuffer*, rocksdb::ReadOptions const&, rocksdb::BlockHandle const&, rocksdb::UnownedPtr<rocksdb::Decompressor>, bool, rocksdb::CachableEntry<rocksdb::Block_kData>*, rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*, rocksdb::BlockContents*, bool, bool) const
+     0.88%  db_bench      [kernel.kallsyms]    [k] filemap_get_read_batch
+     0.85%  db_bench      db_bench             [.] rocksdb::BlockIter<rocksdb::Slice>::CompareKey(rocksdb::IterKey const&, rocksdb::Slice const&) const
+     0.81%  db_bench      db_bench             [.] rocksdb::Block::~Block()
+     0.79%  db_bench      db_bench             [.] rocksdb::BlockFetcher::ReadBlock(bool)
+     0.75%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::FilePicker::GetNextFile()
+     0.75%  db_bench      [kernel.kallsyms]    [k] do_trap_ecall_u
+     0.63%  db_bench      db_bench             [.] rocksdb::BlockBasedTable::NewRangeTombstoneIterator(rocksdb::ReadOptions const&)
+     0.63%  db_bench      db_bench             [.] rocksdb::clock_cache::(anonymous namespace)::TryInsert(rocksdb::clock_cache::ClockHandleBasicData const&, rocksdb::clock_cache::ClockHandle&, unsigned int, bool, bool*)
+     0.56%  db_bench      [kernel.kallsyms]    [k] filemap_read
+     0.55%  db_bench      libc.so.6            [.] memset
+     0.52%  db_bench      [kernel.kallsyms]    [k] fdget
+     0.51%  db_bench      db_bench             [.] rocksdb::BlockIter<rocksdb::IndexValue>::CompareKey(rocksdb::IterKey const&, rocksdb::Slice const&) const
+     0.51%  db_bench      db_bench             [.] rocksdb::Block::NewIndexIterator(rocksdb::Comparator const*, unsigned long, rocksdb::IndexBlockIter*, rocksdb::Statistics*, bool, bool, bool, bool, bool, bool, rocksdb::BlockPrefixIndex*, rocksdb::BlockBasedTableOptions::BlockSearchType)
+     0.46%  db_bench      db_bench             [.] rocksdb::RandomAccessFileReader::Read(rocksdb::IOOptions const&, unsigned long, unsigned long, rocksdb::Slice*, char*, std::unique_ptr<void, std::function<void (void*)> >*, rocksdb::IODebugContext*) const
+     0.44%  db_bench      db_bench             [.] rocksdb::BlockIter<rocksdb::Slice>::FindKeyAfterBinarySeek(rocksdb::Slice const&, unsigned int, bool)
+     0.43%  db_bench      db_bench             [.] bool rocksdb::BlockIter<rocksdb::IndexValue>::ParseNextKey<rocksdb::DecodeEntryV4, false>(bool*)
+     0.41%  db_bench      db_bench             [.] memcpy@plt
+     0.38%  db_bench      db_bench             [.] std::enable_if<(rocksdb::Block_kData::kCacheEntryRole==((rocksdb::CacheEntryRole)13))||(true), rocksdb::Status>::type rocksdb::BlockBasedTable::GetDataBlockFromCache<rocksdb::Block_kData>(rocksdb::Slice const&, rocksdb::FullTypedCacheInterface<rocksdb::Block_kData, rocksdb::BlockCreateContext, rocksdb::Block_kData::kCacheEntryRole, rocksdb::Cache*>, rocksdb::CachableEntry<rocksdb::Block_kData>*, rocksdb::GetContext*, rocksdb::UnownedPtr<rocksdb::Decompressor>) const
+     0.38%  db_bench      db_bench             [.] rocksdb::ThreadLocalPtr::StaticMeta::CompareAndSwap(unsigned int, void*, void*&)
+     0.37%  db_bench      db_bench             [.] rocksdb::GetContext::SaveValue(rocksdb::ParsedInternalKey const&, rocksdb::Slice const&, bool*, rocksdb::Status*, rocksdb::Cleanable*)
+     0.37%  db_bench      db_bench             [.] TLS init function for rocksdb::perf_context
+     0.37%  db_bench      db_bench             [.] rocksdb::DataBlockIter* rocksdb::BlockBasedTable::NewDataBlockIterator<rocksdb::DataBlockIter>(rocksdb::ReadOptions const&, rocksdb::BlockHandle const&, rocksdb::DataBlockIter*, rocksdb::BlockType, rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*, rocksdb::FilePrefetchBuffer*, bool, bool, rocksdb::Status&, bool) const
+     0.37%  db_bench      libc.so.6            [.] 0x000000000007ef94
+     0.36%  db_bench      db_bench             [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose()
+     0.36%  db_bench      db_bench             [.] rocksdb::DBImpl::Get(rocksdb::ReadOptions const&, rocksdb::ColumnFamilyHandle*, rocksdb::Slice const&, rocksdb::PinnableSlice*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+     0.35%  db_bench      [kernel.kallsyms]    [k] ext4_file_read_iter
+     0.35%  db_bench      db_bench             [.] rocksdb::BinarySearchIndexReader::NewIterator(rocksdb::ReadOptions const&, bool, rocksdb::IndexBlockIter*, rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*)
+     0.35%  db_bench      libc.so.6            [.] 0x000000000008de98
+     0.34%  db_bench      libc.so.6            [.] 0x000000000008df6c
+     0.34%  db_bench      libc.so.6            [.] 0x000000000008df82
+     0.34%  db_bench      db_bench             [.] rocksdb::MemTable::Get(rocksdb::LookupKey const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, rocksdb::PinnableWideColumns*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, rocksdb::Status*, rocksdb::MergeContext*, unsigned long*, unsigned long*, rocksdb::ReadOptions const&, bool, rocksdb::ReadCallback*, bool*, bool)
+     0.33%  db_bench      db_bench             [.] rocksdb::GetContext::GetContext(rocksdb::Comparator const*, rocksdb::MergeOperator const*, rocksdb::Logger*, rocksdb::Statistics*, rocksdb::GetContext::GetState, rocksdb::Slice const&, rocksdb::PinnableSlice*, rocksdb::PinnableWideColumns*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, bool*, rocksdb::MergeContext*, bool, unsigned long*, rocksdb::SystemClock*, unsigned long*, rocksdb::PinnedIteratorsManager*, rocksdb::ReadCallback*, bool*, unsigned long, rocksdb::BlobFetcher*)
+     0.33%  db_bench      [kernel.kallsyms]    [k] apparmor_file_permission
+     0.32%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::BytewiseComparatorImpl::CompareWithoutTimestamp(rocksdb::Slice const&, bool, rocksdb::Slice const&, bool) const
+     0.32%  db_bench      db_bench             [.] rocksdb::FileIndexer::GetNextLevelIndex(unsigned long, unsigned long, int, int, int*, int*) const
+     0.31%  db_bench      [kernel.kallsyms]    [k] memset
+     0.30%  db_bench      db_bench             [.] rocksdb::DataBlockIter::NextImpl()
+     0.30%  db_bench      db_bench             [.] rocksdb::ThreadLocalPtr::Instance()
+     0.29%  db_bench      [kernel.kallsyms]    [k] fallback_scalar_usercopy_sum_enabled
+     0.29%  db_bench      db_bench             [.] rocksdb::Status rocksdb::clock_cache::BaseClockTable::Insert<rocksdb::clock_cache::AutoHyperClockTable>(rocksdb::clock_cache::ClockHandleBasicData const&, rocksdb::clock_cache::AutoHyperClockTable::HandleImpl**, rocksdb::Cache::Priority)
+     0.28%  db_bench      [kernel.kallsyms]    [k] vfs_read
+     0.27%  db_bench      db_bench             [.] ROCKSDB_XXPH3_64bits
+     0.27%  db_bench      libc.so.6            [.] malloc
+     0.26%  db_bench      [kernel.kallsyms]    [k] xas_start
+     0.24%  db_bench      db_bench             [.] std::mersenne_twister_engine<unsigned long, 64ul, 312ul, 156ul, 31ul, 13043109905998158313ul, 29ul, 6148914691236517205ul, 17ul, 8202884508482404352ul, 37ul, 18444473444759240704ul, 43ul, 6364136223846793005ul>::operator()()
+     0.24%  db_bench      db_bench             [.] rocksdb::BlockFetcher::BlockFetcher(rocksdb::RandomAccessFileReader*, rocksdb::FilePrefetchBuffer*, rocksdb::Footer const&, rocksdb::ReadOptions const&, rocksdb::BlockHandle const&, rocksdb::BlockContents*, rocksdb::ImmutableOptions const&, bool, bool, rocksdb::BlockType, rocksdb::UnownedPtr<rocksdb::Decompressor>, rocksdb::PersistentCacheOptions const&, rocksdb::MemoryAllocator*, rocksdb::MemoryAllocator*, bool)
+     0.22%  db_bench      libc.so.6            [.] 0x0000000000082626
+     0.22%  db_bench      db_bench             [.] rocksdb::GetVarint64Ptr(char const*, char const*, unsigned long*)
+     0.22%  db_bench      db_bench             [.] rocksdb::Status::Status(rocksdb::Status&&)
+     0.22%  db_bench      [kernel.kallsyms]    [k] is_cacheable_safe
+     0.22%  db_bench      db_bench             [.] rocksdb::BijectiveHash2x64(unsigned long, unsigned long, unsigned long*, unsigned long*)
+     0.22%  db_bench      db_bench             [.] rocksdb::ShardedCache<rocksdb::clock_cache::ClockCacheShard<rocksdb::clock_cache::AutoHyperClockTable> >::Release(rocksdb::Cache::Handle*, bool)
+     0.21%  db_bench      db_bench             [.] rocksdb::IndexValue::DecodeFrom(rocksdb::Slice*, bool, rocksdb::BlockHandle const*)
+     0.21%  db_bench      [kernel.kallsyms]    [k] __riscv_v_vstate_save
+     0.21%  db_bench      db_bench             [.] rocksdb::VerifyBlockChecksum(rocksdb::Footer const&, char const*, unsigned long, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, rocksdb::BlockType)
+     0.21%  db_bench      libc.so.6            [.] malloc_usable_size
+     0.21%  db_bench      db_bench             [.] rocksdb::DataBlockIter::SeekImpl(rocksdb::Slice const&)
+     0.20%  db_bench      [kernel.kallsyms]    [k] touch_atime
+     0.20%  db_bench      db_bench             [.] rocksdb::ColumnFamilyHandleImpl::GetComparator() const
+     0.20%  db_bench      libc.so.6            [.] 0x0000000000083562
+     0.20%  db_bench      libc.so.6            [.] 0x00000000000849e4
+     0.20%  db_bench      [kernel.kallsyms]    [k] __rcu_read_unlock
+     0.19%  db_bench      db_bench             [.] rocksdb::RandomAccessFileReader::PrepareIOOptions(rocksdb::ReadOptions const&, rocksdb::IOOptions&, rocksdb::IODebugContext*) const
+     0.19%  db_bench      [kernel.kallsyms]    [k] filemap_get_pages
+     0.19%  db_bench      db_bench             [.] rocksdb::RecordIOStats(rocksdb::Statistics*, rocksdb::Temperature, bool, unsigned long)
+     0.18%  db_bench      db_bench             [.] rocksdb::FilterBlockReaderCommon<rocksdb::ParsedFullFilterBlock>::GetOrReadFilterBlock(rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*, rocksdb::CachableEntry<rocksdb::ParsedFullFilterBlock>*, rocksdb::ReadOptions const&) const
+     0.18%  db_bench      db_bench             [.] rocksdb::Block::Block(rocksdb::BlockContents&&, unsigned long, rocksdb::Statistics*, unsigned int)
+     0.18%  db_bench      db_bench             [.] std::enable_if<(rocksdb::Block_kData::kCacheEntryRole==((rocksdb::CacheEntryRole)13))||(true), rocksdb::Status>::type rocksdb::BlockBasedTable::PutDataBlockToCache<rocksdb::Block_kData>(rocksdb::Slice const&, rocksdb::FullTypedCacheInterface<rocksdb::Block_kData, rocksdb::BlockCreateContext, rocksdb::Block_kData::kCacheEntryRole, rocksdb::Cache*>, rocksdb::CachableEntry<rocksdb::Block_kData>*, rocksdb::BlockContents&&, rocksdb::BlockContents&&, rocksdb::CompressionType, rocksdb::UnownedPtr<rocksdb::Decompressor>, rocksdb::MemoryAllocator*, rocksdb::GetContext*) const
+     0.18%  db_bench      [kernel.kallsyms]    [k] copy_page_to_iter
+     0.17%  db_bench      db_bench             [.] rocksdb::BlockFetcher::ReadBlockContents()
+     0.17%  db_bench      libc.so.6            [.] 0x0000000000083716
+     0.17%  db_bench      [kernel.kallsyms]    [k] __fsnotify_parent
+     0.17%  db_bench      db_bench             [.] rocksdb::DBImpl::GetImpl(rocksdb::ReadOptions const&, rocksdb::ColumnFamilyHandle*, rocksdb::Slice const&, rocksdb::PinnableSlice*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+     0.16%  db_bench      [kernel.kallsyms]    [k] _copy_to_iter
+     0.16%  db_bench      db_bench             [.] rocksdb::Status::Status(rocksdb::Status const&)
+     0.16%  db_bench      db_bench             [.] rocksdb::DBImpl::FailIfCfHasTs(rocksdb::ColumnFamilyHandle const*) const [clone .isra.0]
+     0.16%  db_bench      [kernel.kallsyms]    [k] kernel_vector_begin
+     0.16%  db_bench      libc.so.6            [.] 0x00000000000836f6
+     0.15%  db_bench      db_bench             [.] rocksdb::PosixRandomAccessFile::Read(unsigned long, unsigned long, rocksdb::IOOptions const&, rocksdb::Slice*, char*, rocksdb::IODebugContext*) const
+     0.15%  db_bench      db_bench             [.] rocksdb::Status::operator=(rocksdb::Status&&) [clone .isra.0]
+     0.15%  db_bench      db_bench             [.] rocksdb::IndexBlockIter::DecodeCurrentValue(bool)
+     0.15%  db_bench      db_bench             [.] std::enable_if<(rocksdb::Block_kData::kCacheEntryRole==((rocksdb::CacheEntryRole)13))||(true), rocksdb::Status>::type rocksdb::BlockBasedTable::RetrieveBlock<rocksdb::Block_kData>(rocksdb::FilePrefetchBuffer*, rocksdb::ReadOptions const&, rocksdb::BlockHandle const&, rocksdb::UnownedPtr<rocksdb::Decompressor>, rocksdb::CachableEntry<rocksdb::Block_kData>*, rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*, bool, bool, bool, bool) const
+     0.15%  db_bench      db_bench             [.] rocksdb::clock_cache::AutoHyperClockTable::DoInsert(rocksdb::clock_cache::ClockHandleBasicData const&, unsigned int, bool, rocksdb::clock_cache::AutoHyperClockTable::InsertState&)
+     0.15%  db_bench      libc.so.6            [.] 0x0000000000083fa8
+     0.15%  db_bench      db_bench             [.] rocksdb::ColumnFamilyData::ReturnThreadLocalSuperVersion(rocksdb::SuperVersion*)
+     0.14%  db_bench      [kernel.kallsyms]    [k] rwsem_spin_on_owner
+     0.14%  db_bench      db_bench             [.] TLS init function for rocksdb::iostats_context
+     0.14%  db_bench      db_bench             [.] rocksdb::DataBlockIter::~DataBlockIter()
+     0.14%  db_bench      db_bench             [.] rocksdb::ShardedCache<rocksdb::clock_cache::ClockCacheShard<rocksdb::clock_cache::AutoHyperClockTable> >::Lookup(rocksdb::Slice const&, rocksdb::Cache::CacheItemHelper const*, rocksdb::Cache::CreateContext*, rocksdb::Cache::Priority, rocksdb::Statistics*)
+     0.14%  db_bench      libc.so.6            [.] 0x00000000000836fc
+     0.14%  db_bench      db_bench             [.] rocksdb::Status::operator=(rocksdb::Status&&) [clone .isra.0]
+     0.14%  db_bench      db_bench             [.] rocksdb::Cleanable::~Cleanable()
+     0.14%  db_bench      [kernel.kallsyms]    [k] kernel_vector_end
+     0.14%  db_bench      libc.so.6            [.] 0x0000000000084a02
+     0.14%  db_bench      [kernel.kallsyms]    [k] __riscv_sys_pread64
+     0.13%  db_bench      db_bench             [.] rocksdb::BlockIter<rocksdb::Slice>::UpdateKey()
+     0.13%  db_bench      db_bench             [.] rocksdb::Stats::FinishedOps(rocksdb::DBWithColumnFamilies*, rocksdb::DB*, long, rocksdb::OperationType)
+     0.13%  db_bench      db_bench             [.] rocksdb::ColumnFamilyHandleImpl::cfd() const
+     0.13%  db_bench      libstdc++.so.6.0.35  [.] operator new[](unsigned long)
+     0.13%  db_bench      db_bench             [.] rocksdb::StopWatch::~StopWatch()
+     0.12%  db_bench      libc.so.6            [.] 0x0000000000083fc6
+     0.12%  db_bench      [kernel.kallsyms]    [k] atime_needs_update
+     0.12%  db_bench      db_bench             [.] memset@plt
+     0.12%  db_bench      db_bench             [.] rocksdb::BlockBasedTable::IndexReaderCommon::GetOrReadIndexBlock(rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*, rocksdb::CachableEntry<rocksdb::Block>*, rocksdb::ReadOptions const&) const
+     0.12%  db_bench      [kernel.kallsyms]    [k] __might_resched
+     0.12%  db_bench      db_bench             [.] rocksdb::BlockIter<rocksdb::IndexValue>::UpdateKey()
+     0.12%  db_bench      db_bench             [.] rocksdb::DBImpl::GetLastPublishedSequence() const
+     0.12%  db_bench      db_bench             [.] rocksdb::EncodeVarint32(char*, unsigned int)
+     0.12%  db_bench      db_bench             [.] rocksdb::ThreadLocalPtr::StaticMeta::Swap(unsigned int, void*)
+     0.11%  db_bench      db_bench             [.] rocksdb::IndexBlockIter::~IndexBlockIter()
+     0.11%  db_bench      db_bench             [.] rocksdb::LookupKey::LookupKey(rocksdb::Slice const&, unsigned long, rocksdb::Slice const*)
+     0.11%  db_bench      db_bench             [.] rocksdb::BlockIter<rocksdb::IndexValue>::status() const
+     0.11%  db_bench      db_bench             [.] std::_Function_base::~_Function_base()
+     0.11%  db_bench      db_bench             [.] rocksdb::FilterBlockReaderCommon<rocksdb::ParsedFullFilterBlock>::whole_key_filtering() const
+     0.11%  db_bench      libgcc_s.so.1        [.] __bswapdi2
+     0.10%  db_bench      db_bench             [.] rocksdb::BlockBasedTable::UpdateCacheHitMetrics(rocksdb::BlockType, rocksdb::GetContext*, unsigned long) const
+     0.10%  db_bench      db_bench             [.] rocksdb::MergeContext::~MergeContext()
+     0.10%  db_bench      db_bench             [.] rocksdb::MemTableListVersion::GetFromList(std::__cxx11::list<rocksdb::ReadOnlyMemTable*, std::allocator<rocksdb::ReadOnlyMemTable*> >*, rocksdb::LookupKey const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, rocksdb::PinnableWideColumns*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, rocksdb::Status*, rocksdb::MergeContext*, unsigned long*, unsigned long*, rocksdb::ReadOptions const&, rocksdb::ReadCallback*, bool*)
+     0.10%  db_bench      db_bench             [.] rocksdb::BlockIter<rocksdb::IndexValue>::Seek(rocksdb::Slice const&)
+     0.10%  db_bench      db_bench             [.] rocksdb::BlockFetcher::ProcessTrailerIfPresent()
+     0.10%  db_bench      libc.so.6            [.] 0x000000000008dea2
+     0.10%  db_bench      db_bench             [.] rocksdb::BlockFetcher::GetBlockContents()
+     0.10%  db_bench      [kernel.kallsyms]    [k] aa_file_perm
+     0.10%  db_bench      db_bench             [.] rocksdb::CachableEntry<rocksdb::Block>::ReleaseCacheHandle(void*, void*)
+     0.10%  db_bench      db_bench             [.] rocksdb::ColumnFamilyData::GetThreadLocalSuperVersion(rocksdb::DBImpl*)
+     0.09%  db_bench      db_bench             [.] rocksdb::PerfStepTimer::Stop()
+     0.09%  db_bench      libc.so.6            [.] 0x0000000000083fc2
+     0.09%  db_bench      db_bench             [.] rocksdb::BlockHandle::DecodeFrom(rocksdb::Slice*)
+     0.09%  db_bench      [kernel.kallsyms]    [k] __rcu_read_lock
+     0.09%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::BytewiseComparatorImpl::EqualWithoutTimestamp(rocksdb::Slice const&, rocksdb::Slice const&) const
+     0.09%  db_bench      [kernel.kallsyms]    [k] __asm_copy_to_user
+     0.09%  db_bench      db_bench             [.] rocksdb::BlockFetcher::~BlockFetcher()
+     0.09%  db_bench      db_bench             [.] rocksdb::ParseInternalKey(rocksdb::Slice const&, rocksdb::ParsedInternalKey*, bool) [clone .isra.0]
+     0.08%  db_bench      [kernel.kallsyms]    [k] fput
+     0.08%  db_bench      db_bench             [.] rocksdb::DBImpl::ReturnAndCleanupSuperVersion(rocksdb::ColumnFamilyData*, rocksdb::SuperVersion*)
+     0.08%  db_bench      [kernel.kallsyms]    [k] __xas_next
+     0.08%  db_bench      [kernel.kallsyms]    [k] security_file_permission
+     0.08%  db_bench      libc.so.6            [.] 0x00000000000849ea
+     0.08%  db_bench      db_bench             [.] rocksdb::CachableEntry<rocksdb::DecompressorDict>::ReleaseResource(bool)
+     0.08%  db_bench      libstdc++.so.6.0.35  [.] operator new(unsigned long)
+     0.07%  db_bench      db_bench             [.] rocksdb::Random::GetTLSInstance()
+     0.07%  db_bench      db_bench             [.] __bswapdi2@plt
+     0.07%  db_bench      [kernel.kallsyms]    [k] __might_sleep
+     0.07%  db_bench      [kernel.kallsyms]    [k] enter_vector_usercopy
+     0.07%  db_bench      db_bench             [.] rocksdb::Cleanable::Cleanable()
+     0.07%  db_bench      db_bench             [.] rocksdb::ShardedCache<rocksdb::clock_cache::ClockCacheShard<rocksdb::clock_cache::AutoHyperClockTable> >::Insert(rocksdb::Slice const&, void*, rocksdb::Cache::CacheItemHelper const*, unsigned long, rocksdb::Cache::Handle**, rocksdb::Cache::Priority, rocksdb::Slice const&, rocksdb::CompressionType)
+     0.07%  db_bench      db_bench             [.] rocksdb::IndexBlockIter::value() const
+     0.07%  db_bench      db_bench             [.] rocksdb::BlockIter<rocksdb::IndexValue>::Valid() const
+     0.06%  db_bench      db_bench             [.] rocksdb::PosixRandomAccessFile::use_direct_io() const
+     0.06%  db_bench      db_bench             [.] rocksdb::FullFilterBlockReader::KeyMayMatch(rocksdb::Slice const&, rocksdb::Slice const*, rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*, rocksdb::ReadOptions const&)
+     0.06%  db_bench      db_bench             [.] rocksdb::ShardedCacheBase::GetUsage(rocksdb::Cache::Handle*) const
+     0.06%  db_bench      libc.so.6            [.] 0x000000000008dfca
+     0.06%  db_bench      db_bench             [.] rocksdb::ThreadLocalPtr::CompareAndSwap(void*, void*&)
+     0.06%  db_bench      db_bench             [.] rocksdb::DBImpl::DefaultColumnFamily() const
+     0.06%  db_bench      db_bench             [.] rocksdb::DataBlockFooter::DecodeFrom(rocksdb::Slice*)
+     0.06%  db_bench      db_bench             [.] rocksdb::clock_cache::BaseClockTable::TrackAndReleaseEvictedEntry(rocksdb::clock_cache::ClockHandle*)
+     0.06%  db_bench      [kernel.kallsyms]    [k] __might_fault
+     0.06%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::PosixFileSystem::SupportedOps(long&)
+     0.06%  db_bench      libc.so.6            [.] 0x000000000008367a
+     0.06%  db_bench      [kernel.kallsyms]    [k] _raw_spin_unlock_irqrestore
+     0.06%  db_bench      db_bench             [.] rocksdb::Cleanable::RegisterCleanup(void (*)(void*, void*), void*, void*)
+     0.05%  db_bench      db_bench             [.] std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::~_Hashtable()
+     0.05%  db_bench      db_bench             [.] operator new[](unsigned long)@plt
+     0.05%  db_bench      db_bench             [.] rocksdb::GetContext::appendToReplayLog(rocksdb::ValueType, rocksdb::Slice, rocksdb::Slice)
+     0.05%  db_bench      libc.so.6            [.] __libc_pread
+     0.05%  db_bench      db_bench             [.] XXH3_mergeAccs
+     0.05%  db_bench      libc.so.6            [.] 0x0000000000082642
+     0.05%  db_bench      db_bench             [.] std::mersenne_twister_engine<unsigned long, 64ul, 312ul, 156ul, 31ul, 13043109905998158313ul, 29ul, 6148914691236517205ul, 17ul, 8202884508482404352ul, 37ul, 18444473444759240704ul, 43ul, 6364136223846793005ul>::_M_gen_rand()
+     0.05%  db_bench      [kernel.kallsyms]    [k] __asm_vector_usercopy
+     0.05%  db_bench      db_bench             [.] rocksdb::CachableEntry<rocksdb::Block_kData>::SetCachedValue(rocksdb::Block_kData*, rocksdb::Cache*, rocksdb::Cache::Handle*)
+     0.05%  db_bench      libc.so.6            [.] 0x0000000000083f90
+     0.05%  db_bench      db_bench             [.] malloc_usable_size@plt
+     0.05%  db_bench      db_bench             [.] rocksdb::clock_cache::BaseHyperClockCache<rocksdb::clock_cache::AutoHyperClockTable>::Value(rocksdb::Cache::Handle*)
+     0.05%  db_bench      libstdc++.so.6.0.35  [.] operator delete[](void*)
+     0.05%  db_bench      db_bench             [.] rocksdb::Cleanable::DelegateCleanupsTo(rocksdb::Cleanable*)
+     0.05%  db_bench      libc.so.6            [.] 0x0000000000083fa4
+     0.05%  db_bench      libc.so.6            [.] 0x0000000000083f9c
+     0.05%  db_bench      db_bench             [.] rocksdb::GetPerfLevel()
+     0.04%  db_bench      [kernel.kallsyms]    [k] folio_mark_accessed
+     0.04%  db_bench      db_bench             [.] rocksdb::ComputeBuiltinChecksum(rocksdb::ChecksumType, char const*, unsigned long)
+     0.04%  db_bench      [kernel.kallsyms]    [k] change_protection
+     0.04%  db_bench      db_bench             [.] rocksdb::BlockFetcher::TryGetFromPrefetchBuffer()
+     0.04%  db_bench      db_bench             [.] pread@plt
+     0.04%  db_bench      libstdc++.so.6.0.35  [.] operator new(unsigned long)@plt
+     0.04%  db_bench      db_bench             [.] rocksdb::BlockCreateContext::Create(std::unique_ptr<rocksdb::Block_kData, std::default_delete<rocksdb::Block_kData> >*, rocksdb::BlockContents&&)
+     0.04%  db_bench      db_bench             [.] rocksdb::BlockBasedTable::UpdateCacheMissMetrics(rocksdb::BlockType, rocksdb::GetContext*) const
+     0.04%  db_bench      db_bench             [.] rocksdb::BlockFetcher::TryGetSerializedBlockFromPersistentCache()
+     0.04%  db_bench      [kernel.kallsyms]    [k] __futex_hash
+     0.04%  db_bench      libc.so.6            [.] 0x0000000000084a2c
+     0.04%  db_bench      [kernel.kallsyms]    [k] rw_verify_area
+     0.04%  db_bench      libc.so.6            [.] 0x000000000008df5c
+     0.04%  db_bench      db_bench             [.] rocksdb::Block::ApproximateMemoryUsage() const
+     0.04%  db_bench      libc.so.6            [.] 0x000000000008df6a
+     0.04%  db_bench      db_bench             [.] rocksdb::StopWatch::StopWatch(rocksdb::SystemClock*, rocksdb::Statistics*, unsigned int, unsigned int, unsigned long*, bool, bool)
+     0.04%  db_bench      [kernel.kallsyms]    [k] perf_iterate_ctx
+     0.04%  db_bench      db_bench             [.] rocksdb::BlockBasedTable::UpdateCacheInsertionMetrics(rocksdb::BlockType, rocksdb::GetContext*, unsigned long, bool, rocksdb::Statistics*)
+     0.03%  db_bench      db_bench             [.] rocksdb::MemTableListVersion::Get(rocksdb::LookupKey const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, rocksdb::PinnableWideColumns*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, rocksdb::Status*, rocksdb::MergeContext*, unsigned long*, unsigned long*, rocksdb::ReadOptions const&, rocksdb::ReadCallback*, bool*)
+     0.03%  db_bench      [kernel.kallsyms]    [k] make_vfsuid
+     0.03%  db_bench      db_bench             [.] rocksdb::clock_cache::AutoHyperClockTable::SplitForGrow(unsigned long, unsigned long, int)
+     0.03%  db_bench      libc.so.6            [.] 0x0000000000084a30
+     0.03%  db_bench      [kernel.kallsyms]    [k] __handle_mm_fault
+     0.03%  db_bench      db_bench             [.] rocksdb::Block::InitializeDataBlockProtectionInfo(unsigned char, rocksdb::Comparator const*)
+     0.03%  db_bench      [kernel.kallsyms]    [k] mas_walk
+     0.03%  db_bench      db_bench             [.] rocksdb::BasicTypedCacheHelperFns<rocksdb::Block_kData>::Delete(void*, rocksdb::MemoryAllocator*)
+     0.03%  db_bench      libstdc++.so.6.0.35  [.] operator delete(void*)
+     0.03%  db_bench      [kernel.kallsyms]    [k] osq_lock
+     0.03%  db_bench      db_bench             [.] ROCKSDB_XXH3_64bits
+     0.03%  db_bench      db_bench             [.] std::unique_ptr<char [], rocksdb::CacheAllocationDeleter>::~unique_ptr()
+     0.03%  db_bench      db_bench             [.] rocksdb::ThreadLocalPtr::Swap(void*)
+     0.03%  db_bench      [kernel.kallsyms]    [k] clear_page
+     0.03%  db_bench      [kernel.kallsyms]    [k] do_raw_spin_lock
+     0.03%  db_bench      [kernel.kallsyms]    [k] futex_ref_get
+     0.03%  db_bench      db_bench             [.] std::unique_ptr<rocksdb::InternalIteratorBase<rocksdb::IndexValue>, std::default_delete<rocksdb::InternalIteratorBase<rocksdb::IndexValue> > >::~unique_ptr()
+     0.03%  db_bench      libc.so.6            [.] 0x000000000008deb4
+     0.03%  db_bench      [kernel.kallsyms]    [k] handle_page_fault
+     0.03%  db_bench      libc.so.6            [.] 0x000000000008355e
+     0.03%  db_bench      db_bench             [.] rocksdb::DataBlockIter::value() const
+     0.02%  db_bench      db_bench             [.] rocksdb::clock_cache::BaseHyperClockCache<rocksdb::clock_cache::AutoHyperClockTable>::GetCharge(rocksdb::Cache::Handle*) const
+     0.02%  db_bench      libstdc++.so.6.0.35  [.] malloc@plt
+     0.02%  db_bench      libc.so.6            [.] 0x000000000008df60
+     0.02%  db_bench      db_bench             [.] rocksdb::BlockBasedTable::TimestampMayMatch(rocksdb::ReadOptions const&) const
+     0.02%  db_bench      libc.so.6            [.] 0x000000000008263e
+     0.02%  db_bench      db_bench             [.] operator new(unsigned long)@plt
+     0.02%  db_bench      [kernel.kallsyms]    [k] do_mprotect_pkey.constprop.0
+     0.02%  db_bench      libc.so.6            [.] __lll_lock_wait_private
+     0.02%  db_bench      libc.so.6            [.] 0x000000000008df86
+     0.02%  db_bench      libstdc++.so.6.0.35  [.] free@plt
+     0.02%  db_bench      libc.so.6            [.] 0x0000000000074f9c
+     0.02%  db_bench      libc.so.6            [.] 0x000000000008df72
+     0.02%  db_bench      [kernel.kallsyms]    [k] generic_file_read_iter
+     0.02%  db_bench      [kernel.kallsyms]    [k] percpu_counter_add_batch
+     0.02%  db_bench      libc.so.6            [.] 0x0000000000083578
+     0.02%  db_bench      [kernel.kallsyms]    [k] fallback_scalar_usercopy
+     0.02%  db_bench      [kernel.kallsyms]    [k] page_copy_sane
+     0.02%  db_bench      [kernel.kallsyms]    [k] mas_wr_store_type
+     0.02%  db_bench      libc.so.6            [.] 0x000000000008df90
+     0.02%  db_bench      [kernel.kallsyms]    [k] perf_event_mmap
+     0.02%  db_bench      db_bench             [.] operator delete(void*, unsigned long)@plt
+     0.02%  db_bench      [kernel.kallsyms]    [k] __vma_enter_locked
+     0.02%  db_bench      db_bench             [.] rocksdb::clock_cache::AutoHyperClockTable::Grow(rocksdb::clock_cache::AutoHyperClockTable::InsertState&)
+     0.02%  db_bench      db_bench             [.] rocksdb::PosixRandomAccessFile::GetRequiredBufferAlignment() const
+     0.02%  db_bench      libc.so.6            [.] 0x000000000008df76
+     0.02%  db_bench      libc.so.6            [.] 0x0000000000083fb4
+     0.02%  db_bench      libc.so.6            [.] 0x000000000007ef78
+     0.02%  db_bench      [kernel.kallsyms]    [k] dynamic_cond_resched
+     0.02%  db_bench      [kernel.kallsyms]    [k] get_page_from_freelist
+     0.02%  db_bench      db_bench             [.] rocksdb::clock_cache::AutoHyperClockTable::CatchUpLengthInfoNoWait(unsigned long)
+     0.02%  db_bench      [kernel.kallsyms]    [k] __rmqueue_pcplist
+     0.02%  db_bench      libstdc++.so.6.0.35  [.] operator delete(void*, unsigned long)
+     0.02%  db_bench      libstdc++.so.6.0.35  [.] operator delete(void*)@plt
+     0.02%  db_bench      [kernel.kallsyms]    [k] handle_mm_fault
+     0.02%  db_bench      [kernel.kallsyms]    [k] mod_memcg_lruvec_state
+     0.02%  db_bench      db_bench             [.] rocksdb::clock_cache::ClockCacheShard<rocksdb::clock_cache::AutoHyperClockTable>::Insert(rocksdb::Slice const&, std::array<unsigned long, 2ul> const&, void*, rocksdb::Cache::CacheItemHelper const*, unsigned long, rocksdb::clock_cache::AutoHyperClockTable::HandleImpl**, rocksdb::Cache::Priority)
+     0.01%  db_bench      [kernel.kallsyms]    [k] get_mem_cgroup_from_mm
+     0.01%  db_bench      db_bench             [.] rocksdb::ThreadLocalPtr::StaticMeta::GetThreadLocal()
+     0.01%  db_bench      [kernel.kallsyms]    [k] futex_hash
+     0.01%  db_bench      db_bench             [.] rocksdb::SetPerfLevel(rocksdb::PerfLevel)
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074f70
+     0.01%  db_bench      [kernel.kallsyms]    [k] mas_prev_slot
+     0.01%  db_bench      [kernel.kallsyms]    [k] __pte_offset_map_lock
+     0.01%  db_bench      [kernel.kallsyms]    [k] _raw_spin_unlock
+     0.01%  db_bench      libc.so.6            [.] __mprotect
+     0.01%  db_bench      [kernel.kallsyms]    [k] mas_store_prealloc
+     0.01%  db_bench      libc.so.6            [.] 0x00000000000849be
+     0.01%  db_bench      [kernel.kallsyms]    [k] commit_merge
+     0.01%  db_bench      [kernel.kallsyms]    [k] perf_iterate_sb.constprop.0
+     0.01%  db_bench      libc.so.6            [.] 0x00000000000849da
+     0.01%  db_bench      [kernel.kallsyms]    [k] mas_find
+     0.01%  db_bench      [kernel.kallsyms]    [k] vma_modify
+     0.01%  db_bench      db_bench             [.] operator delete[](void*)@plt
+     0.01%  db_bench      libc.so.6            [.] 0x00000000000849bc
+     0.01%  db_bench      [kernel.kallsyms]    [k] do_futex
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000083888
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000084194
+     0.01%  db_bench      [kernel.kallsyms]    [k] sched_balance_update_blocked_averages
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000083f78
+     0.01%  db_bench      [kernel.kallsyms]    [k] try_charge_memcg
+     0.01%  db_bench      db_bench             [.] rocksdb::Env::GetSystemClock() const
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074f6c
+     0.01%  db_bench      [kernel.kallsyms]    [k] __vma_start_write
+     0.01%  db_bench      [kernel.kallsyms]    [k] css_rstat_updated
+     0.01%  db_bench      [kernel.kallsyms]    [k] up_write
+     0.01%  db_bench      [kernel.kallsyms]    [k] lock_vma_under_rcu
+     0.01%  db_bench      libc.so.6            [.] __lll_lock_wake_private
+     0.01%  db_bench      [kernel.kallsyms]    [k] rwsem_down_write_slowpath
+     0.01%  db_bench      [kernel.kallsyms]    [k] down_write_killable
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008416c
+     0.01%  db_bench      [kernel.kallsyms]    [k] count_memcg_events
+     0.01%  db_bench      libc.so.6            [.] 0x00000000000836ac
+     0.01%  db_bench      [kernel.kallsyms]    [k] __lruvec_stat_mod_folio
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074f3c
+     0.01%  db_bench      [kernel.kallsyms]    [k] make_vfsgid
+     0.01%  db_bench      libc.so.6            [.] 0x00000000000849cc
+     0.01%  db_bench      db_bench             [.] std::__uniq_ptr_impl<char, rocksdb::CacheAllocationDeleter>::operator=(std::__uniq_ptr_impl<char, rocksdb::CacheAllocationDeleter>&&) [clone .isra.0]
+     0.01%  db_bench      libc.so.6            [.] 0x000000000007ef86
+     0.01%  db_bench      [kernel.kallsyms]    [k] mas_next_slot
+     0.01%  db_bench      [kernel.kallsyms]    [k] get_futex_key
+     0.01%  db_bench      [kernel.kallsyms]    [k] mas_wr_spanning_store
+     0.01%  db_bench      [kernel.kallsyms]    [k] __riscv_sys_futex
+     0.01%  db_bench      [kernel.kallsyms]    [k] futex_private_hash_put
+     0.01%  db_bench      [kernel.kallsyms]    [k] vma_prepare
+     0.01%  db_bench      [kernel.kallsyms]    [k] mas_wr_store_entry
+     0.01%  db_bench      [kernel.kallsyms]    [k] __alloc_frozen_pages_noprof
+     0.01%  db_bench      [kernel.kallsyms]    [k] finish_task_switch.isra.0
+     0.01%  db_bench      [kernel.kallsyms]    [k] mas_topiary_replace
+     0.01%  db_bench      [kernel.kallsyms]    [k] blk_cgroup_congested
+     0.01%  db_bench      [kernel.kallsyms]    [k] mprotect_fixup
+     0.01%  db_bench      [kernel.kallsyms]    [k] mas_preallocate
+     0.01%  db_bench      [kernel.kallsyms]    [k] mas_prev_setup.constprop.0
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008df96
+     0.01%  db_bench      [kernel.kallsyms]    [k] __futex_wait
+     0.01%  db_bench      [kernel.kallsyms]    [k] may_expand_vm
+     0.01%  db_bench      [kernel.kallsyms]    [k] mab_mas_cp
+     0.01%  db_bench      [kernel.kallsyms]    [k] vma_complete
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008259a
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008df5a
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000083f8e
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000082624
+     0.01%  db_bench      [kernel.kallsyms]    [k] __riscv_sys_mprotect
+     0.01%  db_bench      [kernel.kallsyms]    [k] __mem_cgroup_charge
+     0.01%  db_bench      [kernel.kallsyms]    [k] strnlen
+     0.01%  db_bench      [kernel.kallsyms]    [k] static_key_count
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074fa8
+     0.01%  db_bench      libc.so.6            [.] 0x00000000000825a6
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074f9e
+     0.01%  db_bench      [kernel.kallsyms]    [k] do_raw_spin_trylock
+     0.01%  db_bench      libc.so.6            [.] 0x00000000000826b2
+     0.01%  db_bench      [kernel.kallsyms]    [k] p4d_offset
+     0.01%  db_bench      [kernel.kallsyms]    [k] __folio_batch_add_and_move
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008388a
+     0.01%  db_bench      db_bench             [.] rocksdb::Hash64(char const*, unsigned long)
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008259e
+     0.01%  db_bench      [kernel.kallsyms]    [k] cap_capable
+     0.01%  db_bench      [kernel.kallsyms]    [k] _raw_spin_unlock_irq
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008264a
+     0.01%  db_bench      [kernel.kallsyms]    [k] down_write
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000084382
+     0.01%  db_bench      [kernel.kallsyms]    [k] mas_spanning_rebalance
+     0.01%  db_bench      [kernel.kallsyms]    [k] futex_wait_setup
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000083700
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008371a
+     0.00%  db_bench      [kernel.kallsyms]    [k] vm_stat_account
+     0.00%  db_bench      [kernel.kallsyms]    [k] charge_memcg
+     0.00%  db_bench      [kernel.kallsyms]    [k] perf_event_mmap_output
+     0.00%  db_bench      [kernel.kallsyms]    [k] folio_add_new_anon_rmap
+     0.00%  db_bench      [kernel.kallsyms]    [k] security_vm_enough_memory_mm
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008401e
+     0.00%  db_bench      [kernel.kallsyms]    [k] osq_unlock
+     0.00%  db_bench      [kernel.kallsyms]    [k] tlb_gather_mmu
+     0.00%  db_bench      [kernel.kallsyms]    [k] update_mmu_cache_range.isra.0
+     0.00%  db_bench      [kernel.kallsyms]    [k] strlen_zbb
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000849ce
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df94
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084022
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000826b6
+     0.00%  db_bench      [kernel.kallsyms]    [k] futex_q_lock
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008441c
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f76
+     0.00%  db_bench      [kernel.kallsyms]    [k] vma_set_page_prot
+     0.00%  db_bench      [kernel.kallsyms]    [k] cap_vm_enough_memory
+     0.00%  db_bench      [kernel.kallsyms]    [k] vma_modify_flags
+     0.00%  db_bench      [kernel.kallsyms]    [k] tlb_finish_mmu
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082596
+     0.00%  db_bench      [kernel.kallsyms]    [k] __kmem_cache_alloc_bulk
+     0.00%  db_bench      [kernel.kallsyms]    [k] futex_wake
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f34
+     0.00%  db_bench      [kernel.kallsyms]    [k] mas_prev
+     0.00%  db_bench      [kernel.kallsyms]    [k] _raw_spin_lock
+     0.00%  db_bench      [kernel.kallsyms]    [k] tlb_flush_mmu_tlbonly
+     0.00%  db_bench      [kernel.kallsyms]    [k] pte_offset_map_rw_nolock
+     0.00%  db_bench      [kernel.kallsyms]    [k] ___pte_offset_map
+     0.00%  db_bench      [kernel.kallsyms]    [k] vm_get_page_prot
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000849dc
+     0.00%  db_bench      [kernel.kallsyms]    [k] mas_ascend
+     0.00%  db_bench      [kernel.kallsyms]    [k] mas_leaf_max_gap
+     0.00%  db_bench      [kernel.kallsyms]    [k] vma_adjust_trans_huge
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df9c
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000849c0
+     0.00%  db_bench      [kernel.kallsyms]    [k] futex_get_value_locked
+     0.00%  db_bench      [kernel.kallsyms]    [k] rseq_get_rseq_cs_ptr_val
+     0.00%  db_bench      [kernel.kallsyms]    [k] anon_vma_interval_tree_insert
+     0.00%  db_bench      [kernel.kallsyms]    [k] init_multi_vma_prep
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f42
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084418
+     0.00%  db_bench      [kernel.kallsyms]    [k] folio_prealloc.isra.0
+     0.00%  db_bench      [kernel.kallsyms]    [k] __build_id_parse.isra.0
+     0.00%  db_bench      [kernel.kallsyms]    [k] can_vma_merge_left.constprop.0
+     0.00%  db_bench      [kernel.kallsyms]    [k] kvfree_call_rcu
+     0.00%  db_bench      [kernel.kallsyms]    [k] __kfree_rcu_sheaf
+     0.00%  db_bench      [kernel.kallsyms]    [k] khugepaged_enter_vma
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008dfa0
+     0.00%  db_bench      [kernel.kallsyms]    [k] futex_setup_timer
+     0.00%  db_bench      [kernel.kallsyms]    [k] futex_wait
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000842ae
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000849ec
+     0.00%  db_bench      [kernel.kallsyms]    [k] anon_vma_interval_tree_remove
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082652
+     0.00%  db_bench      [kernel.kallsyms]    [k] __vm_enough_memory
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000849de
+     0.00%  db_bench      [kernel.kallsyms]    [k] security_file_mprotect
+     0.00%  db_bench      [kernel.kallsyms]    [k] kernel_init_pages
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df70
+     0.00%  db_bench      [kernel.kallsyms]    [k] apparmor_file_mprotect
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f0a
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000837ec
+     0.00%  db_bench      [kernel.kallsyms]    [k] mas_mab_cp
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083590
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df98
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000840e8
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008401a
+     0.00%  db_bench      [kernel.kallsyms]    [k] handle_softirqs
+     0.00%  db_bench      [kernel.kallsyms]    [k] hugepage_pmd_enabled
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f52
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df7e
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000849fa
+     0.00%  db_bench      [kernel.kallsyms]    [k] __rb_insert_augmented
+     0.00%  db_bench      [kernel.kallsyms]    [k] rb_next
+     0.00%  db_bench      [kernel.kallsyms]    [k] dynamic_might_resched
+     0.00%  db_bench      [kernel.kallsyms]    [k] vma_wants_writenotify
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008335c
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083574
+     0.00%  db_bench      [kernel.kallsyms]    [k] kmem_cache_alloc_from_sheaf_noprof
+     0.00%  db_bench      [kernel.kallsyms]    [k] mtree_range_walk
+     0.00%  db_bench      [kernel.kallsyms]    [k] kmem_cache_prefill_sheaf
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007ef80
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074fae
+     0.00%  db_bench      [kernel.kallsyms]    [k] futex_q_unlock
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000849d6
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083564
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082610
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084386
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084a06
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008335e
+     0.00%  db_bench      [kernel.kallsyms]    [k] irqentry_exit_to_user_mode
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000841ce
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f74
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082632
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007ef74
+     0.00%  db_bench      [kernel.kallsyms]    [k] folio_add_lru_vma
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084464
+     0.00%  db_bench      [kernel.kallsyms]    [k] kthread_blkcg
+     0.00%  db_bench      [kernel.kallsyms]    [k] folio_add_lru
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000842b6
+     0.00%  db_bench      [kernel.kallsyms]    [k] __folio_throttle_swaprate
+     0.00%  db_bench      [kernel.kallsyms]    [k] folios_put_refs
+     0.00%  db_bench      [kernel.kallsyms]    [k] anon_vma_name
+     0.00%  db_bench      [kernel.kallsyms]    [k] sized_strscpy
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000825a2
+     0.00%  db_bench      [kernel.kallsyms]    [k] __lock_text_start
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000835c8
+     0.00%  db_bench      [kernel.kallsyms]    [k] ___slab_alloc
+     0.00%  db_bench      [kernel.kallsyms]    [k] finish_rcuwait
+     0.00%  db_bench      [kernel.kallsyms]    [k] build_id_parse_nofault
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008353c
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000836ae
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083fd6
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084466
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000849e0
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082656
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082628
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084288
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008354e
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084a20
+     0.00%  db_bench      [kernel.kallsyms]    [k] __schedule
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f98
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f36
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000836b4
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f30
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083354
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083fe4
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083368
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008366a
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000825cc
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f58
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082664
+     0.00%  db_bench      [kernel.kallsyms]    [k] mas_alloc_nodes
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000841cc
+     0.00%  db_bench      [kernel.kallsyms]    [k] mem_cgroup_from_task
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000835c0
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084a0a
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083fba
+     0.00%  db_bench      [kernel.kallsyms]    [k] arch_vma_name
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f28
+     0.00%  db_bench      [kernel.kallsyms]    [k] pud_offset
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008427c
+     0.00%  db_bench      [kernel.kallsyms]    [k] is_mergeable_anon_vma
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000847c4
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f94
+     0.00%  db_bench      db_bench             [.] __clzdi2@plt
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008318e
+     0.00%  db_bench      [kernel.kallsyms]    [k] __folio_mod_stat
+     0.00%  db_bench      [kernel.kallsyms]    [k] rcu_core
+     0.00%  db_bench      [kernel.kallsyms]    [k] mas_data_end
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083550
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084742
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f64
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083704
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000847e2
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f18
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008370c
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008451e
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f60
+     0.00%  db_bench      [kernel.kallsyms]    [k] wake_up_q
+     0.00%  db_bench      [kernel.kallsyms]    [k] update_sd_lb_stats.constprop.0
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084164
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083650
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083186
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f4e
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f80
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f80
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008353e
+     0.00%  db_bench      [kernel.kallsyms]    [k] exit_to_user_mode_loop
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008438c
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f0c
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df7a
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f20
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082592
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f68
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084a16
+     0.00%  db_bench      [kernel.kallsyms]    [k] __vmf_anon_prepare
+     0.00%  db_bench      [kernel.kallsyms]    [k] is_vmalloc_addr
+     0.00%  db_bench      [kernel.kallsyms]    [k] schedule
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008440c
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008428c
+     0.00%  db_bench      [kernel.kallsyms]    [k] __mod_node_page_state
+     0.00%  db_bench      [kernel.kallsyms]    [k] futex_hash_put
+     0.00%  db_bench      [kernel.kallsyms]    [k] __futex_unqueue
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083804
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083fe2
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000842b2
+     0.00%  db_bench      libgcc_s.so.1        [.] __clzdi2
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074fac
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000849c2
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000837c2
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000846ca
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083aae
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f40
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008473e
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008318c
+     0.00%  db_bench      db_bench             [.] rocksdb::clock_cache::(anonymous namespace)::UpgradeShiftsOnRange(rocksdb::clock_cache::AutoHyperClockTable::HandleImpl*, unsigned long&, rocksdb::clock_cache::AutoHyperClockTable::HandleImpl::NextWithShift, int, int) [clone .isra.0]
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000847e0
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083ac8
+     0.00%  db_bench      [kernel.kallsyms]    [k] __rseq_handle_notify_resume
+     0.00%  db_bench      [kernel.kallsyms]    [k] page_counter_try_charge
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084a36
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008318a
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008379a
+     0.00%  db_bench      [kernel.kallsyms]    [k] folio_lruvec_lock_irqsave
+     0.00%  db_bench      [kernel.kallsyms]    [k] kmem_cache_return_sheaf
+     0.00%  db_bench      [kernel.kallsyms]    [k] mas_set_parent.isra.0
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084532
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000847ce
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083ac2
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000841f8
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000847c0
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082580
+     0.00%  db_bench      [kernel.kallsyms]    [k] build_detached_freelist
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000841d4
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083814
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082622
+     0.00%  db_bench      [kernel.kallsyms]    [k] __rcu_free_sheaf_prepare
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000836ba
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084b00
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008261c
+     0.00%  db_bench      [kernel.kallsyms]    [k] memcpy
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083746
+     0.00%  db_bench      [kernel.kallsyms]    [k] tcp_orphan_update
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000841ca
+     0.00%  db_bench      [kernel.kallsyms]    [k] note_gp_changes
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000837ce
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008417c
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083654
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084408
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084706
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f28
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f38
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083580
+     0.00%  db_bench      [kernel.kallsyms]    [k] rcu_preempt_deferred_qs
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000845ee
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084618
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083702
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083362
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f44
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008364e
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000846f0
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083566
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000840ec
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008deae
+     0.00%  db_bench      libc.so.6            [.] 0x000000000004c292
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008317c
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000825b8
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f7e
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084540
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f08
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083fda
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f54
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084a34
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f48
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008366e
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f10
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082646
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082614
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000825bc
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007ef8e
+     0.00%  db_bench      [kernel.kallsyms]    [k] propagate_protected_usage
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082006
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083676
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083662
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000837f0
+     0.00%  db_bench      [kernel.kallsyms]    [k] wake_q_add_safe
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000840e6
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000054daa
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000835d0
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008355a
+     0.00%  db_bench      [kernel.kallsyms]    [k] futex_wake_mark
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008437e
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084050
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008474a
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084298
+     0.00%  db_bench      [kernel.kallsyms]    [k] sched_balance_rq
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000825b6
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084294
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f54
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008436e
+     0.00%  db_bench      [kernel.kallsyms]    [k] kfree
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084568
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f48
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000842ac
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008336a
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084a12
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008265e
+     0.00%  db_bench      [kernel.kallsyms]    [k] clear_rseq_cs
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000835ce
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083fbe
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083358
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083540
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083192
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000840e2
+     0.00%  db_bench      [kernel.kallsyms]    [k] sched_balance_find_src_group
+     0.00%  db_bench      [kernel.kallsyms]    [k] plist_add
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084632
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084a0e
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000836f2
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008358e
+     0.00%  db_bench      [kernel.kallsyms]    [k] queue_work_on
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083f2c
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008383a
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083184
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008263c
+     0.00%  db_bench      [kernel.kallsyms]    [k] fdget_pos
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082014
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082598
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008372a
+     0.00%  db_bench      [kernel.kallsyms]    [k] sched_balance_domains
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008381e
+     0.00%  db_bench      [kernel.kallsyms]    [k] __folio_alloc_noprof
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000837da
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008341a
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000846bc
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000841f0
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008451a
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082008
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000842a0
+     0.00%  db_bench      libc.so.6            [.] __sched_yield
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000837be
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000837d2
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083750
+     0.00%  db_bench      [kernel.kallsyms]    [k] tmigr_handle_remote_up
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008476e
+     0.00%  db_bench      [kernel.kallsyms]    [k] mod_node_page_state
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f4c
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000826cc
+     0.00%  db_bench      [kernel.kallsyms]    [k] try_to_wake_up
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084622
+     0.00%  db_bench      [kernel.kallsyms]    [k] page_counter_cancel
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008472a
+     0.00%  db_bench      [kernel.kallsyms]    [k] up_read
+     0.00%  db_bench      db_bench             [.] rocksdb::BlockBasedTable::Open(rocksdb::ReadOptions const&, rocksdb::ImmutableOptions const&, rocksdb::EnvOptions const&, rocksdb::BlockBasedTableOptions const&, rocksdb::InternalKeyComparator const&, std::unique_ptr<rocksdb::RandomAccessFileReader, std::default_delete<rocksdb::RandomAccessFileReader> >&&, unsigned long, unsigned char, std::unique_ptr<rocksdb::TableReader, std::default_delete<rocksdb::TableReader> >*, unsigned long, std::shared_ptr<rocksdb::CacheReservationManager>, std::shared_ptr<rocksdb::SliceTransform const> const&, rocksdb::UnownedPtr<rocksdb::CompressionManager>, bool, bool, int, bool, unsigned long, bool, rocksdb::TailPrefetchStats*, rocksdb::BlockCacheTracer*, unsigned long, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, std::array<unsigned long, 2ul>, bool)
+     0.00%  db_bench      [kernel.kallsyms]    [k] down_read_trylock
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000855ce
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000844a0
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083648
+     0.00%  db_bench      [kernel.kallsyms]    [k] generic_get_unmapped_area_topdown
+     0.00%  db_bench      [kernel.kallsyms]    [k] lockref_mark_dead
+     0.00%  db_bench      [kernel.kallsyms]    [k] kmem_cache_alloc_noprof
+     0.00%  db_bench      [kernel.kallsyms]    [k] __riscv_sys_rseq
+     0.00%  db_bench      libc.so.6            [.] strchrnul
+     0.00%  db_bench      [kernel.kallsyms]    [k] cap_mmap_addr
+     0.00%  db_bench      [kernel.kallsyms]    [k] mt_find
+     0.00%  rocksdb:high  libc.so.6            [.] __ctype_init
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] exit_to_user_mode_loop
+     0.00%  perf-exec     [kernel.kallsyms]    [k] perf_event_exec
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] finish_task_switch.isra.0
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] finish_task_switch.isra.0
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

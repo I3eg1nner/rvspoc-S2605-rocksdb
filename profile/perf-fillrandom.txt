@@ -1,0 +1,1493 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 172K of event 'cycles:P'
+# Event count (approx.): 825463650699
+#
+# Overhead  Command       Shared Object        Symbol                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+# ........  ............  ...................  ............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+#
+    13.86%  db_bench      db_bench             [.] void rocksdb::InlineSkipList<rocksdb::MemTableRep::KeyComparator const&>::FindSpliceForLevel<true>(rocksdb::Slice const&, rocksdb::InlineSkipList<rocksdb::MemTableRep::KeyComparator const&>::Node*, rocksdb::InlineSkipList<rocksdb::MemTableRep::KeyComparator const&>::Node*, int, rocksdb::InlineSkipList<rocksdb::MemTableRep::KeyComparator const&>::Node**, rocksdb::InlineSkipList<rocksdb::MemTableRep::KeyComparator const&>::Node**) const
+     4.32%  db_bench      libc.so.6            [.] memcmp
+     3.24%  db_bench      db_bench             [.] rocksdb::MemTable::KeyComparator::operator()(char const*, rocksdb::Slice const&) const
+     2.18%  db_bench      db_bench             [.] bool rocksdb::InlineSkipList<rocksdb::MemTableRep::KeyComparator const&>::Insert<false>(char const*, rocksdb::InlineSkipList<rocksdb::MemTableRep::KeyComparator const&>::Splice*, bool)
+     1.83%  rocksdb:low   libc.so.6            [.] memcmp
+     1.81%  db_bench      db_bench             [.] non-virtual thunk to rocksdb::(anonymous namespace)::BytewiseComparatorImpl::Compare(rocksdb::Slice const&, rocksdb::Slice const&) const
+     1.80%  db_bench      db_bench             [.] rocksdb::DBImpl::PipelinedWriteImpl(rocksdb::WriteOptions const&, rocksdb::WriteBatch*, rocksdb::WriteCallback*, rocksdb::UserWriteCallback*, unsigned long*, unsigned long, bool, unsigned long*)
+     1.58%  rocksdb:low   db_bench             [.] rocksdb::CompactionIterator::NextFromInput()
+     1.36%  rocksdb:low   db_bench             [.] XXH3_hashLong_64b_default.constprop.0
+     1.33%  db_bench      db_bench             [.] unsigned int rocksdb::crc32c::ExtendImpl<&rocksdb::crc32c::DefaultCRC32>(unsigned int, char const*, unsigned long)
+     1.25%  db_bench      db_bench             [.] rocksdb::Benchmark::DoWrite(rocksdb::ThreadState*, rocksdb::Benchmark::WriteMode)
+     1.20%  db_bench      db_bench             [.] memcmp@plt
+     1.19%  db_bench      db_bench             [.] rocksdb::WritableFileWriter::Append(rocksdb::IOOptions const&, rocksdb::Slice const&, unsigned int)
+     1.09%  rocksdb:low   db_bench             [.] rocksdb::BinaryHeap<rocksdb::CompactionMergingIterator::HeapItem*, rocksdb::CompactionMergingIterator::CompactionHeapItemComparator>::downheap(unsigned long)
+     1.08%  db_bench      [kernel.kallsyms]    [k] do_trap_ecall_u
+     1.08%  rocksdb:high  db_bench             [.] rocksdb::MemTableIterator::key() const
+     1.00%  db_bench      [kernel.kallsyms]    [k] balance_dirty_pages_ratelimited_flags
+     0.94%  db_bench      [kernel.kallsyms]    [k] vfs_write
+     0.89%  rocksdb:low   db_bench             [.] memcpy@plt
+     0.75%  rocksdb:low   libc.so.6            [.] 0x000000000008de98
+     0.75%  rocksdb:low   db_bench             [.] rocksdb::BlockBuilder::AddWithLastKeyImpl(rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::Slice const*, bool, unsigned long)
+     0.69%  db_bench      db_bench             [.] rocksdb::WriteThread::ExitAsBatchGroupLeader(rocksdb::WriteThread::WriteGroup&, rocksdb::Status&)
+     0.65%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableBuilder::Add(rocksdb::Slice const&, rocksdb::Slice const&)
+     0.65%  db_bench      db_bench             [.] rocksdb::MemTable::Add(unsigned long, rocksdb::ValueType, rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::ProtectionInfoKVOS<unsigned long> const*, bool, rocksdb::MemTablePostProcessInfo*, void**)
+     0.62%  db_bench      db_bench             [.] rocksdb::WritableFileWriter::WriteBuffered(rocksdb::IOOptions const&, char const*, unsigned long)
+     0.61%  rocksdb:low   db_bench             [.] bool rocksdb::BlockIter<rocksdb::Slice>::ParseNextKey<rocksdb::DecodeEntry, false>(bool*)
+     0.55%  db_bench      db_bench             [.] rocksdb::DBImpl::PreprocessWrite(rocksdb::WriteOptions const&, rocksdb::DBImpl::WalContext*, rocksdb::DBImpl::WriteContext*)
+     0.52%  rocksdb:low   db_bench             [.] memcmp@plt
+     0.52%  db_bench      db_bench             [.] char* rocksdb::ConcurrentArena::AllocateImpl<rocksdb::ConcurrentArena::AllocateAligned(unsigned long, unsigned long, rocksdb::Logger*)::{lambda()#1}>(unsigned long, bool, rocksdb::ConcurrentArena::AllocateAligned(unsigned long, unsigned long, rocksdb::Logger*)::{lambda()#1} const&)
+     0.52%  db_bench      db_bench             [.] rocksdb::WritableFileWriter::Flush(rocksdb::IOOptions const&)
+     0.51%  db_bench      [kernel.kallsyms]    [k] mark_buffer_dirty
+     0.51%  rocksdb:low   db_bench             [.] rocksdb::CompactionOutputs::AddToOutput(rocksdb::CompactionIterator const&, std::function<rocksdb::Status (rocksdb::CompactionOutputs&)> const&, std::function<rocksdb::Status (rocksdb::Status const&, rocksdb::ParsedInternalKey const&, rocksdb::Slice const&, rocksdb::CompactionIterator const*, rocksdb::CompactionOutputs&)> const&, rocksdb::ParsedInternalKey const&)
+     0.51%  db_bench      db_bench             [.] rocksdb::WriteThread::SetState(rocksdb::WriteThread::Writer*, unsigned char)
+     0.50%  db_bench      libc.so.6            [.] 0x000000000007ef94
+     0.50%  rocksdb:low   db_bench             [.] rocksdb::OutputValidator::Add(rocksdb::Slice const&, rocksdb::Slice const&)
+     0.50%  rocksdb:low   [kernel.kallsyms]    [k] __asm_vector_usercopy_sum_enabled
+     0.50%  db_bench      db_bench             [.] rocksdb::log::Writer::AddRecord(rocksdb::WriteOptions const&, rocksdb::Slice const&, unsigned long const&)
+     0.49%  db_bench      [kernel.kallsyms]    [k] memset
+     0.48%  rocksdb:low   db_bench             [.] rocksdb::BlockIter<rocksdb::Slice>::UpdateKey()
+     0.45%  rocksdb:low   db_bench             [.] rocksdb::CompactionJob::ProcessKeyValue(rocksdb::SubcompactionState*, rocksdb::ColumnFamilyData*, rocksdb::CompactionIterator*, std::function<rocksdb::Status (rocksdb::CompactionOutputs&)> const&, std::function<rocksdb::Status (rocksdb::Status const&, rocksdb::ParsedInternalKey const&, rocksdb::Slice const&, rocksdb::CompactionIterator const*, rocksdb::CompactionOutputs&)> const&, unsigned long&)
+     0.45%  rocksdb:low   db_bench             [.] rocksdb::BlockBuilder::EstimateSizeAfterKV(rocksdb::Slice const&, rocksdb::Slice const&) const
+     0.45%  db_bench      db_bench             [.] rocksdb::crc32c::Crc32cCombine(unsigned int, unsigned int, unsigned long)
+     0.45%  rocksdb:low   db_bench             [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace(unsigned long, unsigned long, char const*, unsigned long)
+     0.42%  db_bench      libc.so.6            [.] 0x000000000008df6c
+     0.42%  rocksdb:high  db_bench             [.] rocksdb::CompactionIterator::NextFromInput()
+     0.40%  db_bench      db_bench             [.] rocksdb::Status rocksdb::(anonymous namespace)::MemTableInserter::PutCFImpl<rocksdb::(anonymous namespace)::MemTableInserter::PutCF(unsigned int, rocksdb::Slice const&, rocksdb::Slice const&)::{lambda(rocksdb::WriteBatch*, unsigned int, rocksdb::Slice const&, rocksdb::Slice const&)#1}>(unsigned int, rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::ValueType, rocksdb::(anonymous namespace)::MemTableInserter::PutCF(unsigned int, rocksdb::Slice const&, rocksdb::Slice const&)::{lambda(rocksdb::WriteBatch*, unsigned int, rocksdb::Slice const&, rocksdb::Slice const&)#1}, rocksdb::ProtectionInfoKVOS<unsigned long> const*) [clone .constprop.0]
+     0.39%  db_bench      db_bench             [.] rocksdb::WriteBatchInternal::Iterate(rocksdb::WriteBatch const*, rocksdb::WriteBatch::Handler*, unsigned long, unsigned long)
+     0.39%  db_bench      [kernel.kallsyms]    [k] apparmor_file_permission
+     0.39%  rocksdb:low   db_bench             [.] rocksdb::CompactionMergingIterator::Next()
+     0.37%  rocksdb:low   db_bench             [.] rocksdb::NotifyCollectTableCollectorsOnAdd(rocksdb::Slice const&, rocksdb::Slice const&, unsigned long, std::vector<std::unique_ptr<rocksdb::InternalTblPropColl, std::default_delete<rocksdb::InternalTblPropColl> >, std::allocator<std::unique_ptr<rocksdb::InternalTblPropColl, std::default_delete<rocksdb::InternalTblPropColl> > > > const&, rocksdb::Logger*)
+     0.36%  rocksdb:high  libc.so.6            [.] 0x000000000008df6c
+     0.36%  db_bench      db_bench             [.] rocksdb::WritableFileWriter::FinalizeIOOptions(rocksdb::IOOptions const&) const
+     0.35%  db_bench      db_bench             [.] rocksdb::DBImpl::WriteImpl(rocksdb::WriteOptions const&, rocksdb::WriteBatch*, rocksdb::WriteCallback*, rocksdb::UserWriteCallback*, unsigned long*, unsigned long, bool, unsigned long*, unsigned long, rocksdb::PreReleaseCallback*, rocksdb::PostMemTableCallback*, std::shared_ptr<rocksdb::WriteBatchWithIndex>)
+     0.35%  db_bench      [kernel.kallsyms]    [k] ext4_block_write_begin
+     0.35%  rocksdb:low   db_bench             [.] rocksdb::FileMetaData::UpdateBoundaries(rocksdb::Slice const&, rocksdb::Slice const&, unsigned long, rocksdb::ValueType)
+     0.35%  rocksdb:low   db_bench             [.] non-virtual thunk to rocksdb::(anonymous namespace)::BytewiseComparatorImpl::Compare(rocksdb::Slice const&, rocksdb::Slice const&) const
+     0.35%  db_bench      [kernel.kallsyms]    [k] copy_folio_from_iter_atomic
+     0.33%  rocksdb:low   db_bench             [.] rocksdb::CompactionIterator::Next()
+     0.33%  db_bench      db_bench             [.] rocksdb::DBImpl::WriteGroupToWAL(rocksdb::WriteThread::WriteGroup const&, rocksdb::log::Writer*, unsigned long*, bool, bool, unsigned long, rocksdb::DBImpl::WalFileNumberSize&)
+     0.33%  db_bench      db_bench             [.] rocksdb::VersionEdit::~VersionEdit()
+     0.32%  db_bench      [kernel.kallsyms]    [k] __might_resched
+     0.32%  db_bench      [kernel.kallsyms]    [k] fdget_pos
+     0.32%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::XXPH3FilterBitsBuilder::AddKey(rocksdb::Slice const&)
+     0.32%  rocksdb:low   db_bench             [.] rocksdb::CompactionMergingIterator::FindNextVisibleKey()
+     0.31%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::FastLocalBloomBitsBuilder::Finish(std::unique_ptr<char const [], std::default_delete<char const []> >*, rocksdb::Status*)
+     0.31%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableIterator::NextAndGetResult(rocksdb::IterateResult*)
+     0.30%  db_bench      [kernel.kallsyms]    [k] fallback_scalar_usercopy_sum_enabled
+     0.29%  db_bench      db_bench             [.] rocksdb::PutLengthPrefixedSlice(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, rocksdb::Slice const&)
+     0.29%  rocksdb:low   db_bench             [.] rocksdb::FlushBlockBySizePolicy::Update(rocksdb::Slice const&, rocksdb::Slice const&)
+     0.29%  rocksdb:high  db_bench             [.] rocksdb::BlockBuilder::AddWithLastKeyImpl(rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::Slice const*, bool, unsigned long)
+     0.29%  rocksdb:low   db_bench             [.] rocksdb::ParseInternalKey(rocksdb::Slice const&, rocksdb::ParsedInternalKey*, bool) [clone .isra.0]
+     0.28%  rocksdb:high  db_bench             [.] memcpy@plt
+     0.28%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::LevelIterator::NextAndGetResult(rocksdb::IterateResult*)
+     0.28%  db_bench      [kernel.kallsyms]    [k] __rcu_read_unlock
+     0.27%  rocksdb:high  libc.so.6            [.] memcmp
+     0.27%  rocksdb:low   db_bench             [.] rocksdb::CompactionOutputs::ShouldStopBefore(rocksdb::CompactionIterator const&)
+     0.27%  db_bench      [kernel.kallsyms]    [k] __rcu_read_lock
+     0.26%  rocksdb:low   libc.so.6            [.] 0x000000000008dea2
+     0.26%  db_bench      libc.so.6            [.] memset
+     0.26%  db_bench      db_bench             [.] memcpy@plt
+     0.25%  db_bench      db_bench             [.] rocksdb::DBImpl::WriteToWAL(rocksdb::WriteBatch const&, rocksdb::WriteOptions const&, rocksdb::log::Writer*, unsigned long*, unsigned long*, rocksdb::DBImpl::WalFileNumberSize&, unsigned long)
+     0.25%  db_bench      [kernel.kallsyms]    [k] filemap_get_entry
+     0.25%  db_bench      db_bench             [.] rocksdb::WriteBatchInternal::Put(rocksdb::WriteBatch*, unsigned int, rocksdb::Slice const&, rocksdb::Slice const&)
+     0.25%  rocksdb:low   db_bench             [.] rocksdb::CompactionOutputs::UpdateGrandparentBoundaryInfo(rocksdb::Slice const&)
+     0.24%  rocksdb:high  db_bench             [.] XXH3_hashLong_64b_default.constprop.0
+     0.24%  rocksdb:low   db_bench             [.] rocksdb::FullFilterBlockBuilder::Add(rocksdb::Slice const&)
+     0.24%  db_bench      [kernel.kallsyms]    [k] ktime_get_coarse_real_ts64_mg
+     0.24%  db_bench      db_bench             [.] rocksdb::WriteThread::LinkOne(rocksdb::WriteThread::Writer*, std::atomic<rocksdb::WriteThread::Writer*>*)
+     0.23%  db_bench      [kernel.kallsyms]    [k] __might_sleep
+     0.23%  db_bench      db_bench             [.] rocksdb::WriteBatchInternal::InsertInto(rocksdb::WriteThread::WriteGroup&, unsigned long, rocksdb::ColumnFamilyMemTables*, rocksdb::FlushScheduler*, rocksdb::TrimHistoryScheduler*, bool, unsigned long, rocksdb::DB*, bool, bool)
+     0.23%  db_bench      db_bench             [.] std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::~_Hashtable()
+     0.23%  rocksdb:high  libc.so.6            [.] 0x000000000008de98
+     0.22%  db_bench      db_bench             [.] rocksdb::log::Writer::EmitPhysicalRecord(rocksdb::WriteOptions const&, rocksdb::log::RecordType, char const*, unsigned long)
+     0.22%  db_bench      [kernel.kallsyms]    [k] ext4_da_write_begin
+     0.22%  db_bench      db_bench             [.] rocksdb::WriteBatch::Clear()
+     0.22%  db_bench      [kernel.kallsyms]    [k] ext4_da_write_end
+     0.22%  db_bench      db_bench             [.] rocksdb::WriteThread::ExitAsMemTableWriter(rocksdb::WriteThread::Writer*, rocksdb::WriteThread::WriteGroup&)
+     0.22%  db_bench      libc.so.6            [.] 0x000000000008de98
+     0.22%  db_bench      [kernel.kallsyms]    [k] up_write
+     0.22%  db_bench      db_bench             [.] TLS init function for rocksdb::iostats_context
+     0.22%  rocksdb:high  db_bench             [.] rocksdb::BlockBasedTableBuilder::Add(rocksdb::Slice const&, rocksdb::Slice const&)
+     0.21%  db_bench      db_bench             [.] TLS init function for rocksdb::perf_context
+     0.21%  db_bench      [kernel.kallsyms]    [k] _raw_spin_unlock_irqrestore
+     0.21%  db_bench      libc.so.6            [.] pthread_mutex_lock
+     0.21%  db_bench      [kernel.kallsyms]    [k] __filemap_get_folio
+     0.20%  db_bench      [kernel.kallsyms]    [k] xas_load
+     0.20%  rocksdb:low   db_bench             [.] rocksdb::EncodeVarint32(char*, unsigned int)
+     0.20%  rocksdb:low   db_bench             [.] rocksdb::CompactionIterator::PrepareOutput()
+     0.20%  db_bench      [kernel.kallsyms]    [k] _raw_spin_unlock_irq
+     0.19%  rocksdb:low   db_bench             [.] ROCKSDB_XXPH3_64bits
+     0.19%  db_bench      db_bench             [.] rocksdb::WriteThread::EnterAsMemTableWriter(rocksdb::WriteThread::Writer*, rocksdb::WriteThread::WriteGroup*)
+     0.19%  rocksdb:low   db_bench             [.] rocksdb::SubcompactionState::AddToOutput(rocksdb::CompactionIterator const&, bool, std::function<rocksdb::Status (rocksdb::CompactionOutputs&)> const&, std::function<rocksdb::Status (rocksdb::Status const&, rocksdb::ParsedInternalKey const&, rocksdb::Slice const&, rocksdb::CompactionIterator const*, rocksdb::CompactionOutputs&)> const&, rocksdb::ParsedInternalKey const&)
+     0.19%  db_bench      db_bench             [.] rocksdb::GetLengthPrefixedSlice(rocksdb::Slice*, rocksdb::Slice*)
+     0.19%  db_bench      [kernel.kallsyms]    [k] generic_perform_write
+     0.18%  rocksdb:low   db_bench             [.] TLS init function for rocksdb::perf_context
+     0.18%  db_bench      db_bench             [.] rocksdb::WriteBatchInternal::GetColumnFamilyIdAndTimestampSize(rocksdb::WriteBatch*, rocksdb::ColumnFamilyHandle*)
+     0.18%  db_bench      db_bench             [.] rocksdb::DBImpl::MergeBatch(rocksdb::WriteThread::WriteGroup const&, rocksdb::WriteBatch*, rocksdb::WriteBatch**, unsigned long*, rocksdb::WriteBatch**)
+     0.18%  db_bench      db_bench             [.] rocksdb::WriteBatch::Put(rocksdb::ColumnFamilyHandle*, rocksdb::Slice const&, rocksdb::Slice const&)
+     0.18%  db_bench      db_bench             [.] rocksdb::EncodeVarint32(char*, unsigned int)
+     0.18%  rocksdb:low   db_bench             [.] rocksdb::CompactionIterator::InvokeFilterIfNeeded(bool*, rocksdb::Slice*)
+     0.17%  db_bench      [kernel.kallsyms]    [k] ext4_file_write_iter
+     0.17%  db_bench      db_bench             [.] rocksdb::SuperVersionContext::Clean()
+     0.17%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableIterator::value() const
+     0.17%  db_bench      [kernel.kallsyms]    [k] ext4_inode_journal_mode
+     0.17%  db_bench      [kernel.kallsyms]    [k] down_write
+     0.17%  db_bench      db_bench             [.] rocksdb::InlineSkipList<rocksdb::MemTableRep::KeyComparator const&>::RecomputeSpliceLevels(rocksdb::Slice const&, rocksdb::InlineSkipList<rocksdb::MemTableRep::KeyComparator const&>::Splice*, int) const
+     0.17%  rocksdb:high  db_bench             [.] rocksdb::BuildTable(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, rocksdb::VersionSet*, rocksdb::ImmutableDBOptions const&, rocksdb::TableBuilderOptions const&, rocksdb::FileOptions const&, rocksdb::TableCache*, rocksdb::InternalIteratorBase<rocksdb::Slice>*, std::vector<std::unique_ptr<rocksdb::FragmentedRangeTombstoneIterator, std::default_delete<rocksdb::FragmentedRangeTombstoneIterator> >, std::allocator<std::unique_ptr<rocksdb::FragmentedRangeTombstoneIterator, std::default_delete<rocksdb::FragmentedRangeTombstoneIterator> > > >, rocksdb::FileMetaData*, std::vector<rocksdb::BlobFileAddition, std::allocator<rocksdb::BlobFileAddition> >*, std::vector<unsigned long, std::allocator<unsigned long> >, unsigned long, unsigned long, unsigned long, rocksdb::SnapshotChecker*, bool, rocksdb::InternalStats*, rocksdb::IOStatus*, std::shared_ptr<rocksdb::IOTracer> const&, rocksdb::BlobFileCreationReason, rocksdb::UnownedPtr<rocksdb::SeqnoToTimeMapping const>, rocksdb::EventLogger*, int, rocksdb::TableProperties*, rocksdb::Env::WriteLifeTimeHint, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const*, rocksdb::BlobFileCompletionCallback*, rocksdb::Version*, unsigned long*, unsigned long*, rocksdb::InternalStats::CompactionStats*)
+     0.17%  db_bench      [kernel.kallsyms]    [k] mutex_lock
+     0.16%  rocksdb:high  db_bench             [.] rocksdb::MemTableIterator::value() const
+     0.16%  db_bench      db_bench             [.] rocksdb::DBImpl::Write(rocksdb::WriteOptions const&, rocksdb::WriteBatch*)
+     0.16%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::MemTableInserter::PutCF(unsigned int, rocksdb::Slice const&, rocksdb::Slice const&)
+     0.16%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::MemTableInserter::CheckMemtableFull()
+     0.16%  db_bench      db_bench             [.] rocksdb::PosixWritableFile::Append(rocksdb::Slice const&, rocksdb::IOOptions const&, rocksdb::IODebugContext*)
+     0.16%  db_bench      db_bench             [.] rocksdb::ReadRecordFromWriteBatch(rocksdb::Slice*, char*, unsigned int*, rocksdb::Slice*, rocksdb::Slice*, rocksdb::Slice*, rocksdb::Slice*, unsigned long*)
+     0.16%  rocksdb:low   libc.so.6            [.] 0x000000000008df6c
+     0.16%  rocksdb:high  db_bench             [.] rocksdb::OutputValidator::Add(rocksdb::Slice const&, rocksdb::Slice const&)
+     0.16%  db_bench      [kernel.kallsyms]    [k] __radix_tree_lookup
+     0.16%  db_bench      db_bench             [.] rocksdb::ColumnFamilyMemTablesImpl::current()
+     0.15%  db_bench      db_bench             [.] rocksdb::StopWatch::~StopWatch()
+     0.15%  rocksdb:high  db_bench             [.] rocksdb::MemTableIterator::Next()
+     0.15%  db_bench      db_bench             [.] rocksdb::Stats::FinishedOps(rocksdb::DBWithColumnFamilies*, rocksdb::DB*, long, rocksdb::OperationType)
+     0.15%  db_bench      db_bench             [.] rocksdb::DBImpl::WriteContext::~WriteContext()
+     0.15%  db_bench      [kernel.kallsyms]    [k] mutex_unlock
+     0.15%  db_bench      db_bench             [.] rocksdb::log::Writer::MaybeAddUserDefinedTimestampSizeRecord(rocksdb::WriteOptions const&, std::unordered_map<unsigned int, unsigned long, std::hash<unsigned int>, std::equal_to<unsigned int>, std::allocator<std::pair<unsigned int const, unsigned long> > > const&)
+     0.14%  rocksdb:low   db_bench             [.] rocksdb::CompactionOutputs::UpdateFilesToCutForTTLStates(rocksdb::Slice const&)
+     0.14%  db_bench      db_bench             [.] rocksdb::MemTable::ShouldFlushNow()
+     0.14%  db_bench      db_bench             [.] rocksdb::WriteThread::EnterAsBatchGroupLeader(rocksdb::WriteThread::Writer*, rocksdb::WriteThread::WriteGroup*)
+     0.14%  db_bench      db_bench             [.] rocksdb::WriteBatch::VerifyChecksum() const
+     0.14%  rocksdb:low   db_bench             [.] rocksdb::CompactionRangeDelAggregator::ShouldDelete(rocksdb::ParsedInternalKey const&, rocksdb::RangeDelPositioningMode)
+     0.14%  db_bench      [kernel.kallsyms]    [k] block_commit_write
+     0.14%  db_bench      db_bench             [.] std::mersenne_twister_engine<unsigned long, 64ul, 312ul, 156ul, 31ul, 13043109905998158313ul, 29ul, 6148914691236517205ul, 17ul, 8202884508482404352ul, 37ul, 18444473444759240704ul, 43ul, 6364136223846793005ul>::operator()()
+     0.13%  rocksdb:low   [kernel.kallsyms]    [k] do_trap_ecall_u
+     0.13%  db_bench      [kernel.kallsyms]    [k] security_file_permission
+     0.13%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableIterator::Next()
+     0.13%  db_bench      [kernel.kallsyms]    [k] generic_write_checks
+     0.13%  rocksdb:high  db_bench             [.] rocksdb::NotifyCollectTableCollectorsOnAdd(rocksdb::Slice const&, rocksdb::Slice const&, unsigned long, std::vector<std::unique_ptr<rocksdb::InternalTblPropColl, std::default_delete<rocksdb::InternalTblPropColl> >, std::allocator<std::unique_ptr<rocksdb::InternalTblPropColl, std::default_delete<rocksdb::InternalTblPropColl> > > > const&, rocksdb::Logger*)
+     0.13%  rocksdb:high  db_bench             [.] rocksdb::FileMetaData::UpdateBoundaries(rocksdb::Slice const&, rocksdb::Slice const&, unsigned long, rocksdb::ValueType)
+     0.13%  db_bench      [kernel.kallsyms]    [k] generic_write_check_limits
+     0.13%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::MemTableInserter::SeekToColumnFamily(unsigned int, rocksdb::Status*) [clone .constprop.0]
+     0.13%  db_bench      [kernel.kallsyms]    [k] fallback_scalar_usercopy
+     0.12%  db_bench      db_bench             [.] rocksdb::InstrumentedMutex::Lock()
+     0.12%  rocksdb:low   libc.so.6            [.] 0x000000000008df82
+     0.12%  db_bench      db_bench             [.] rocksdb::ConcurrentArena::AllocateAligned(unsigned long, unsigned long, rocksdb::Logger*)
+     0.12%  db_bench      [kernel.kallsyms]    [k] fput
+     0.12%  rocksdb:high  db_bench             [.] rocksdb::(anonymous namespace)::SkipListRep::Iterator::Next()
+     0.12%  rocksdb:low   db_bench             [.] rocksdb::CompactionMergingIterator::IsDeleteRangeSentinelKey() const
+     0.11%  rocksdb:high  db_bench             [.] rocksdb::(anonymous namespace)::FastLocalBloomBitsBuilder::Finish(std::unique_ptr<char const [], std::default_delete<char const []> >*, rocksdb::Status*)
+     0.11%  rocksdb:high  db_bench             [.] rocksdb::CompactionIterator::Next()
+     0.11%  rocksdb:high  [kernel.kallsyms]    [k] __asm_vector_usercopy_sum_enabled
+     0.11%  rocksdb:low   db_bench             [.] rocksdb::DataBlockIter::NextImpl()
+     0.11%  rocksdb:low   db_bench             [.] rocksdb::WritableFileWriter::Append(rocksdb::IOOptions const&, rocksdb::Slice const&, unsigned int)
+     0.11%  db_bench      libc.so.6            [.] write
+     0.11%  rocksdb:high  db_bench             [.] memcmp@plt
+     0.11%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableIterator::CheckOutOfBound()
+     0.11%  db_bench      [kernel.kallsyms]    [k] folio_unlock
+     0.11%  rocksdb:low   db_bench             [.] rocksdb::CompactionIterator::ExtractLargeValueIfNeededImpl()
+     0.11%  db_bench      db_bench             [.] rocksdb::PosixWritableFile::use_direct_io() const
+     0.11%  db_bench      [kernel.kallsyms]    [k] ext4_buffered_write_iter
+     0.10%  db_bench      libc.so.6            [.] 0x000000000008dea2
+     0.10%  rocksdb:low   [kernel.kallsyms]    [k] filemap_read
+     0.10%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::SkipListRep::Allocate(unsigned long, char**)
+     0.10%  db_bench      [kernel.kallsyms]    [k] __riscv_sys_write
+     0.10%  rocksdb:low   db_bench             [.] rocksdb::BlockFetcher::ReadBlock(bool)
+     0.10%  rocksdb:low   [kernel.kallsyms]    [k] _raw_spin_unlock_irqrestore
+     0.10%  db_bench      [kernel.kallsyms]    [k] dynamic_might_resched
+     0.10%  rocksdb:low   libc.so.6            [.] 0x000000000007ef94
+     0.10%  rocksdb:low   [kernel.kallsyms]    [k] clear_page
+     0.10%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::LevelIterator::IsDeleteRangeSentinelKey() const
+     0.10%  db_bench      db_bench             [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::push_back(char)
+     0.10%  rocksdb:high  db_bench             [.] rocksdb::FullFilterBlockBuilder::Add(rocksdb::Slice const&)
+     0.10%  rocksdb:low   libc.so.6            [.] 0x000000000008df6a
+     0.10%  rocksdb:low   libc.so.6            [.] 0x000000000008deae
+     0.09%  rocksdb:high  db_bench             [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_replace(unsigned long, unsigned long, char const*, unsigned long)
+     0.09%  db_bench      [kernel.kallsyms]    [k] __fsnotify_parent
+     0.09%  db_bench      [kernel.kallsyms]    [k] ext4_nonda_switch
+     0.09%  db_bench      libc.so.6            [.] pthread_mutex_unlock
+     0.09%  rocksdb:high  db_bench             [.] rocksdb::FlushBlockBySizePolicy::Update(rocksdb::Slice const&, rocksdb::Slice const&)
+     0.09%  db_bench      [kernel.kallsyms]    [k] file_update_time_flags
+     0.09%  rocksdb:high  db_bench             [.] rocksdb::ParseInternalKey(rocksdb::Slice const&, rocksdb::ParsedInternalKey*, bool) [clone .isra.0]
+     0.09%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::LevelIterator::value() const
+     0.09%  rocksdb:high  db_bench             [.] TLS init function for rocksdb::iostats_context
+     0.09%  db_bench      db_bench             [.] rocksdb::crc32c::Extend(unsigned int, char const*, unsigned long)
+     0.09%  rocksdb:low   db_bench             [.] rocksdb::RandomAccessFileReader::Read(rocksdb::IOOptions const&, unsigned long, unsigned long, rocksdb::Slice*, char*, std::unique_ptr<void, std::function<void (void*)> >*, rocksdb::IODebugContext*) const
+     0.09%  db_bench      db_bench             [.] rocksdb::Random::GetTLSInstance()
+     0.09%  db_bench      [kernel.kallsyms]    [k] ksys_write
+     0.09%  db_bench      db_bench             [.] rocksdb::WriteBatchInternal::Count(rocksdb::WriteBatch const*)
+     0.08%  db_bench      libgcc_s.so.1        [.] __ctzdi2
+     0.08%  db_bench      db_bench             [.] rocksdb::DBImpl::WriteStatusCheck(rocksdb::Status const&)
+     0.08%  rocksdb:low   [kernel.kallsyms]    [k] memset
+     0.08%  db_bench      db_bench             [.] rocksdb::ColumnFamilyMemTablesImpl::GetMemTable() const
+     0.08%  db_bench      db_bench             [.] rocksdb::Arena::AllocateAligned(unsigned long, unsigned long, rocksdb::Logger*)
+     0.08%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::BytewiseComparatorImpl::EqualWithoutTimestamp(rocksdb::Slice const&, rocksdb::Slice const&) const
+     0.08%  db_bench      [kernel.kallsyms]    [k] file_remove_privs_flags
+     0.08%  db_bench      db_bench             [.] rocksdb::FSWritableFile::PrepareWrite(unsigned long, unsigned long, rocksdb::IOOptions const&, rocksdb::IODebugContext*)
+     0.08%  rocksdb:high  db_bench             [.] rocksdb::(anonymous namespace)::XXPH3FilterBitsBuilder::AddKey(rocksdb::Slice const&)
+     0.08%  db_bench      db_bench             [.] rocksdb::ColumnFamilyMemTablesImpl::Seek(unsigned int)
+     0.08%  rocksdb:high  [kernel.kallsyms]    [k] _raw_spin_unlock_irqrestore
+     0.08%  rocksdb:low   [kernel.kallsyms]    [k] apparmor_file_permission
+     0.08%  db_bench      [kernel.kallsyms]    [k] current_time
+     0.08%  db_bench      db_bench             [.] rocksdb::WriteThread::AwaitState(rocksdb::WriteThread::Writer*, unsigned char, rocksdb::WriteThread::AdaptationContext*)
+     0.07%  rocksdb:low   db_bench             [.] rocksdb::CompactionMergingIterator::value() const
+     0.07%  rocksdb:low   db_bench             [.] rocksdb::clock_cache::AutoHyperClockTable::Lookup(std::array<unsigned long, 2ul> const&)
+     0.07%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableBuilder::EstimatedFileSize() const
+     0.07%  db_bench      [kernel.kallsyms]    [k] aa_file_perm
+     0.07%  rocksdb:low   db_bench             [.] rocksdb::BlockBuilder::AddWithLastKey(rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::Slice const*, bool)
+     0.07%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableBuilder::BlockBasedTablePropertiesCollector::InternalAdd(rocksdb::Slice const&, rocksdb::Slice const&, unsigned long)
+     0.07%  db_bench      db_bench             [.] write@plt
+     0.07%  db_bench      [kernel.kallsyms]    [k] dynamic_cond_resched
+     0.07%  rocksdb:high  db_bench             [.] rocksdb::MemTableIterator::Valid() const
+     0.07%  rocksdb:high  db_bench             [.] rocksdb::BlockBuilder::EstimateSizeAfterKV(rocksdb::Slice const&, rocksdb::Slice const&) const
+     0.07%  db_bench      [kernel.kallsyms]    [k] rw_verify_area
+     0.07%  db_bench      libc.so.6            [.] 0x000000000007bccc
+     0.07%  rocksdb:low   db_bench             [.] rocksdb::sstableKeyCompare(rocksdb::Comparator const*, rocksdb::Slice const&, rocksdb::Slice const&)
+     0.07%  db_bench      [kernel.kallsyms]    [k] xas_start
+     0.07%  db_bench      db_bench             [.] rocksdb::WritableFileWriter::PrepareIOOptions(rocksdb::WriteOptions const&, rocksdb::IOOptions&)
+     0.07%  db_bench      [kernel.kallsyms]    [k] inode_to_bdi
+     0.07%  rocksdb:low   db_bench             [.] rocksdb::clock_cache::(anonymous namespace)::TryInsert(rocksdb::clock_cache::ClockHandleBasicData const&, rocksdb::clock_cache::ClockHandle&, unsigned int, bool, bool*)
+     0.07%  db_bench      [kernel.kallsyms]    [k] ext4_generic_write_checks
+     0.06%  db_bench      db_bench             [.] rocksdb::WriteBatch::MaybeTrackTimestampSize(unsigned int, unsigned long)
+     0.06%  rocksdb:high  libc.so.6            [.] 0x000000000008df82
+     0.06%  rocksdb:low   libc.so.6            [.] 0x000000000008df60
+     0.06%  rocksdb:high  libc.so.6            [.] 0x000000000008dea2
+     0.06%  db_bench      db_bench             [.] rocksdb::WriteThread::JoinBatchGroup(rocksdb::WriteThread::Writer*)
+     0.06%  rocksdb:high  db_bench             [.] ROCKSDB_XXPH3_64bits
+     0.06%  rocksdb:low   [kernel.kallsyms]    [k] filemap_get_read_batch
+     0.06%  rocksdb:high  db_bench             [.] TLS init function for rocksdb::perf_context
+     0.06%  rocksdb:high  db_bench             [.] rocksdb::InternalIteratorBase<rocksdb::Slice>::IsDeleteRangeSentinelKey() const
+     0.06%  db_bench      db_bench             [.] rocksdb::WriteBatch::ComputeContentFlags() const
+     0.06%  db_bench      db_bench             [.] pthread_mutex_lock@plt
+     0.06%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableIterator::FindBlockForward()
+     0.06%  db_bench      db_bench             [.] rocksdb::PerfStepTimer::Stop()
+     0.06%  db_bench      db_bench             [.] pthread_mutex_unlock@plt
+     0.06%  db_bench      [kernel.kallsyms]    [k] __rmqueue_pcplist
+     0.06%  db_bench      db_bench             [.] rocksdb::InlineSkipList<rocksdb::MemTableRep::KeyComparator const&>::AllocateNode(unsigned long, int) [clone .isra.0]
+     0.06%  db_bench      [kernel.kallsyms]    [k] get_mem_cgroup_from_mm
+     0.06%  rocksdb:low   db_bench             [.] rocksdb::CompactionMergingIterator::key() const
+     0.06%  db_bench      db_bench             [.] memset@plt
+     0.06%  db_bench      db_bench             [.] rocksdb::log::Writer::MaybeHandleSeenFileWriterError()
+     0.06%  rocksdb:low   [kernel.kallsyms]    [k] xas_load
+     0.06%  db_bench      db_bench             [.] rocksdb::PosixWritableFile::GetFileSize(rocksdb::IOOptions const&, rocksdb::IODebugContext*)
+     0.05%  rocksdb:low   [kernel.kallsyms]    [k] fdget
+     0.05%  db_bench      db_bench             [.] rocksdb::port::Mutex::Unlock()
+     0.05%  rocksdb:high  db_bench             [.] rocksdb::ThreadStatusUtil::SetThreadOperationProperty(int, unsigned long)
+     0.05%  rocksdb:high  db_bench             [.] rocksdb::EncodeVarint32(char*, unsigned int)
+     0.05%  rocksdb:low   libc.so.6            [.] 0x000000000008dfca
+     0.05%  db_bench      db_bench             [.] rocksdb::MemTable::UpdateEntryChecksum(rocksdb::ProtectionInfoKVOS<unsigned long> const*, rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::ValueType, unsigned long, char*)
+     0.05%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::MemTableInserter::get_post_process_info(rocksdb::MemTable*)
+     0.05%  db_bench      [kernel.kallsyms]    [k] __memcg_slab_post_alloc_hook
+     0.05%  rocksdb:high  [kernel.kallsyms]    [k] _raw_spin_unlock_irq
+     0.05%  rocksdb:high  db_bench             [.] rocksdb::CompactionIterator::PrepareOutput()
+     0.05%  db_bench      db_bench             [.] rocksdb::MemTable::MaybeUpdateNewestUDT(rocksdb::Slice const&)
+     0.05%  db_bench      [kernel.kallsyms]    [k] radix_tree_lookup
+     0.05%  rocksdb:low   db_bench             [.] rocksdb::Status rocksdb::(anonymous namespace)::ReadAndParseBlockFromFile<rocksdb::Block_kData>(rocksdb::RandomAccessFileReader*, rocksdb::FilePrefetchBuffer*, rocksdb::Footer const&, rocksdb::ReadOptions const&, rocksdb::BlockHandle const&, std::unique_ptr<rocksdb::Block_kData, std::default_delete<rocksdb::Block_kData> >*, rocksdb::ImmutableOptions const&, rocksdb::BlockCreateContext&, bool, rocksdb::UnownedPtr<rocksdb::Decompressor>, rocksdb::PersistentCacheOptions const&, rocksdb::MemoryAllocator*, bool, bool)
+     0.05%  rocksdb:high  db_bench             [.] rocksdb::WritableFileWriter::Append(rocksdb::IOOptions const&, rocksdb::Slice const&, unsigned int)
+     0.05%  rocksdb:low   db_bench             [.] void rocksdb::clock_cache::AutoHyperClockTable::PurgeImpl<std::array<unsigned long, 2ul> const>(std::array<unsigned long, 2ul> const*, unsigned long, rocksdb::clock_cache::BaseClockTable::EvictionData*) [clone .isra.0]
+     0.05%  db_bench      [kernel.kallsyms]    [k] block_write_end
+     0.05%  db_bench      db_bench             [.] rocksdb::WriteBatch::HasMerge() const
+     0.05%  db_bench      [kernel.kallsyms]    [k] file_modified
+     0.05%  db_bench      [kernel.kallsyms]    [k] folio_wait_stable
+     0.05%  db_bench      libc.so.6            [.] 0x000000000008df82
+     0.05%  rocksdb:low   [kernel.kallsyms]    [k] vfs_read
+     0.05%  db_bench      db_bench             [.] __ctzdi2@plt
+     0.05%  rocksdb:low   libc.so.6            [.] 0x000000000008df6e
+     0.05%  rocksdb:low   libc.so.6            [.] 0x000000000008df70
+     0.05%  db_bench      db_bench             [.] rocksdb::WriteController::IsStopped() const
+     0.05%  rocksdb:high  db_bench             [.] rocksdb::CompactionIterator::InvokeFilterIfNeeded(bool*, rocksdb::Slice*)
+     0.05%  db_bench      db_bench             [.] rocksdb::Status::operator=(rocksdb::Status&&) [clone .isra.0]
+     0.05%  db_bench      db_bench             [.] rocksdb::MemTable::UpdateOldestKeyTime()
+     0.05%  rocksdb:low   [kernel.kallsyms]    [k] ext4_file_read_iter
+     0.04%  db_bench      libc.so.6            [.] 0x0000000000074f70
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::clock_cache::AutoHyperClockTable::TryEraseHandle(rocksdb::clock_cache::AutoHyperClockTable::HandleImpl*, bool, bool)
+     0.04%  rocksdb:low   db_bench             [.] TLS init function for rocksdb::iostats_context
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::IndexValue::EncodeTo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, bool, rocksdb::BlockHandle const*) const
+     0.04%  rocksdb:low   [kernel.kallsyms]    [k] _raw_spin_unlock_irq
+     0.04%  db_bench      [kernel.kallsyms]    [k] folio_mapping
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::PosixRandomAccessFile::Read(unsigned long, unsigned long, rocksdb::IOOptions const&, rocksdb::Slice*, char*, rocksdb::IODebugContext*) const
+     0.04%  rocksdb:low   libc.so.6            [.] malloc
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::DataBlockIter* rocksdb::BlockBasedTable::NewDataBlockIterator<rocksdb::DataBlockIter>(rocksdb::ReadOptions const&, rocksdb::BlockHandle const&, rocksdb::DataBlockIter*, rocksdb::BlockType, rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*, rocksdb::FilePrefetchBuffer*, bool, bool, rocksdb::Status&, bool) const [clone .isra.0]
+     0.04%  rocksdb:low   db_bench             [.] std::enable_if<(rocksdb::Block_kData::kCacheEntryRole==((rocksdb::CacheEntryRole)13))||(true), rocksdb::Status>::type rocksdb::BlockBasedTable::RetrieveBlock<rocksdb::Block_kData>(rocksdb::FilePrefetchBuffer*, rocksdb::ReadOptions const&, rocksdb::BlockHandle const&, rocksdb::UnownedPtr<rocksdb::Decompressor>, rocksdb::CachableEntry<rocksdb::Block_kData>*, rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*, bool, bool, bool, bool) const
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::InternalIteratorBase<rocksdb::Slice>::IsDeleteRangeSentinelKey() const
+     0.04%  rocksdb:high  db_bench             [.] rocksdb::CompactionRangeDelAggregator::ShouldDelete(rocksdb::ParsedInternalKey const&, rocksdb::RangeDelPositioningMode)
+     0.04%  db_bench      db_bench             [.] rocksdb::WriteBatch::Iterate(rocksdb::WriteBatch::Handler*) const
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::CompactionMergingIterator::Valid() const
+     0.04%  db_bench      [kernel.kallsyms]    [k] clear_page
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::WritableFileWriter::FinalizeIOOptions(rocksdb::IOOptions const&) const
+     0.04%  rocksdb:high  db_bench             [.] rocksdb::ThreadStatusUpdater::SetThreadOperationProperty(int, unsigned long)
+     0.04%  db_bench      [kernel.kallsyms]    [k] kmem_cache_alloc_noprof
+     0.04%  db_bench      [kernel.kallsyms]    [k] __alloc_frozen_pages_noprof
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::ShortenedIndexBuilder::FindShortestInternalKeySeparator(rocksdb::Comparator const&, rocksdb::Slice const&, rocksdb::Slice const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::IndexBlockIter::DecodeCurrentValue(bool)
+     0.04%  rocksdb:low   [kernel.kallsyms]    [k] is_cacheable_safe
+     0.04%  rocksdb:low   [kernel.kallsyms]    [k] copy_page_to_iter
+     0.04%  rocksdb:low   libc.so.6            [.] 0x000000000008df72
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::BytewiseComparatorImpl::CompareWithoutTimestamp(rocksdb::Slice const&, bool, rocksdb::Slice const&, bool) const
+     0.04%  db_bench      db_bench             [.] rocksdb::PosixWritableFile::Flush(rocksdb::IOOptions const&, rocksdb::IODebugContext*)
+     0.04%  rocksdb:low   db_bench             [.] std::enable_if<(rocksdb::Block_kData::kCacheEntryRole==((rocksdb::CacheEntryRole)13))||(true), rocksdb::Status>::type rocksdb::BlockBasedTable::GetDataBlockFromCache<rocksdb::Block_kData>(rocksdb::Slice const&, rocksdb::FullTypedCacheInterface<rocksdb::Block_kData, rocksdb::BlockCreateContext, rocksdb::Block_kData::kCacheEntryRole, rocksdb::Cache*>, rocksdb::CachableEntry<rocksdb::Block_kData>*, rocksdb::GetContext*, rocksdb::UnownedPtr<rocksdb::Decompressor>) const
+     0.04%  db_bench      [kernel.kallsyms]    [k] __asm_copy_to_user
+     0.04%  rocksdb:low   db_bench             [.] operator new[](unsigned long)@plt
+     0.04%  db_bench      db_bench             [.] rocksdb::port::Mutex::Lock()
+     0.04%  rocksdb:low   libc.so.6            [.] free
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableIterator::InitDataBlock()
+     0.04%  rocksdb:low   [kernel.kallsyms]    [k] _copy_to_iter
+     0.04%  db_bench      db_bench             [.] rocksdb::GetColumnFamilyID(rocksdb::ColumnFamilyHandle*)
+     0.04%  db_bench      libc.so.6            [.] 0x0000000000074f6c
+     0.04%  rocksdb:low   db_bench             [.] bool rocksdb::BlockIter<rocksdb::IndexValue>::ParseNextKey<rocksdb::DecodeEntryV4, false>(bool*)
+     0.04%  rocksdb:high  db_bench             [.] rocksdb::(anonymous namespace)::SkipListRep::Iterator::key() const
+     0.04%  db_bench      [kernel.kallsyms]    [k] create_empty_buffers
+     0.04%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableBuilder::WriteMaybeCompressedBlockImpl(rocksdb::Slice const&, rocksdb::CompressionType, rocksdb::BlockHandle*, rocksdb::BlockType, rocksdb::Slice const*, bool*)
+     0.03%  rocksdb:low   [kernel.kallsyms]    [k] __riscv_v_vstate_save
+     0.03%  rocksdb:low   libc.so.6            [.] 0x000000000008deb4
+     0.03%  db_bench      [kernel.kallsyms]    [k] get_page_from_freelist
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::BlockPrefetcher::PrefetchIfNeeded(rocksdb::BlockBasedTable::Rep const*, rocksdb::BlockHandle const&, unsigned long, bool, bool, rocksdb::ReadOptions const&, std::function<void (bool, unsigned long&, unsigned long&)> const&, bool)
+     0.03%  rocksdb:high  db_bench             [.] rocksdb::CompactionIterator::ExtractLargeValueIfNeededImpl()
+     0.03%  db_bench      libc.so.6            [.] 0x000000000008dfa0
+     0.03%  db_bench      db_bench             [.] rocksdb::WriteBatchInternal::SetSequence(rocksdb::WriteBatch*, unsigned long)
+     0.03%  db_bench      db_bench             [.] rocksdb::LocalSavePoint::commit()
+     0.03%  db_bench      db_bench             [.] rocksdb::FixedDistribution::Get()
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::RecordIOStats(rocksdb::Statistics*, rocksdb::Temperature, bool, unsigned long)
+     0.03%  rocksdb:high  [kernel.kallsyms]    [k] clear_page
+     0.03%  rocksdb:low   [kernel.kallsyms]    [k] kernel_vector_begin
+     0.03%  rocksdb:high  [kernel.kallsyms]    [k] folio_account_cleaned
+     0.03%  rocksdb:low   [kernel.kallsyms]    [k] __rcu_read_unlock
+     0.03%  rocksdb:low   [kernel.kallsyms]    [k] __might_resched
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::Status rocksdb::clock_cache::BaseClockTable::Insert<rocksdb::clock_cache::AutoHyperClockTable>(rocksdb::clock_cache::ClockHandleBasicData const&, rocksdb::clock_cache::AutoHyperClockTable::HandleImpl**, rocksdb::Cache::Priority)
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::VerifyBlockChecksum(rocksdb::Footer const&, char const*, unsigned long, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, rocksdb::BlockType)
+     0.03%  rocksdb:low   db_bench             [.] std::enable_if<(rocksdb::Block_kData::kCacheEntryRole==((rocksdb::CacheEntryRole)13))||(true), rocksdb::Status>::type rocksdb::BlockBasedTable::MaybeReadBlockAndLoadToCache<rocksdb::Block_kData>(rocksdb::FilePrefetchBuffer*, rocksdb::ReadOptions const&, rocksdb::BlockHandle const&, rocksdb::UnownedPtr<rocksdb::Decompressor>, bool, rocksdb::CachableEntry<rocksdb::Block_kData>*, rocksdb::GetContext*, rocksdb::BlockCacheLookupContext*, rocksdb::BlockContents*, bool, bool) const
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::BijectiveHash2x64(unsigned long, unsigned long, unsigned long*, unsigned long*)
+     0.03%  rocksdb:low   libc.so.6            [.] 0x000000000008df86
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::DataIsDefinitelyInSnapshot(unsigned long, unsigned long, rocksdb::SnapshotChecker const*)
+     0.03%  db_bench      db_bench             [.] rocksdb::WriteBatchInternal::AppendedByteSize(unsigned long, unsigned long)
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::StopWatch::~StopWatch()
+     0.03%  rocksdb:high  libc.so.6            [.] 0x000000000008df6a
+     0.03%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::SkipListRep::InsertKey(void*)
+     0.03%  rocksdb:low   [kernel.kallsyms]    [k] __memcg_slab_post_alloc_hook
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::BytewiseComparatorImpl::FindShortestSeparator(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, rocksdb::Slice const&) const
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::ShortenedIndexBuilder::OnKeyAdded(rocksdb::Slice const&, std::optional<rocksdb::Slice> const&)
+     0.03%  db_bench      libc.so.6            [.] 0x0000000000074f2c
+     0.03%  rocksdb:high  db_bench             [.] non-virtual thunk to rocksdb::(anonymous namespace)::BytewiseComparatorImpl::Compare(rocksdb::Slice const&, rocksdb::Slice const&) const
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::Block::Block(rocksdb::BlockContents&&, unsigned long, rocksdb::Statistics*, unsigned int)
+     0.03%  rocksdb:low   [kernel.kallsyms]    [k] percpu_counter_add_batch
+     0.03%  rocksdb:high  db_bench             [.] rocksdb::BlockBuilder::AddWithLastKey(rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::Slice const*, bool)
+     0.03%  db_bench      db_bench             [.] rocksdb::Status::Status(rocksdb::Status const&)
+     0.03%  rocksdb:low   [kernel.kallsyms]    [k] __riscv_sys_pread64
+     0.03%  rocksdb:high  [kernel.kallsyms]    [k] find_lock_entries
+     0.03%  rocksdb:high  [kernel.kallsyms]    [k] percpu_counter_add_batch
+     0.03%  db_bench      libc.so.6            [.] 0x000000000008df6a
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::clock_cache::AutoHyperClockTable::DoInsert(rocksdb::clock_cache::ClockHandleBasicData const&, unsigned int, bool, rocksdb::clock_cache::AutoHyperClockTable::InsertState&)
+     0.03%  rocksdb:low   [kernel.kallsyms]    [k] __rcu_read_lock
+     0.03%  db_bench      [kernel.kallsyms]    [k] ext4_da_get_block_prep
+     0.03%  rocksdb:low   libc.so.6            [.] 0x000000000008dfb8
+     0.03%  rocksdb:low   db_bench             [.] operator new(unsigned long)@plt
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableBuilder::Flush(rocksdb::Slice const*)
+     0.03%  db_bench      db_bench             [.] rocksdb::PerfStepTimer::Start()
+     0.03%  rocksdb:low   db_bench             [.] rocksdb::Cleanable::RegisterCleanup(void (*)(void*, void*), void*, void*)
+     0.03%  rocksdb:low   [kernel.kallsyms]    [k] kernel_vector_end
+     0.03%  db_bench      libc.so.6            [.] 0x000000000008deae
+     0.03%  db_bench      db_bench             [.] rocksdb::FixedDistribution::NeedTruncate()
+     0.03%  db_bench      libc.so.6            [.] 0x000000000007bc86
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] kmem_cache_alloc_noprof
+     0.02%  db_bench      [kernel.kallsyms]    [k] timestamp_truncate
+     0.02%  db_bench      libc.so.6            [.] 0x000000000008df72
+     0.02%  db_bench      db_bench             [.] std::mersenne_twister_engine<unsigned long, 64ul, 312ul, 156ul, 31ul, 13043109905998158313ul, 29ul, 6148914691236517205ul, 17ul, 8202884508482404352ul, 37ul, 18444473444759240704ul, 43ul, 6364136223846793005ul>::_M_gen_rand()
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] fallback_scalar_usercopy_sum_enabled
+     0.02%  rocksdb:high  db_bench             [.] rocksdb::WritableFileWriter::FinalizeIOOptions(rocksdb::IOOptions const&) const
+     0.02%  rocksdb:low   libc.so.6            [.] 0x000000000008dfc0
+     0.02%  rocksdb:low   db_bench             [.] std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::~_Hashtable()
+     0.02%  db_bench      db_bench             [.] rocksdb::(anonymous namespace)::SkipListRep::ApproximateMemoryUsage()
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableIterator::ResetDataIter()
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::ShortenedIndexBuilder::GetSeparatorWithSeq(rocksdb::Slice const&, rocksdb::Slice const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] xas_start
+     0.02%  rocksdb:low   libc.so.6            [.] malloc_usable_size
+     0.02%  rocksdb:low   libc.so.6            [.] 0x0000000000084a02
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::IndexValue::DecodeFrom(rocksdb::Slice*, bool, rocksdb::BlockHandle const*)
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] mark_buffer_dirty
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::ShortenedIndexBuilder::AddIndexEntryImpl(rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::BlockHandle const&, bool, bool)
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::BlockBuilder::Add(rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::Slice const*, bool)
+     0.02%  rocksdb:high  libc.so.6            [.] 0x000000000008deae
+     0.02%  db_bench      libc.so.6            [.] 0x000000000008df6e
+     0.02%  db_bench      db_bench             [.] rocksdb::WriteBatch::HasDeleteRange() const
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] __asm_copy_to_user
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::BlockFetcher::ReadBlockContents()
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] filemap_get_pages
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] block_invalidate_folio
+     0.02%  rocksdb:low   libc.so.6            [.] 0x0000000000082642
+     0.02%  rocksdb:low   libc.so.6            [.] 0x000000000008df90
+     0.02%  rocksdb:low   libc.so.6            [.] 0x000000000008df76
+     0.02%  db_bench      [kernel.kallsyms]    [k] page_copy_sane
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::DataBlockFooter::DecodeFrom(rocksdb::Slice*)
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] enter_vector_usercopy
+     0.02%  rocksdb:high  [kernel.kallsyms]    [k] block_invalidate_folio
+     0.02%  db_bench      [kernel.kallsyms]    [k] do_raw_spin_trylock
+     0.02%  db_bench      [kernel.kallsyms]    [k] _raw_spin_unlock
+     0.02%  db_bench      db_bench             [.] rocksdb::GetPerfLevel()
+     0.02%  rocksdb:high  db_bench             [.] rocksdb::(anonymous namespace)::BytewiseComparatorImpl::EqualWithoutTimestamp(rocksdb::Slice const&, rocksdb::Slice const&) const
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::BlockFetcher::~BlockFetcher()
+     0.02%  rocksdb:low   libstdc++.so.6.0.35  [.] operator new(unsigned long)
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] __might_sleep
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] mpage_process_page_bufs
+     0.02%  rocksdb:high  db_bench             [.] rocksdb::MemTableIterator::VerifyEntryChecksum()
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] __memcg_slab_free_hook
+     0.02%  db_bench      libc.so.6            [.] 0x0000000000074f76
+     0.02%  rocksdb:high  libc.so.6            [.] 0x000000000008df60
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] atime_needs_update
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::BlockBuilder::Finish()
+     0.02%  rocksdb:high  [kernel.kallsyms]    [k] do_raw_spin_lock
+     0.02%  db_bench      [kernel.kallsyms]    [k] __filemap_add_folio
+     0.02%  db_bench      db_bench             [.] rocksdb::MemTable::UpdateFlushState()
+     0.02%  rocksdb:high  [kernel.kallsyms]    [k] memset
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::BlockFetcher::ProcessTrailerIfPresent()
+     0.02%  rocksdb:high  libc.so.6            [.] 0x000000000008df70
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] __slab_free
+     0.02%  db_bench      [kernel.kallsyms]    [k] try_charge_memcg
+     0.02%  db_bench      libc.so.6            [.] 0x000000000007ef78
+     0.02%  db_bench      db_bench             [.] rocksdb::SetPerfLevel(rocksdb::PerfLevel)
+     0.02%  db_bench      libc.so.6            [.] 0x000000000008df70
+     0.02%  rocksdb:low   libc.so.6            [.] 0x000000000008dfa6
+     0.02%  rocksdb:low   libc.so.6            [.] 0x000000000008df18
+     0.02%  rocksdb:low   libc.so.6            [.] 0x000000000008dfac
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::IndexBlockIter::value() const
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::ShardedCache<rocksdb::clock_cache::ClockCacheShard<rocksdb::clock_cache::AutoHyperClockTable> >::Release(rocksdb::Cache::Handle*, bool)
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::IndexBlockIter::NextImpl()
+     0.02%  rocksdb:high  [kernel.kallsyms]    [k] drop_buffers.constprop.0
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::ForceReleaseCachedEntry(void*, void*)
+     0.02%  db_bench      [kernel.kallsyms]    [k] node_dirty_ok
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::Block::NewDataIterator(rocksdb::Comparator const*, unsigned long, rocksdb::DataBlockIter*, rocksdb::Statistics*, bool, bool)
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::GetVarint64Ptr(char const*, char const*, unsigned long*)
+     0.02%  rocksdb:low   [kernel.kallsyms]    [k] ext4_da_get_block_prep
+     0.02%  rocksdb:low   db_bench             [.] malloc_usable_size@plt
+     0.02%  rocksdb:low   db_bench             [.] rocksdb::NotifyCollectTableCollectorsOnBlockAdd(std::vector<std::unique_ptr<rocksdb::InternalTblPropColl, std::default_delete<rocksdb::InternalTblPropColl> >, std::allocator<std::unique_ptr<rocksdb::InternalTblPropColl, std::default_delete<rocksdb::InternalTblPropColl> > > > const&, unsigned long, unsigned long, unsigned long)
+     0.02%  db_bench      [kernel.kallsyms]    [k] ext4_es_lookup_extent
+     0.02%  db_bench      [kernel.kallsyms]    [k] __folio_batch_add_and_move
+     0.01%  rocksdb:low   libc.so.6            [.] 0x0000000000083716
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] _raw_spin_unlock
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockFetcher::TryGetSerializedBlockFromPersistentCache()
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableBuilder::CompressAndVerifyBlock(rocksdb::Slice const&, bool, rocksdb::BlockBasedTableBuilder::WorkingAreaPair&, rocksdb::GrowableBuffer*, rocksdb::CompressionType*)
+     0.01%  rocksdb:high  libc.so.6            [.] 0x000000000008dfca
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::DataBlockFooter::EncodeTo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*) const
+     0.01%  rocksdb:low   db_bench             [.] ROCKSDB_XXH3_64bits
+     0.01%  db_bench      [kernel.kallsyms]    [k] charge_memcg
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008df28
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockBuilder::Reset()
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] __fsnotify_parent
+     0.01%  db_bench      [kernel.kallsyms]    [k] percpu_counter_add_batch
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::FSWritableFile::PrepareWrite(unsigned long, unsigned long, rocksdb::IOOptions const&, rocksdb::IODebugContext*)
+     0.01%  rocksdb:low   libgcc_s.so.1        [.] __bswapdi2
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] __xas_next
+     0.01%  rocksdb:low   db_bench             [.] XXH3_mergeAccs
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008ded8
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074fa8
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008dee8
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074f9c
+     0.01%  rocksdb:high  db_bench             [.] rocksdb::ShortenedIndexBuilder::OnKeyAdded(rocksdb::Slice const&, std::optional<rocksdb::Slice> const&)
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008df7e
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074f44
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] ext4_es_lookup_extent
+     0.01%  rocksdb:high  libc.so.6            [.] 0x000000000008df6e
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockFetcher::TryGetFromPrefetchBuffer()
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] ext4_update_bh_state
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockFetcher::GetBlockContents()
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableBuilder::WriteBlock(rocksdb::Slice const&, rocksdb::BlockHandle*, rocksdb::BlockType, bool*)
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::CachableEntry<rocksdb::Block>::DeleteValue(void*, void*)
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTable::UpdateCacheMissMetrics(rocksdb::BlockType, rocksdb::GetContext*) const
+     0.01%  db_bench      [kernel.kallsyms]    [k] zero_user_segments
+     0.01%  db_bench      libc.so.6            [.] 0x000000000007bcd0
+     0.01%  rocksdb:low   libc.so.6            [.] 0x00000000000849e4
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::Block::~Block()
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::ComputeBuiltinChecksumWithLastByte(rocksdb::ChecksumType, char const*, unsigned long, char)
+     0.01%  rocksdb:low   libstdc++.so.6.0.35  [.] malloc@plt
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] ext4_bio_write_folio
+     0.01%  db_bench      [kernel.kallsyms]    [k] balance_dirty_pages_ratelimited
+     0.01%  rocksdb:high  db_bench             [.] rocksdb::ShortenedIndexBuilder::FindShortestInternalKeySeparator(rocksdb::Comparator const&, rocksdb::Slice const&, rocksdb::Slice const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+     0.01%  db_bench      libc.so.6            [.] 0x000000000007bcaa
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] kmem_cache_alloc_noprof
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008df94
+     0.01%  rocksdb:low   libstdc++.so.6.0.35  [.] operator delete(void*)
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::ShortenedIndexBuilder::AddIndexEntry(rocksdb::Slice const&, rocksdb::Slice const*, rocksdb::BlockHandle const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, bool)
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockIter<rocksdb::IndexValue>::Next()
+     0.01%  db_bench      [kernel.kallsyms]    [k] mas_walk
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::PosixRandomAccessFile::use_direct_io() const
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] aa_file_perm
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] get_page_from_freelist
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockIter<rocksdb::IndexValue>::UpdateKey()
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] arch_sync_dma_for_device
+     0.01%  db_bench      [kernel.kallsyms]    [k] kernel_init_pages
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::ComputeBuiltinChecksum(rocksdb::ChecksumType, char const*, unsigned long)
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] __rmqueue_pcplist
+     0.01%  rocksdb:high  libc.so.6            [.] 0x000000000008df90
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] block_commit_write
+     0.01%  db_bench      db_bench             [.] rocksdb::TrimHistoryScheduler::Empty()
+     0.01%  rocksdb:high  libc.so.6            [.] 0x000000000008df72
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074f52
+     0.01%  db_bench      db_bench             [.] rocksdb::WriteBatchInternal::IsLatestPersistentState(rocksdb::WriteBatch const*)
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074f30
+     0.01%  rocksdb:low   db_bench             [.] operator delete(void*, unsigned long)@plt
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] __asm_vector_usercopy
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::StopWatch::StopWatch(rocksdb::SystemClock*, rocksdb::Statistics*, unsigned int, unsigned int, unsigned long*, bool, bool)
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::ShardedCache<rocksdb::clock_cache::ClockCacheShard<rocksdb::clock_cache::AutoHyperClockTable> >::Lookup(rocksdb::Slice const&, rocksdb::Cache::CacheItemHelper const*, rocksdb::Cache::CreateContext*, rocksdb::Cache::Priority, rocksdb::Statistics*)
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::PlaceholderCacheInterface<(rocksdb::CacheEntryRole)13, rocksdb::Cache*>::Insert(rocksdb::Slice const&, unsigned long, rocksdb::Cache::Handle**) [clone .isra.0]
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008df7a
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] ext4_bio_write_folio
+     0.01%  db_bench      db_bench             [.] rocksdb::FlushScheduler::Empty()
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] mpage_process_page_bufs
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008df60
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] ext4_da_get_block_prep
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074f9e
+     0.01%  db_bench      [kernel.kallsyms]    [k] __handle_mm_fault
+     0.01%  rocksdb:low   libstdc++.so.6.0.35  [.] operator delete[](void*)
+     0.01%  db_bench      [kernel.kallsyms]    [k] folio_alloc_buffers
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] security_file_permission
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableBuilder::EmitBlock(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, rocksdb::Slice const&, rocksdb::Slice const*)
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::CacheKey::CreateUniqueForCacheLifetime(rocksdb::Cache*)
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::DataBlockIter::SeekToFirstImpl()
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::ShardedCacheBase::NewId()
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::ShardedCache<rocksdb::clock_cache::ClockCacheShard<rocksdb::clock_cache::AutoHyperClockTable> >::Insert(rocksdb::Slice const&, void*, rocksdb::Cache::CacheItemHelper const*, unsigned long, rocksdb::Cache::Handle**, rocksdb::Cache::Priority, rocksdb::Slice const&, rocksdb::CompressionType)
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] __rcu_read_lock
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::FullFilterBlockBuilder::AddWithPrevKey(rocksdb::Slice const&, rocksdb::Slice const&)
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] find_lock_entries
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] __memcg_slab_post_alloc_hook
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] bvec_try_merge_page
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::Block::InitializeDataBlockProtectionInfo(unsigned char, rocksdb::Comparator const*)
+     0.01%  rocksdb:low   db_bench             [.] __bswapdi2@plt
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::FullFilterBlockBuilder::OnDataBlockFinalized(unsigned long)
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] ___slab_alloc
+     0.01%  db_bench      [kernel.kallsyms]    [k] do_raw_spin_lock
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockCreateContext::Create(std::unique_ptr<rocksdb::Block_kData, std::default_delete<rocksdb::Block_kData> >*, rocksdb::BlockContents&&)
+     0.01%  db_bench      [kernel.kallsyms]    [k] __f_unlock_pos
+     0.01%  rocksdb:high  libc.so.6            [.] malloc
+     0.01%  rocksdb:low   libc.so.6            [.] 0x0000000000082626
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::FastLocalBloomBitsBuilder::CalculateSpace(unsigned long)
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] jbd2_journal_grab_journal_head
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] __slab_free
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] __account_obj_stock
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] create_empty_buffers
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] mod_zone_page_state
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] __memcg_slab_free_hook
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008dfca
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] obj_cgroup_charge_account
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] ext4_es_lookup_extent
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::ShortenedIndexBuilder::UpdateIndexSizeEstimate()
+     0.01%  db_bench      db_bench             [.] rocksdb::WriteBatch::GetProtectionBytesPerKey() const
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008dfa8
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008df10
+     0.01%  rocksdb:high  libc.so.6            [.] 0x0000000000084a02
+     0.01%  db_bench      [kernel.kallsyms]    [k] __mem_cgroup_charge
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] rw_verify_area
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] _raw_read_unlock
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] touch_atime
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::Block::ApproximateMemoryUsage() const
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] __rcu_read_unlock
+     0.01%  rocksdb:low   libstdc++.so.6.0.35  [.] operator delete(void*, unsigned long)
+     0.01%  rocksdb:high  db_bench             [.] rocksdb::ShortenedIndexBuilder::AddIndexEntryImpl(rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::BlockHandle const&, bool, bool)
+     0.01%  rocksdb:high  libc.so.6            [.] 0x000000000008dfac
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] free_unref_folios
+     0.01%  rocksdb:low   libc.so.6            [.] 0x0000000000083f90
+     0.01%  rocksdb:high  db_bench             [.] rocksdb::BlockBuilder::Finish()
+     0.01%  db_bench      libc.so.6            [.] 0x0000000000074fae
+     0.01%  db_bench      libc.so.6            [.] 0x000000000007bc8e
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008df90
+     0.01%  db_bench      [kernel.kallsyms]    [k] mod_memcg_lruvec_state
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] workingset_refault
+     0.01%  rocksdb:low   libc.so.6            [.] __libc_pread
+     0.01%  db_bench      [kernel.kallsyms]    [k] handle_page_fault
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] _raw_read_unlock
+     0.01%  rocksdb:low   libstdc++.so.6.0.35  [.] operator new(unsigned long)@plt
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::FullFilterBlockBuilder::UpdateFilterSizeEstimate(unsigned long)
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::DataBlockIter* rocksdb::BlockBasedTable::InitBlockIterator<rocksdb::DataBlockIter>(rocksdb::BlockBasedTable::Rep const*, rocksdb::Block*, rocksdb::BlockType, rocksdb::DataBlockIter*, bool)
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] fput
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockHandle::DecodeFrom(rocksdb::Slice*)
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] kmem_cache_free
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] __folio_cancel_dirty
+     0.01%  rocksdb:high  db_bench             [.] rocksdb::IndexValue::EncodeTo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, bool, rocksdb::BlockHandle const*) const
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] down_write
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::CachableEntry<rocksdb::DecompressorDict>::ReleaseResource(bool)
+     0.01%  db_bench      [kernel.kallsyms]    [k] _raw_read_lock
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008df86
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] __might_fault
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008dfba
+     0.01%  rocksdb:high  libc.so.6            [.] 0x000000000008deb4
+     0.01%  rocksdb:high  libc.so.6            [.] 0x000000000008df76
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008dee8
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] __might_resched
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] ext4_invalidate_folio
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] unmap_page_range
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::WritableFileWriter::PrepareIOOptions(rocksdb::WriteOptions const&, rocksdb::IOOptions&)
+     0.01%  rocksdb:low   libc.so.6            [.] 0x0000000000082610
+     0.01%  rocksdb:high  libc.so.6            [.] 0x000000000008df86
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] mpage_map_and_submit_buffers
+     0.01%  rocksdb:high  db_bench             [.] rocksdb::(anonymous namespace)::BytewiseComparatorImpl::FindShortestSeparator(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, rocksdb::Slice const&) const
+     0.01%  rocksdb:high  db_bench             [.] rocksdb::BlockBasedTableBuilder::WriteMaybeCompressedBlockImpl(rocksdb::Slice const&, rocksdb::CompressionType, rocksdb::BlockHandle*, rocksdb::BlockType, rocksdb::Slice const*, bool*)
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008deb4
+     0.01%  db_bench      libc.so.6            [.] 0x000000000007bc88
+     0.01%  db_bench      [kernel.kallsyms]    [k] obj_cgroup_charge_account
+     0.01%  db_bench      [kernel.kallsyms]    [k] __mark_inode_dirty
+     0.01%  db_bench      [kernel.kallsyms]    [k] folio_set_bh
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] mod_memcg_lruvec_state
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::BlockBuilder::ScanForUniformity() const
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] _raw_write_lock
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::Status::Status(rocksdb::Status&&)
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] up_write
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] alloc_buffer_head
+     0.01%  rocksdb:low   libc.so.6            [.] 0x00000000000836f6
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::Status::operator=(rocksdb::Status&&) [clone .isra.0]
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008df20
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008df7c
+     0.01%  db_bench      [kernel.kallsyms]    [k] alloc_buffer_head
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008dec8
+     0.01%  db_bench      [kernel.kallsyms]    [k] filemap_add_folio
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008df44
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] read_pages
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] uncharge_folio
+     0.01%  db_bench      libc.so.6            [.] 0x000000000007bcb0
+     0.01%  db_bench      libc.so.6            [.] 0x000000000008ded0
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008df04
+     0.01%  db_bench      [kernel.kallsyms]    [k] folios_put_refs
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] get_mem_cgroup_from_mm
+     0.01%  rocksdb:low   db_bench             [.] rocksdb::Env::GetSystemClock() const
+     0.01%  rocksdb:low   db_bench             [.] pread@plt
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008def8
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008ded0
+     0.01%  rocksdb:high  db_bench             [.] rocksdb::BlockBasedTableBuilder::Flush(rocksdb::Slice const*)
+     0.01%  db_bench      libc.so.6            [.] 0x000000000007bce4
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] folio_mark_accessed
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] dynamic_cond_resched
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] _raw_read_lock
+     0.01%  rocksdb:low   libc.so.6            [.] 0x000000000008df28
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] filemap_free_folio
+     0.01%  rocksdb:high  db_bench             [.] XXH3_mergeAccs
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] handle_page_fault
+     0.01%  db_bench      libc.so.6            [.] 0x000000000007ef8e
+     0.01%  rocksdb:high  db_bench             [.] std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::~_Hashtable()
+     0.01%  rocksdb:high  libc.so.6            [.] 0x000000000008ded0
+     0.01%  rocksdb:low   [kernel.kallsyms]    [k] generic_file_read_iter
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] uncharge_folio
+     0.01%  rocksdb:high  [kernel.kallsyms]    [k] __might_sleep
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] jbd2_journal_grab_journal_head
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] kmem_cache_free
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dfb8
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableIterator::CheckDataBlockWithinUpperBound() [clone .part.0]
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] _raw_spin_unlock
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::StopWatch::~StopWatch()
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] folio_set_bh
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::BlockBasedTableBuilder::CompressAndVerifyBlock(rocksdb::Slice const&, bool, rocksdb::BlockBasedTableBuilder::WorkingAreaPair&, rocksdb::GrowableBuffer*, rocksdb::CompressionType*)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df00
+     0.00%  db_bench      [kernel.kallsyms]    [k] ___slab_alloc
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::NotifyCollectTableCollectorsOnBlockAdd(std::vector<std::unique_ptr<rocksdb::InternalTblPropColl, std::default_delete<rocksdb::InternalTblPropColl> >, std::allocator<std::unique_ptr<rocksdb::InternalTblPropColl, std::default_delete<rocksdb::InternalTblPropColl> > > > const&, unsigned long, unsigned long, unsigned long)
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008dfc4
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df96
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008decc
+     0.00%  db_bench      [kernel.kallsyms]    [k] crc32_lsb_clmul
+     0.00%  db_bench      [kernel.kallsyms]    [k] folio_add_lru
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::BlockBuilder::Add(rocksdb::Slice const&, rocksdb::Slice const&, rocksdb::Slice const*, bool)
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] free_unref_folios
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df76
+     0.00%  db_bench      [kernel.kallsyms]    [k] handle_mm_fault
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df7a
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] page_copy_sane
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008dee0
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] wbc_account_cgroup_owner
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df18
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __handle_mm_fault
+     0.00%  db_bench      libc.so.6            [.] free
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007bcba
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] free_tail_page_prepare
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f48
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::(anonymous namespace)::XXPH3FilterBitsBuilder::EstimateEntriesAdded()
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dfa8
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df44
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dfa6
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::ShortenedIndexBuilder::GetSeparatorWithSeq(rocksdb::Slice const&, rocksdb::Slice const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df40
+     0.00%  db_bench      [kernel.kallsyms]    [k] ext4_update_bh_state
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] mas_walk
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f34
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074fac
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df50
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007ef80
+     0.00%  rocksdb:low   db_bench             [.] operator delete[](void*)@plt
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007bce6
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] bio_add_page
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_block_write_begin
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::BlockBasedTableBuilder::BlockBasedTablePropertiesCollector::InternalAdd(rocksdb::Slice const&, rocksdb::Slice const&, unsigned long)
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] xa_load
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df38
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008defc
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f70
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::BlockIter<rocksdb::IndexValue>::Valid() const
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df7c
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __lruvec_stat_mod_folio
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::clock_cache::ClockCacheShard<rocksdb::clock_cache::AutoHyperClockTable>::Insert(rocksdb::Slice const&, std::array<unsigned long, 2ul> const&, void*, rocksdb::Cache::CacheItemHelper const*, unsigned long, rocksdb::clock_cache::AutoHyperClockTable::HandleImpl**, rocksdb::Cache::Priority)
+     0.00%  rocksdb:low   libstdc++.so.6.0.35  [.] operator delete(void*)@plt
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] folio_unlock
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000849ea
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] wake_up_bit
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] try_to_free_buffers
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] get_page_from_freelist
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df48
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df34
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] alloc_buffer_head
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008dfa8
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::XXPH3FilterBitsBuilder::EstimateEntriesAdded()
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] rb_next
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dfba
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df0c
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df94
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::Hash64(char const*, unsigned long)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df96
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] _raw_read_lock
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] block_commit_write
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df5a
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df44
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084382
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableBuilder::WriteMaybeCompressedBlock(rocksdb::Slice const&, rocksdb::CompressionType, rocksdb::BlockHandle*, rocksdb::BlockType, rocksdb::Slice const*, bool*)
+     0.00%  db_bench      [kernel.kallsyms]    [k] find_get_block_common
+     0.00%  rocksdb:low   libstdc++.so.6.0.35  [.] free@plt
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df4c
+     0.00%  db_bench      [kernel.kallsyms]    [k] finish_task_switch.isra.0
+     0.00%  db_bench      [kernel.kallsyms]    [k] xas_nomem
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df2c
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f9c
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008def4
+     0.00%  db_bench      [kernel.kallsyms]    [k] ext4_mark_iloc_dirty
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] fscrypt_mergeable_bio_bh
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f28
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] page_cache_ra_unbounded
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000007ef78
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] dynamic_might_resched
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] get_mem_cgroup_from_mm
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008dedc
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] try_charge_memcg
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df08
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] mod_memcg_lruvec_state
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] css_rstat_updated
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] truncate_cleanup_folio
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] crc32_lsb_clmul
+     0.00%  rocksdb:high  libstdc++.so.6.0.35  [.] operator new(unsigned long)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000846f6
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000849da
+     0.00%  rocksdb:low   libstdc++.so.6.0.35  [.] operator new[](unsigned long)
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __get_pfnblock_flags_mask.isra.0
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dee0
+     0.00%  db_bench      [kernel.kallsyms]    [k] _raw_spin_lock
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008dee4
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df7e
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __alloc_frozen_pages_noprof
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000846f0
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] mark_buffer_dirty
+     0.00%  rocksdb:high  libc.so.6            [.] free
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] _raw_spin_lock
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f60
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __es_insert_extent
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df04
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __es_remove_extent
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::DataBlockFooter::EncodeTo(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*) const
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] free_buffer_head
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_es_can_be_merged.isra.0
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dfc0
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000849dc
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007ef74
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007bc9c
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082580
+     0.00%  db_bench      [kernel.kallsyms]    [k] inode_set_ctime_current
+     0.00%  db_bench      [kernel.kallsyms]    [k] ext4_fill_raw_inode
+     0.00%  db_bench      [kernel.kallsyms]    [k] __lock_text_start
+     0.00%  db_bench      [kernel.kallsyms]    [k] lock_vma_under_rcu
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008def8
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] make_vfsuid
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] bio_add_folio
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df4c
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008dedc
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] charge_memcg
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000836fc
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dee8
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] refill_obj_stock
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000849be
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] vfs_write
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::PosixWritableFile::use_direct_io() const
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] wake_up_bit
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] refill_obj_stock
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_release_folio
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008dfa4
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] mod_memcg_state
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] fallback_scalar_usercopy
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000842ae
+     0.00%  db_bench      [kernel.kallsyms]    [k] folio_add_new_anon_rmap
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df3c
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] fscrypt_mergeable_bio_bh
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] _raw_write_unlock
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dec8
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::BlockBasedTableBuilder::EmitBlock(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, rocksdb::Slice const&, rocksdb::Slice const*)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008366a
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::FullFilterBlockBuilder::UpdateFilterSizeEstimate(unsigned long)
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df28
+     0.00%  db_bench      [kernel.kallsyms]    [k] _raw_spin_lock_irq
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::RandomAccessFileReader::PrepareIOOptions(rocksdb::ReadOptions const&, rocksdb::IOOptions&, rocksdb::IODebugContext*) const
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f80
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::ShortenedIndexBuilder::AddIndexEntry(rocksdb::Slice const&, rocksdb::Slice const*, rocksdb::BlockHandle const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, bool)
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ___slab_alloc
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] balance_dirty_pages_ratelimited_flags
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::FullFilterBlockBuilder::OnDataBlockFinalized(unsigned long)
+     0.00%  db_bench      [kernel.kallsyms]    [k] new_slab
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] bvec_try_merge_page
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df50
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] fscrypt_mergeable_bio
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] find_get_block_common
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000849bc
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008dfc2
+     0.00%  db_bench      [kernel.kallsyms]    [k] _raw_spin_lock_irqsave
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f6c
+     0.00%  db_bench      [kernel.kallsyms]    [k] ext4_get_group_desc
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df98
+     0.00%  db_bench      [kernel.kallsyms]    [k] task_mm_cid_work
+     0.00%  db_bench      [kernel.kallsyms]    [k] __lruvec_stat_mod_folio
+     0.00%  db_bench      [kernel.kallsyms]    [k] _raw_read_unlock
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] do_raw_spin_trylock
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __mem_cgroup_uncharge_folios
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __dquot_alloc_space
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::BlockBasedTableBuilder::WriteBlock(rocksdb::Slice const&, rocksdb::BlockHandle*, rocksdb::BlockType, bool*)
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] dynamic_might_resched
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_da_reserve_space
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] filemap_add_folio
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] filemap_free_folio
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f38
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::PosixFileSystem::SupportedOps(long&)
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] new_slab
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __kmalloc_node_noprof
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082596
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] free_buffer_head
+     0.00%  db_bench      [kernel.kallsyms]    [k] __account_obj_stock
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __folio_batch_add_and_move
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df7a
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000825b6
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] xas_find
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __account_obj_stock
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] free_frozen_page_commit
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008dec8
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] drop_buffers.constprop.0
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::PosixRandomAccessFile::GetRequiredBufferAlignment() const
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df98
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] folio_mapping
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] do_raw_spin_trylock
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] finish_task_switch.isra.0
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::WritableFileWriter::PrepareIOOptions(rocksdb::WriteOptions const&, rocksdb::IOOptions&)
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __mem_cgroup_charge
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084618
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] filemap_release_folio
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] xas_find
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] handle_mm_fault
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __kmalloc_node_noprof
+     0.00%  db_bench      [kernel.kallsyms]    [k] ext4_journal_check_start
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __rmqueue_pcplist
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008ded8
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] try_charge_memcg
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] is_cacheable_safe
+     0.00%  rocksdb:high  libstdc++.so.6.0.35  [.] operator delete(void*)
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df00
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008dfb2
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] create_empty_buffers
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008decc
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df20
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::FSWritableFile::PrepareWrite(unsigned long, unsigned long, rocksdb::IOOptions const&, rocksdb::IODebugContext*)
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::(anonymous namespace)::FastLocalBloomBitsBuilder::CalculateSpace(unsigned long)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084372
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000849cc
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::ComputeBuiltinChecksumWithLastByte(rocksdb::ChecksumType, char const*, unsigned long, char)
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __handle_mm_fault
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::FullFilterBlockBuilder::AddWithPrevKey(rocksdb::Slice const&, rocksdb::Slice const&)
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df1c
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008dfc6
+     0.00%  db_bench      [kernel.kallsyms]    [k] map_id_range_up
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] _copy_to_user
+     0.00%  db_bench      [kernel.kallsyms]    [k] blk_cgroup_congested
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::CompactionJob::RecordCompactionIOStats()
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083580
+     0.00%  db_bench      [kernel.kallsyms]    [k] page_counter_try_charge
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df3c
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df9c
+     0.00%  db_bench      [kernel.kallsyms]    [k] ext4_inode_csum_set
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] mem_cgroup_css_from_folio
+     0.00%  db_bench      [kernel.kallsyms]    [k] __folio_alloc_noprof
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] folio_add_lru
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dedc
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f28
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] stop_this_handle
+     0.00%  db_bench      [kernel.kallsyms]    [k] add_transaction_credits
+     0.00%  db_bench      [kernel.kallsyms]    [k] __ext4_mark_inode_dirty
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] fdget_pos
+     0.00%  db_bench      [kernel.kallsyms]    [k] propagate_protected_usage
+     0.00%  db_bench      [kernel.kallsyms]    [k] inode_update_timestamps
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008dfc2
+     0.00%  db_bench      [kernel.kallsyms]    [k] count_memcg_events
+     0.00%  db_bench      [kernel.kallsyms]    [k] __folio_mark_dirty
+     0.00%  db_bench      [kernel.kallsyms]    [k] queue_work_on
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df14
+     0.00%  db_bench      [kernel.kallsyms]    [k] jbd2_write_access_granted
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007ef86
+     0.00%  db_bench      [kernel.kallsyms]    [k] errseq_check
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f4c
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df94
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] sched_balance_update_blocked_averages
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] _raw_spin_lock_irq
+     0.00%  db_bench      [kernel.kallsyms]    [k] __ext4_get_inode_loc
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082628
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] make_vfsgid
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] page_counter_cancel
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f74
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007bcea
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084a06
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008deec
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] inode_to_bdi
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] unmap_page_range
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] css_rstat_updated
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] folio_mapping
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] obj_cgroup_uncharge_pages
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084830
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __blk_rq_map_sg
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::SetPerfLevel(rocksdb::PerfLevel)
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __ext4_get_inode_loc
+     0.00%  rocksdb:low   libstdc++.so.6.0.35  [.] std::_Rb_tree_insert_and_rebalance(bool, std::_Rb_tree_node_base*, std::_Rb_tree_node_base*, std::_Rb_tree_node_base&)
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] blk_mq_submit_bio
+     0.00%  db_bench      [kernel.kallsyms]    [k] ___pte_offset_map
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] pid_for_clock
+     0.00%  db_bench      [kernel.kallsyms]    [k] update_mmu_cache_range.isra.0
+     0.00%  db_bench      [kernel.kallsyms]    [k] __ext4_journal_start_sb
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] fscrypt_mergeable_bio
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000845de
+     0.00%  db_bench      [kernel.kallsyms]    [k] mod_memcg_state
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] kernel_vector_begin
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007bcc4
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084582
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] jbd2_journal_stop
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] mpage_map_and_submit_buffers
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] task_mm_cid_work
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008def8
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000825c6
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008ded4
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083354
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df40
+     0.00%  rocksdb:high  libstdc++.so.6.0.35  [.] operator delete(void*, unsigned long)
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008def4
+     0.00%  rocksdb:high  db_bench             [.] ROCKSDB_XXH3_64bits
+     0.00%  rocksdb:high  libc.so.6            [.] 0x00000000000849ea
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] find_get_block_common
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df50
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::Hash64(char const*, unsigned long)
+     0.00%  rocksdb:high  libc.so.6            [.] memset
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_block_write_begin
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000083716
+     0.00%  rocksdb:high  libc.so.6            [.] 0x00000000000836f6
+     0.00%  rocksdb:high  libc.so.6            [.] 0x00000000000849cc
+     0.00%  db_bench      [kernel.kallsyms]    [k] __kmalloc_node_noprof
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083f94
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] folio_set_bh
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::ShortenedIndexBuilder::UpdateIndexSizeEstimate()
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008ded4
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f2c
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::CompactionJob::UpdateSubcompactionJobStatsIncrementally(rocksdb::CompactionIterator*, rocksdb::CompactionJobStats*, unsigned long, unsigned long&)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008427c
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_es_insert_delayed_extent
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] prep_compound_page
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008def0
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008357c
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df30
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] p4d_offset
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::ThreadStatusUpdater::IncreaseThreadOperationProperty(int, unsigned long)
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __riscv_sys_clock_gettime
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082590
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __alloc_frozen_pages_noprof
+     0.00%  db_bench      [kernel.kallsyms]    [k] kmem_cache_free
+     0.00%  db_bench      [kernel.kallsyms]    [k] css_rstat_updated
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083fb4
+     0.00%  rocksdb:high  libstdc++.so.6.0.35  [.] malloc@plt
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000084620
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df9c
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::(anonymous namespace)::SkipListRep::Iterator::Valid() const
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_has_free_clusters
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008451a
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f44
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084a2c
+     0.00%  db_bench      [kernel.kallsyms]    [k] shmem_mapping
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000083888
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] add_transaction_credits
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000843a6
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008474c
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] count_memcg_events
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008472e
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] mb_find_order_for_block
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082624
+     0.00%  db_bench      [kernel.kallsyms]    [k] folio_add_lru_vma
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008decc
+     0.00%  db_bench      libc.so.6            [.] 0x000000000007bcc8
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000846b0
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] mod_delayed_work_on
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008dfa4
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] enter_vector_usercopy
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df04
+     0.00%  db_bench      [kernel.kallsyms]    [k] folio_mark_accessed
+     0.00%  rocksdb:high  libc.so.6            [.] 0x00000000000849e4
+     0.00%  db_bench      [kernel.kallsyms]    [k] from_kuid
+     0.00%  rocksdb:low   [vdso]               [.] __vdso_clock_gettime
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008364c
+     0.00%  db_bench      [kernel.kallsyms]    [k] start_this_handle
+     0.00%  db_bench      [kernel.kallsyms]    [k] jbd2_journal_dirty_metadata
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] generic_fadvise
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] vfs_write
+     0.00%  db_bench      [kernel.kallsyms]    [k] __brelse
+     0.00%  rocksdb:low   db_bench             [.] clock_gettime@plt
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df0c
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084a0a
+     0.00%  db_bench      [kernel.kallsyms]    [k] __ext4_handle_dirty_metadata
+     0.00%  db_bench      [kernel.kallsyms]    [k] update_sd_lb_stats.constprop.0
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __lock_text_start
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] obj_cgroup_charge_pages
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083542
+     0.00%  db_bench      [kernel.kallsyms]    [k] call_timer_fn
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084622
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] task_sched_runtime
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] blk_map_iter_next
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084a32
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] free_tail_page_prepare
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] folios_put_refs
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df24
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] put_cpu_partial
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df96
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] do_raw_spin_lock
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008ded4
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __lock_text_start
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] obj_cgroup_uncharge_pages
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000847e2
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] handle_mm_fault
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] node_dirty_ok
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008317c
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000825d0
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df10
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_mpage_readpages
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] propagate_protected_usage
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] jbd2_journal_try_to_free_buffers
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __mem_cgroup_uncharge_folios
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] file_update_time_flags
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::ReadTablePropertiesHelper(rocksdb::ReadOptions const&, rocksdb::BlockHandle const&, rocksdb::RandomAccessFileReader*, rocksdb::FilePrefetchBuffer*, rocksdb::Footer const&, rocksdb::ImmutableOptions const&, std::unique_ptr<rocksdb::TableProperties, std::default_delete<rocksdb::TableProperties> >*, rocksdb::MemoryAllocator*)
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] page_counter_try_charge
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::WritableFileWriter::Flush(rocksdb::IOOptions const&)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008436e
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] complete_walk
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::GetPerfLevel()
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084620
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] truncate_inode_pages_range
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000009c602
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] dd_dispatch_request
+     0.00%  rocksdb:high  db_bench             [.] bool rocksdb::BlockIter<rocksdb::Slice>::ParseNextKey<rocksdb::DecodeEntry, true>(bool*)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008371a
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] force_page_cache_ra
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_mark_iloc_dirty
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] sg_alloc_table_chained
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083f30
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::NewMergingIterator(rocksdb::InternalKeyComparator const*, rocksdb::InternalIteratorBase<rocksdb::Slice>**, int, rocksdb::Arena*, bool)
+     0.00%  rocksdb:low   libc.so.6            [.] strlen
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] drain_stock
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_validate_block_bitmap
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] dma_direct_map_sg
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::BlockBuilder::Reset()
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] blkcg_maybe_throttle_current
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] scsi_alloc_sgtables
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ufshcd_queuecommand
+     0.00%  rocksdb:low   db_bench             [.] pthread_mutex_unlock@plt
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] rseq_get_rseq_cs_ptr_val
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __filemap_add_folio
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __free_frozen_pages
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] bio_alloc_bioset
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084840
+     0.00%  db_bench      [kernel.kallsyms]    [k] task_work_run
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::CompactionPicker::GetRange(rocksdb::CompactionInputFiles const&, rocksdb::InternalKey*, rocksdb::InternalKey*) const
+     0.00%  db_bench      [kernel.kallsyms]    [k] mnt_get_write_access_file
+     0.00%  db_bench      [kernel.kallsyms]    [k] sched_balance_update_blocked_averages
+     0.00%  db_bench      [kernel.kallsyms]    [k] mas_prev_slot
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] submit_bio_noacct_nocheck
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_inode_table
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] xas_nomem
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] refill_stock
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df7e
+     0.00%  db_bench      [kernel.kallsyms]    [k] ext4_get_inode_loc
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::BlockBasedTableBuilder::WriteMaybeCompressedBlock(rocksdb::Slice const&, rocksdb::CompressionType, rocksdb::BlockHandle*, rocksdb::BlockType, rocksdb::Slice const*, bool*)
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000054daa
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] mpage_prepare_extent_to_map
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074f54
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] domain_dirty_avail
+     0.00%  db_bench      [kernel.kallsyms]    [k] from_kgid
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] folio_remove_rmap_ptes
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] filemap_get_folios_tag
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] rb_insert_color
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_sb_block_valid
+     0.00%  rocksdb:low   db_bench             [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose()
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __folio_start_writeback
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008de94
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000835b0
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] vm_normal_page
+     0.00%  rocksdb:high  libc.so.6            [.] 0x00000000000849be
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] blk_mq_dispatch_list
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_do_writepages
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000083700
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTable::Open(rocksdb::ReadOptions const&, rocksdb::ImmutableOptions const&, rocksdb::EnvOptions const&, rocksdb::BlockBasedTableOptions const&, rocksdb::InternalKeyComparator const&, std::unique_ptr<rocksdb::RandomAccessFileReader, std::default_delete<rocksdb::RandomAccessFileReader> >&&, unsigned long, unsigned char, std::unique_ptr<rocksdb::TableReader, std::default_delete<rocksdb::TableReader> >*, unsigned long, std::shared_ptr<rocksdb::CacheReservationManager>, std::shared_ptr<rocksdb::SliceTransform const> const&, rocksdb::UnownedPtr<rocksdb::CompressionManager>, bool, bool, int, bool, unsigned long, bool, rocksdb::TailPrefetchStats*, rocksdb::BlockCacheTracer*, unsigned long, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, std::array<unsigned long, 2ul>, bool)
+     0.00%  rocksdb:low   libc.so.6            [.] pthread_mutex_lock
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] blk_mq_dispatch_list
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] node_dirty_ok
+     0.00%  rocksdb:high  libc.so.6            [.] 0x00000000000849ec
+     0.00%  rocksdb:high  libc.so.6            [.] pthread_mutex_lock
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_mb_regular_allocator
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] do_writepages
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] mb_clear_bits
+     0.00%  db_bench      [kernel.kallsyms]    [k] get_jiffies_update
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_bread_batch
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] xas_load
+     0.00%  rocksdb:high  libc.so.6            [.] 0x00000000000849ce
+     0.00%  rocksdb:low   db_bench             [.] std::_Hashtable<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, unsigned long*>, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, unsigned long*> >, std::__detail::_Select1st, std::equal_to<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::hash<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<true, false, true> >::_M_find_before_node(unsigned long, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long) const [clone .isra.0]
+     0.00%  rocksdb:low   db_bench             [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::operator=(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&) [clone .isra.0]
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] count_memcg_events
+     0.00%  rocksdb:low   libstdc++.so.6.0.35  [.] std::locale::operator=(std::locale const&)
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] _raw_spin_lock
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000082596
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] jbd2_journal_get_write_access
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000836f0
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008318e
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] folio_mark_accessed
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] security_inode_init_security
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] folio_unlock
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000082590
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083598
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] folio_prealloc.isra.0
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] update_sd_lb_stats.constprop.0
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] blk_mq_get_tag
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] bio_add_page
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008354e
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] wbc_account_cgroup_owner
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_block_bitmap_csum_set
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000009adfe
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] sched_balance_update_blocked_averages
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000082624
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableBuilder::~BlockBasedTableBuilder()
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] thread_cpu_clock_get
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::MetaIndexBuilder::Add(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, rocksdb::BlockHandle const&)
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] free_pages_and_swap_cache
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] filemap_get_entry
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __asm_copy_to_user
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::VersionStorageInfo::UpdateFilesByCompactionPri(rocksdb::ImmutableOptions const&, rocksdb::MutableCFOptions const&)
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dfa0
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] memcg_page_state
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __folio_throttle_swaprate
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] task_work_run
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] irqentry_exit_to_user_mode
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000825b4
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] d_lookup
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084702
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __ext4_journal_get_write_access
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df14
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000825c4
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_superblock_csum_set
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000849c0
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084a16
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000836ee
+     0.00%  rocksdb:high  db_bench             [.] void std::__adjust_heap<__gnu_cxx::__normal_iterator<rocksdb::(anonymous namespace)::Fsize*, std::vector<rocksdb::(anonymous namespace)::Fsize, std::allocator<rocksdb::(anonymous namespace)::Fsize> > >, long, rocksdb::(anonymous namespace)::Fsize, __gnu_cxx::__ops::_Iter_comp_iter<rocksdb::(anonymous namespace)::SortFileByOverlappingRatio(rocksdb::InternalKeyComparator const&, std::vector<rocksdb::FileMetaData*, std::allocator<rocksdb::FileMetaData*> > const&, std::vector<rocksdb::FileMetaData*, std::allocator<rocksdb::FileMetaData*> > const&, rocksdb::SystemClock*, int, int, unsigned long, std::vector<rocksdb::(anonymous namespace)::Fsize, std::allocator<rocksdb::(anonymous namespace)::Fsize> >*)::{lambda(rocksdb::(anonymous namespace)::Fsize const&, rocksdb::(anonymous namespace)::Fsize const&)#1}> >(__gnu_cxx::__normal_iterator<rocksdb::(anonymous namespace)::Fsize*, std::vector<rocksdb::(anonymous namespace)::Fsize, std::allocator<rocksdb::(anonymous namespace)::Fsize> > >, long, long, rocksdb::(anonymous namespace)::Fsize, __gnu_cxx::__ops::_Iter_comp_iter<rocksdb::(anonymous namespace)::SortFileByOverlappingRatio(rocksdb::InternalKeyComparator const&, std::vector<rocksdb::FileMetaData*, std::allocator<rocksdb::FileMetaData*> > const&, std::vector<rocksdb::FileMetaData*, std::allocator<rocksdb::FileMetaData*> > const&, rocksdb::SystemClock*, int, int, unsigned long, std::vector<rocksdb::(anonymous namespace)::Fsize, std::allocator<rocksdb::(anonymous namespace)::Fsize> >*)::{lambda(rocksdb::(anonymous namespace)::Fsize const&, rocksdb::(anonymous namespace)::Fsize const&)#1}>)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000841f8
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] page_counter_try_charge
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] domain_dirty_limits
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] inode_reserved_space
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __riscv_sys_write
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008265e
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] folio_add_new_anon_rmap
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_file_write_iter
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008341a
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000083192
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082652
+     0.00%  db_bench      [kernel.kallsyms]    [k] pte_offset_map_rw_nolock
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084312
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082672
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008262a
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084050
+     0.00%  db_bench      [kernel.kallsyms]    [k] ext4_reserve_inode_write
+     0.00%  db_bench      [kernel.kallsyms]    [k] irqentry_exit_to_user_mode
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df88
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008da22
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df30
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f38
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] mod_memcg_state
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083562
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] block_write_end
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082682
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_generic_write_checks
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] file_remove_privs_flags
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000084388
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] folio_add_new_anon_rmap
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __folio_throttle_swaprate
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008432e
+     0.00%  rocksdb:high  db_bench             [.] operator delete(void*, unsigned long)@plt
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008355a
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::PosixWritableFile::GetFileSize(rocksdb::IOOptions const&, rocksdb::IODebugContext*)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000849e0
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] alloc_slab_obj_exts
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] jbd2_write_access_granted
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] change_protection
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084886
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] propagate_protected_usage
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] migrate_folio_done
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000849ec
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::BlockBasedTable::Open(rocksdb::ReadOptions const&, rocksdb::ImmutableOptions const&, rocksdb::EnvOptions const&, rocksdb::BlockBasedTableOptions const&, rocksdb::InternalKeyComparator const&, std::unique_ptr<rocksdb::RandomAccessFileReader, std::default_delete<rocksdb::RandomAccessFileReader> >&&, unsigned long, unsigned char, std::unique_ptr<rocksdb::TableReader, std::default_delete<rocksdb::TableReader> >*, unsigned long, std::shared_ptr<rocksdb::CacheReservationManager>, std::shared_ptr<rocksdb::SliceTransform const> const&, rocksdb::UnownedPtr<rocksdb::CompressionManager>, bool, bool, int, bool, unsigned long, bool, rocksdb::TailPrefetchStats*, rocksdb::BlockCacheTracer*, unsigned long, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, unsigned long, std::array<unsigned long, 2ul>, bool)
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df08
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000835d0
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000846ea
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] balance_dirty_pages
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000084168
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008364e
+     0.00%  rocksdb:low   db_bench             [.] std::pair<std::_Rb_tree_iterator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, bool> std::_Rb_tree<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::_Select1st<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, rocksdb::stl_wrappers::LessOfComparator, std::allocator<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >::_M_insert_unique<std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >(std::pair<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >&&) [clone .isra.0]
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082582
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084a0e
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df38
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084516
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000840e6
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df5c
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_mb_prefetch
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] lock_vma_under_rcu
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df1c
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] pte_offset_map_rw_nolock
+     0.00%  db_bench      [kernel.kallsyms]    [k] __folio_mod_stat
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084322
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __folio_batch_add_and_move
+     0.00%  db_bench      [kernel.kallsyms]    [k] obj_cgroup_charge_pages
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000082006
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::BlockBasedTableBuilder::Rep::SetStatus(rocksdb::Status const&)
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] posix_cpu_clock_get
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] blk_cgroup_congested
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_da_write_end
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083358
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008263e
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084720
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::(anonymous namespace)::PosixClock::CPUMicros()
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] obj_cgroup_charge_pages
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000841d2
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] down_read_trylock
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000825bc
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f7e
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008df5c
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f52
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_da_write_begin
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] handle_page_fault
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __pte_offset_map_lock
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083666
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] up_write
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dee4
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] bio_submit_split_bioset
+     0.00%  rocksdb:low   libc.so.6            [.] __mprotect
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083fc2
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008365e
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008def0
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084a20
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] perf_event_mmap_output
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df7c
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000083f90
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_da_write_end
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __lruvec_stat_mod_folio
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008da18
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000849d6
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083366
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008df2c
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008353c
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008de9c
+     0.00%  db_bench      [kernel.kallsyms]    [k] jbd2_journal_get_write_access
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] rb_next
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] new_slab
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000083f78
+     0.00%  db_bench      [kernel.kallsyms]    [k] pud_offset
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000083f0a
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] copy_folio_from_iter_atomic
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] mprotect_fixup
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::BlockBasedTableBuilder::Rep::SetStatus(rocksdb::Status const&)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008336a
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __mark_inode_dirty
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] ext4_fill_raw_inode
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083888
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008d9ec
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] jbd2_write_access_granted
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008353e
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] inode_to_bdi
+     0.00%  rocksdb:high  db_bench             [.] operator new(unsigned long)@plt
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] generic_write_checks
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083f28
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ktime_get_coarse_real_ts64_mg
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008472c
+     0.00%  db_bench      [kernel.kallsyms]    [k] __ext4_journal_get_write_access
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f76
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_meta_trans_blocks
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008defc
+     0.00%  db_bench      [kernel.kallsyms]    [k] p4d_offset
+     0.00%  rocksdb:low   libc.so.6            [.] memset
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] fscrypt_setup_filename
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083f22
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] folio_clear_dirty_for_io
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008318c
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] set_root
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __ext4_get_inode_loc
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000007ef80
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_fallocate
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000083aae
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::CompactionOutputs::WriterSyncClose(rocksdb::Status const&, rocksdb::SystemClock*, rocksdb::Statistics*, bool)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008d9e0
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083700
+     0.00%  db_bench      [kernel.kallsyms]    [k] generic_update_time
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] scsi_queue_rq
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084404
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] blk_mq_run_hw_queue
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084200
+     0.00%  db_bench      [kernel.kallsyms]    [k] timer_expire_remote
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082656
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000843a0
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083648
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000841cc
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000083784
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008455c
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __ext4_journal_stop
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::PosixWritableFile::Append(rocksdb::Slice const&, rocksdb::IOOptions const&, rocksdb::IODebugContext*)
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __folio_mod_stat
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] __fsnotify_parent
+     0.00%  db_bench      [kernel.kallsyms]    [k] jbd2_journal_stop
+     0.00%  db_bench      libc.so.6            [.] 0x000000000004d390
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008dea0
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084298
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f30
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_buffered_write_iter
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] perf_iterate_ctx
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000841d4
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000846f2
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000826dc
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083f54
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __radix_tree_lookup
+     0.00%  db_bench      [kernel.kallsyms]    [k] __rseq_handle_notify_resume
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::InstrumentedMutex::Lock()
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_file_write_iter
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] pid_task
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084884
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008266a
+     0.00%  db_bench      [kernel.kallsyms]    [k] folio_lruvec_lock_irqsave
+     0.00%  rocksdb:high  libc.so.6            [.] 0x00000000000845ca
+     0.00%  db_bench      libstdc++.so.6.0.35  [.] operator new(unsigned long)@plt
+     0.00%  db_bench      [kernel.kallsyms]    [k] __schedule
+     0.00%  db_bench      libstdc++.so.6.0.35  [.] operator new[](unsigned long)
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] sized_strscpy
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ns_to_timespec64
+     0.00%  db_bench      [kernel.kallsyms]    [k] run_timer_base
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000825ce
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008de9c
+     0.00%  db_bench      [kernel.kallsyms]    [k] vma_prepare
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_ext_map_blocks
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] balance_dirty_pages_ratelimited_flags
+     0.00%  rocksdb:high  libc.so.6            [.] 0x00000000000825b4
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084a2a
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] xas_start
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] mas_prev
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] mas_next_slot
+     0.00%  rocksdb:low   libc.so.6            [.] readahead
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000849fc
+     0.00%  db_bench      [kernel.kallsyms]    [k] bdev_getblk
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] fscrypt_match_name
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074fa8
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] down_write
+     0.00%  db_bench      [kernel.kallsyms]    [k] stop_this_handle
+     0.00%  db_bench      [kernel.kallsyms]    [k] .L0 
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_fc_track_inode
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082592
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] free_frozen_page_commit
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df98
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] bdev_count_inflight_rw.part.0
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] tlb_finish_mmu
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008dfba
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000082fd4
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::MetaBlockIter::NextImpl()
+     0.00%  db_bench      [kernel.kallsyms]    [k] tmigr_handle_remote
+     0.00%  db_bench      libc.so.6            [.] 0x000000000009c638
+     0.00%  db_bench      [kernel.kallsyms]    [k] ext4_inode_table
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000546aa
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000008dfa4
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000083fa8
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] update_group_capacity
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000084408
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000074fa6
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] jbd2_journal_dirty_metadata
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] timestamp_truncate
+     0.00%  rocksdb:high  db_bench             [.] std::_Sp_counted_base<(__gnu_cxx::_Lock_policy)1>::_M_add_ref_copy()
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df1c
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_fill_raw_inode
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008dfa0
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000074f48
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] sbitmap_get
+     0.00%  db_bench      [kernel.kallsyms]    [k] __vmf_anon_prepare
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] map_id_range_up
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008388a
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] folio_remove_rmap_ptes
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000004d76e
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084284
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008438e
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000825a8
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] scsi_dma_map
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] obj_cgroup_charge_account
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082664
+     0.00%  db_bench      libc.so.6            [.] 0x000000000008df10
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] cgroup_get_e_css
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] bio_associate_blkg_from_css
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000825a6
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] clear_rseq_cs
+     0.00%  rocksdb:high  libc.so.6            [.] 0x000000000009af48
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000084022
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000082586
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __bio_add_page
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] folio_wait_bit_common
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] truncate_cleanup_folio
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000846b0
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_ext_search_right
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] update_group_capacity
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] lock_vma_under_rcu
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ext4_da_write_begin
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000845ea
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::PosixWritableFile::Append(rocksdb::Slice const&, rocksdb::IOOptions const&, rocksdb::IODebugContext*)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x00000000000846fc
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000058c46
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::CompactionIterator::CompactionIterator(rocksdb::InternalIteratorBase<rocksdb::Slice>*, rocksdb::Comparator const*, rocksdb::MergeHelper*, unsigned long, std::vector<unsigned long, std::allocator<unsigned long> >*, unsigned long, unsigned long, unsigned long, rocksdb::SnapshotChecker const*, rocksdb::Env*, bool, rocksdb::CompactionRangeDelAggregator*, rocksdb::BlobFileBuilder*, bool, bool, std::atomic<bool> const&, std::unique_ptr<rocksdb::CompactionIterator::CompactionProxy, std::default_delete<rocksdb::CompactionIterator::CompactionProxy> >, bool, rocksdb::CompactionFilter const*, std::atomic<bool> const*, std::shared_ptr<rocksdb::Logger>, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const*, std::optional<unsigned long>)
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084314
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000084608
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] bio_split_io_at
+     0.00%  rocksdb:high  libc.so.6            [.] 0x0000000000082626
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] truncate_inode_pages_range
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000083f10
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] kfree
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] page_counter_cancel
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] folio_lruvec_lock_irqsave
+     0.00%  rocksdb:low   libc.so.6            [.] 0x000000000008407a
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::CompactionJob::Install(bool*)
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::DoGenerateLevelFilesBrief(rocksdb::LevelFilesBrief*, std::vector<rocksdb::FileMetaData*, std::allocator<rocksdb::FileMetaData*> > const&, rocksdb::Arena*)
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] __get_pfnblock_flags_mask.isra.0
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] ktime_get
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] sbitmap_find_bit
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::TableProperties::~TableProperties()
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::Arena::~Arena()
+     0.00%  rocksdb:low   libc.so.6            [.] 0x0000000000058be8
+     0.00%  rocksdb:high  db_bench             [.] rocksdb::BlockFetcher::GetBlockContents()
+     0.00%  rocksdb:low   db_bench             [.] rocksdb::EventHelpers::LogAndNotifyTableFileCreationFinished(rocksdb::EventLogger*, std::vector<std::shared_ptr<rocksdb::EventListener>, std::allocator<std::shared_ptr<rocksdb::EventListener> > > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int, rocksdb::FileDescriptor const&, unsigned long, rocksdb::TableProperties const&, rocksdb::TableFileCreationReason, rocksdb::Status const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+     0.00%  db_bench      [kernel.kallsyms]    [k] xas_find
+     0.00%  db_bench      [kernel.kallsyms]    [k] __mod_node_page_state
+     0.00%  db_bench      [kernel.kallsyms]    [k] _copy_from_user
+     0.00%  db_bench      [kernel.kallsyms]    [k] rseq_get_rseq_cs_ptr_val
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000077914
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000054650
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000053eb0
+     0.00%  db_bench      libc.so.6            [.] 0x000000000004d400
+     0.00%  db_bench      libc.so.6            [.] 0x0000000000053e2e
+     0.00%  db_bench      [kernel.kallsyms]    [k] blkcg_maybe_throttle_current
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] folio_wait_writeback
+     0.00%  rocksdb:low   [kernel.kallsyms]    [k] exit_to_user_mode_loop
+     0.00%  db_bench      libc.so.6            [.] 0x00000000000cc9d4
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] rseq_get_rseq_cs_ptr_val
+     0.00%  perf-exec     [kernel.kallsyms]    [k] perf_event_exec
+     0.00%  rocksdb:high  [kernel.kallsyms]    [k] finish_task_switch.isra.0
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#
