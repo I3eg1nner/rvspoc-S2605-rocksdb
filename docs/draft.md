@@ -61,12 +61,52 @@
 technique-lmul-selection、pattern-wont-vectorize、lang-autovec、
 hw-spacemit-k3-a100、hw-qemu-virt。
 
+## 候选 1 设计：crc32c-rvv（kernel-crc32c-rvv, verified/benchmarked）
+
+wiki 页：kernel-crc32c-rvv（9.39x@K3）、technique-clmul-folding、
+technique-vlen-dispatch。工件 artifacts/kernels/crc32c-rvv/crc32c_rvv.c
+（RFC3720 + 578 差分绿）。
+
+**集成方案（照 crc32c_arm64.cc 先例）**：
+- 新 TU `util/crc32c_riscv64.cc`（+ .h），加入 src.mk（全平台常驻，
+  内部 `#if defined(__riscv) && defined(HAVE_RVV_CRC32C)` 整体隔离 →
+  x86/ARM 空 TU，构建不变）。
+- Makefile：riscv64 且 `$(CXX) -fsyntax-only -march=rv64gcv_zvbc` 通过
+  时定义 `HAVE_RVV_CRC32C`，并用目标级变量对该 TU 追加
+  `-march=rv64gcv_zvbc`（后者覆盖全局 rv64gc；其余 TU 保持标量）。
+- 运行时探测：riscv_hwprobe(2)（板内核 6.18 OK）查 V + Zvbc；syscall
+  失败/键缺失 → false → 标量路径。LX5000 无 zvbc 时走原
+  ExtendImpl<DefaultCRC32>，质量不降。
+- `Choose_Extend()` 加 riscv 分支：探测过 → `ExtendRVVImpl`；
+  `IsFastCrc32Supported()` 相应报告。
+- 语义泛化：工件只支持 init=0xFFFFFFFF；RocksDB `Extend(crc,...)` 需任
+  意续算 → 把 `crc ^ 0xFFFFFFFF` 的 4 个 LE 字节 xor 进首 4 字节（CRC
+  线性），n < 2*stride 走 slice-by-8。
+- **线程安全修正**：工件的 `static uint8_t first[]/fin[]` 缓冲会在多线
+  程 db_bench 下竞态 → 改栈上数组，W 上限 64 lane（stride ≤ 1KB）。
+  常数 kA/kB/W 一次性推导（VLEN 每机固定），C++11 静态初始化。
+- 分派计数器（tripwire）：`-DRVV_DISPATCH_COUNTERS` 编译时启用 relaxed
+  原子计数 + atexit 打印；测量构建关闭。
+- 差分驻留 rvv-ci/：独立 harness 包 TU，QEMU 3×VLEN + 敌意 ta/ma 跑，
+  再在板上以 crc32c_test + 标量写/RVV 读文件做树内验证。
+
 ## 会话日志
 
-### 2026-08-22 会话 1（进行中）
+### 2026-08-22/23 会话 1（进行中）
 
-- 分支引导完成（本 commit）。
-- 待办见 docs/plan.md。
+- 分支引导完成并推送。
+- 板：deps + openjdk-21（正常运行 ✔）+ 4G swap；release 树 db_bench
+  构建完成，标量钉住验证通过（-march=rv64gc / objdump 0 向量指令）；
+  标量基线脚本运行中（Config A/B，seed=20260822，环境快照已存）。
+- 板网络：GitHub 需代理 192.168.0.127:7897（git 全局代理已配；大传输
+  用 git archive|ssh tar 直传）。
+- QEMU rig：rvv-ci/{Dockerfile,smoke.c,run_matrix.sh,crc32c_diff.cc}；
+  镜像构建中（容器 apt 走 host.docker.internal:7897 代理）。
+- 候选 1 crc32c-rvv 代码落地（见上方设计节）：util/crc32c_riscv64.{h,cc}
+  + crc32c.cc 分派 + Makefile/src.mk 门控。未验证，待容器/板差分。
+- 开放技术点：QEMU 用户态 hwprobe 可能不报 Zvbc → 已加
+  ROCKSDB_RVV_CRC32C=0/1 覆写（=1 仍强制常数自校验）；非对齐 vlseg2e64
+  在未知硬件（LX5000）上的行为待确认——工件在 K3/QEMU 全偏移差分通过。
 
 ## 开放问题
 

@@ -6,12 +6,16 @@
 
 - [x] 分支 s2605-rvv from v11.1.1；脚手架 docs/draft.md、docs/plan.md、
       candidates.jsonl、benchmark.csv、profile/；commit+push
-- [ ] 板准备：apt dev 包 + openjdk-21 + 4G swapfile
+- [x] 板准备：apt dev 包 + openjdk-21 + 4G swapfile（openjdk 21.0.11
+      正常运行 —— JNI 最大未知项初步排除）
+- [x] 板上网络：GitHub 需经代理 http://192.168.0.127:7897（git 已配
+      全局代理；大 clone 走 `git archive | ssh tar` 直传更稳）
 - [ ] 测试树 ~/rocksdb-s2605-check 构建九项子集测试并跑绿
       （crc32c/hash/bloom/dynamic_bloom/coding/slice/comparator_db/
       db_basic/db_bloom_filter）
-- [ ] release 树 ~/rocksdb-s2605 build db_bench（PORTABLE=1，objdump
-      验证零向量指令）
+- [x] release 树 ~/rocksdb-s2605 build db_bench（PORTABLE=1；实测
+      make_config.mk 仅 -march=rv64gc，objdump 向量指令数 0）
+- [x] governor=performance + 环境快照（env-board-20260822.txt）
 - [ ] governor=performance + 环境快照 → profile/env-board-<date>.txt
 - [ ] db_bench 标量基线：Config A（默认）/ B（--compression_type=none
       --bloom_bits=10 --cache_size=1073741824）；num=20M，seed=20260822，
