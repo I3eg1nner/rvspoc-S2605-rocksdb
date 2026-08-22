@@ -18,6 +18,7 @@
 #include "port/lang.h"
 #include "util/coding.h"
 #include "util/crc32c_arm64.h"
+#include "util/crc32c_riscv64.h"
 #include "util/math.h"
 
 #ifdef __powerpc64__
@@ -359,6 +360,12 @@ uint32_t ExtendARMImpl(uint32_t crc, const char* buf, size_t size) {
 }
 #endif
 
+#if defined(__riscv) && defined(HAVE_RVV_CRC32C)
+uint32_t ExtendRVVImpl(uint32_t crc, const char* buf, size_t size) {
+  return ExtendRVV(crc, buf, size);
+}
+#endif
+
 std::string IsFastCrc32Supported() {
   bool has_fast_crc = false;
   std::string fast_zero_msg;
@@ -382,6 +389,9 @@ std::string IsFastCrc32Supported() {
     has_fast_crc = false;
     arch = "Arm64";
   }
+#elif defined(__riscv) && defined(HAVE_RVV_CRC32C)
+  has_fast_crc = RvvCrc32cSupported();
+  arch = "RISC-V (Zvbc)";
 #else
 #ifdef __SSE4_2__
   has_fast_crc = true;
@@ -1110,6 +1120,14 @@ static inline Function Choose_Extend() {
   if(crc32c_runtime_check()) {
     pmull_runtime_flag = crc32c_pmull_runtime_check();
     return ExtendARMImpl;
+  } else {
+    return ExtendImpl<DefaultCRC32>;
+  }
+#elif defined(__riscv) && defined(HAVE_RVV_CRC32C)
+  // Runtime-probed (hwprobe V + Zvbc); scalar fallback otherwise, so a
+  // single binary is correct on RISC-V hardware with or without RVV.
+  if (RvvCrc32cSupported()) {
+    return ExtendRVVImpl;
   } else {
     return ExtendImpl<DefaultCRC32>;
   }

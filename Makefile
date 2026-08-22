@@ -287,6 +287,19 @@ ARMCRC_SOURCE=1
 endif
 endif
 
+# RISC-V: compile only the Zvbc CRC32C translation unit with the vector
+# arch when the compiler supports it. Dispatch is runtime-probed via
+# riscv_hwprobe(2), so every other translation unit keeps the build's
+# (scalar) -march and the binary stays correct on hardware without RVV.
+ifneq (,$(findstring riscv64,$(MACHINE)))
+ifeq (,$(shell $(CXX) -fsyntax-only -march=rv64gcv_zvbc -xc /dev/null 2>&1))
+CXXFLAGS += -DHAVE_RVV_CRC32C
+CFLAGS += -DHAVE_RVV_CRC32C
+$(OBJ_DIR)/util/crc32c_riscv64.o: private CXXFLAGS += -march=rv64gcv_zvbc
+jl/util/crc32c_riscv64.o: private CXXFLAGS += -march=rv64gcv_zvbc
+endif
+endif
+
 export JAVAC_ARGS
 CLEAN_FILES += make_config.mk rocksdb.pc
 
