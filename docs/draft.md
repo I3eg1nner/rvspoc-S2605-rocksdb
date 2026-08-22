@@ -165,6 +165,27 @@ GetRestartKey 12.5% 热点判定为 cache-miss 主导（wont-vectorize case）�
   ROCKSDB_RVV_CRC32C=0/1 覆写（=1 仍强制常数自校验）；非对齐 vlseg2e64
   在未知硬件（LX5000）上的行为待确认——工件在 K3/QEMU 全偏移差分通过。
 
+**候选 1–4 验证记录（2026-08-23）**：
+- crc32c：板差分 4438/0；QEMU 3×VLEN+敌意 0 fail；树内 db_bench
+  crc32c 微基准 7302 vs 901 MB/s（~8.1x，板有 check 负载）；LOG 探测
+  行正确；向量指令 objdump 限于 ExtendRVV 符号；标量写 DB 12.6M 条
+  readseq 零损坏（持久化位相同端到端，方向 1）。
+- memcmp（slice.h 内联）：板 49279/0；QEMU 0 fail。
+- xxhash（XXH_VECTOR=7）：板 30032/0（64/128、流式、非对齐）；QEMU
+  0 fail。
+- bloom probe：板+QEMU 各 603990/0。**QEMU vlen=128 抓到真 bug**：
+  vsetvl(8) 在 e32m1/VLEN128 只授 4 lane，原实现当 8 处理 → 假阳性；
+  修复为按授予 vl 分块 + golden^vl 步进，并升 e32m2。
+  → 待促进回 wiki（pattern-vlen-portability 的 Upstream-evidence +
+  run 记录）。"vsetvl 授予数 ≠ 请求数"教训。
+- 非 riscv 构建不变：aarch64 g++ 预处理输出 token 级一致
+  （slice/xxhash/bloom）；crc32c_riscv64.cc 在非 riscv 预处理为零代码。
+- varint（op 5/6）暂缓判定：DecodeEntry 快路径 1 字节占绝对主导，
+  单 varint 延迟受限（wiki 页自证 inferred）；serde 加速已由
+  CRC+memcmp+xxh3+autovec 承载。等 A/B 数字后决定实现或记 reject。
+- 待办：check 完成后 → 测试树同步 RVV 代码重跑子集 + db_test；
+  RVV 构建（第三树，RISCV_RVV=1）A/B；RocketMQ smoke（包已解压）。
+
 ## 开放问题
 
 - PR base 官方确认（默认 11.1.fb）。
