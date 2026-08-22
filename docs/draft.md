@@ -183,8 +183,23 @@ GetRestartKey 12.5% 热点判定为 cache-miss 主导（wont-vectorize case）�
 - varint（op 5/6）暂缓判定：DecodeEntry 快路径 1 字节占绝对主导，
   单 varint 延迟受限（wiki 页自证 inferred）；serde 加速已由
   CRC+memcmp+xxh3+autovec 承载。等 A/B 数字后决定实现或记 reject。
-- 待办：check 完成后 → 测试树同步 RVV 代码重跑子集 + db_test；
-  RVV 构建（第三树，RISCV_RVV=1）A/B；RocketMQ smoke（包已解压）。
+**RVV 交付构建 + RocketMQ 里程碑（2026-08-23 深夜）**：
+- RISCV_RVV=1 两个坑接连修掉：(1) -march 追加顺序被 PLATFORM_CXXFLAGS
+  的 rv64gc 覆盖（分派 tripwire 抓到：全二进制只有 2 个 vsetvli）→
+  块移到 PLATFORM_CXXFLAGS 并入之后；(2) 改 flags 后旧 .o 被复用
+  （Makefile 不追踪 flag 变化）→ find -name "*.o" -delete 净重建。
+  终态 vsetvli **1659** 处，标量写 DB 交叉读零损坏。
+- gcc 15.2 在高负载下偶发 ICE 段错误（单独重编即过，非可复现）。
+- **RocketMQ 5.5.0 on riscv64 打通**：捆绑 rocketmq-rocksdb-1.0.6 无
+  riscv64 原生库 → broker 起不来（DefaultMessageStore 无条件初始化
+  RocksDB 存储）；用我们 RVV 树 `make rocksdbjava` 产出的
+  rocksdbjni-11.1.1 jar 整包替换 → **broker boot success**，
+  clusterList 正常，benchmark producer **6162 TPS / 0 失败**（板上
+  同时跑着 check）。benchmark/runclass.sh 需去 JDK8 时代 flags
+  （PermSize/CMS/ext.dirs→classpath 通配）。消费端完整验证并入压测。
+- 待办：check 结束 → run_ab_rvv.sh 正式 A/B（空载）→ RocketMQ 60min
+  压测（JVM 压堆已配）→ 测试树同步 RVV 代码重跑全量 check → 促进
+  wiki（vlen 授予坑、K3 数字、RocketMQ-on-riscv64 经验）→ PR。
 
 ## 开放问题
 
