@@ -105,6 +105,30 @@ technique-vlen-dispatch。工件 artifacts/kernels/crc32c-rvv/crc32c_rvv.c
 - 差分驻留 rvv-ci/：独立 harness 包 TU，QEMU 3×VLEN + 敌意 ta/ma 跑，
   再在板上以 crc32c_test + 标量写/RVV 读文件做树内验证。
 
+## 构建层决策：RVV 交付构建 = 全局 -march=rv64gcv（2026-08-23）
+
+比赛目标机是 RV64GCV（V 必在），VLEN 自适应靠 vsetvl；Zvbc 等超出
+基线 V 的扩展仍走 per-TU -march + hwprobe。因此交付构建引入
+`RISCV_RVV=1 make` → 全局追加 -march=rv64gcv：
+- 使 `#if defined(__riscv_vector)` 的头文件内联路径（Slice::compare、
+  后续 xxhash）得以编译，同时收割全程序自动向量化（op 10）。
+- 标量基线（PORTABLE=1, rv64gc）保持为 A/B 的 A 侧与评分对照。
+- 归因纪律：先单独测 "rvv-build-base"（gcv 全局，无内核改动）vs
+  标量基线；此后每个候选在 gcv 基座上同 flags A/B，隔离内核贡献。
+
+## 候选 2 设计：memcmp/Slice::compare（kernel-memcmp-rvv, verified/benchmarked）
+
+wiki：kernel-memcmp-rvv（K3 实测短 key 1.68–2.54x，64KB 收敛 1.06x；
+46016 差分 0 失败）。语义告诫：必须严格 memcmp 语义（无符号、首异
+字节定序），否则 memtable 损坏——差分覆盖 0..300 全长度 + 逐位置
+diff + 非对齐矩阵。
+集成：include/rocksdb/slice.h 的 `Slice::compare` 在
+`#if defined(__riscv) && defined(__riscv_vector)` 下用 vfirst 首异
+向量比较（e8m2 掩码安全，不越界读），全尺寸启用（页表中向量全程
+≥ libc）；非 riscv 路径字面不变。头文件自包含（公共头不引私有头）。
+预期：db_bench 百分位级（perf: 读 memcmp ~8% + 写 skiplist 比较
+~14%），微基准上限 1.7–2.5x。
+
 ## 会话日志
 
 ### 2026-08-22/23 会话 1（进行中）

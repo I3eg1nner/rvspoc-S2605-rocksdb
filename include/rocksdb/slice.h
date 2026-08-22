@@ -26,6 +26,10 @@
 #include <string>
 #include <string_view>
 
+#if defined(__riscv) && defined(__riscv_vector)
+#include <riscv_vector.h>
+#endif
+
 #include "rocksdb/cleanable.h"
 
 namespace ROCKSDB_NAMESPACE {
@@ -280,10 +284,58 @@ inline bool operator==(const Slice& x, const Slice& y) {
 
 inline bool operator!=(const Slice& x, const Slice& y) { return !(x == y); }
 
+#if defined(__riscv) && defined(__riscv_vector)
+namespace detail {
+// First-difference byte compare with exact memcmp semantics (unsigned
+// bytes, sign of first differing byte). Masked vector loads never touch
+// bytes at or beyond a+n / b+n, so this is as overread-safe as memcmp.
+inline int RvvMemcmp(const char* a, const char* b, size_t n) {
+  const uint8_t* pa = reinterpret_cast<const uint8_t*>(a);
+  const uint8_t* pb = reinterpret_cast<const uint8_t*>(b);
+  size_t off = 0;
+  while (off < n) {
+    size_t vl = __riscv_vsetvl_e8m2(n - off);
+    vuint8m2_t va = __riscv_vle8_v_u8m2(pa + off, vl);
+    vuint8m2_t vb = __riscv_vle8_v_u8m2(pb + off, vl);
+    vbool4_t ne = __riscv_vmsne_vv_u8m2_b4(va, vb, vl);
+    long first = __riscv_vfirst_m_b4(ne, vl);
+    if (first >= 0) {
+      size_t idx = off + static_cast<size_t>(first);
+      return pa[idx] < pb[idx] ? -1 : 1;
+    }
+    off += vl;
+  }
+  return 0;
+}
+// Length of the common prefix (index of the first differing byte).
+inline size_t RvvCommonPrefix(const char* a, const char* b, size_t n) {
+  const uint8_t* pa = reinterpret_cast<const uint8_t*>(a);
+  const uint8_t* pb = reinterpret_cast<const uint8_t*>(b);
+  size_t off = 0;
+  while (off < n) {
+    size_t vl = __riscv_vsetvl_e8m2(n - off);
+    vuint8m2_t va = __riscv_vle8_v_u8m2(pa + off, vl);
+    vuint8m2_t vb = __riscv_vle8_v_u8m2(pb + off, vl);
+    vbool4_t ne = __riscv_vmsne_vv_u8m2_b4(va, vb, vl);
+    long first = __riscv_vfirst_m_b4(ne, vl);
+    if (first >= 0) {
+      return off + static_cast<size_t>(first);
+    }
+    off += vl;
+  }
+  return n;
+}
+}  // namespace detail
+#endif  // __riscv && __riscv_vector
+
 inline int Slice::compare(const Slice& b) const {
   assert(data_ != nullptr && b.data_ != nullptr);
   const size_t min_len = (size_ < b.size_) ? size_ : b.size_;
+#if defined(__riscv) && defined(__riscv_vector)
+  int r = detail::RvvMemcmp(data_, b.data_, min_len);
+#else
   int r = memcmp(data_, b.data_, min_len);
+#endif
   if (r == 0) {
     if (size_ < b.size_)
       r = -1;
@@ -294,12 +346,16 @@ inline int Slice::compare(const Slice& b) const {
 }
 
 inline size_t Slice::difference_offset(const Slice& b) const {
-  size_t off = 0;
   const size_t len = (size_ < b.size_) ? size_ : b.size_;
+#if defined(__riscv) && defined(__riscv_vector)
+  return detail::RvvCommonPrefix(data_, b.data_, len);
+#else
+  size_t off = 0;
   for (; off < len; off++) {
     if (data_[off] != b.data_[off]) break;
   }
   return off;
+#endif
 }
 
 }  // namespace ROCKSDB_NAMESPACE

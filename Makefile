@@ -298,6 +298,15 @@ CFLAGS += -DHAVE_RVV_CRC32C
 $(OBJ_DIR)/util/crc32c_riscv64.o: private CXXFLAGS += -march=rv64gcv_zvbc
 jl/util/crc32c_riscv64.o: private CXXFLAGS += -march=rv64gcv_zvbc
 endif
+# RISCV_RVV=1: deliverable RVV build — whole-program -march=rv64gcv
+# (the RV64GCV target guarantees V; VLEN adaptivity is runtime vsetvl).
+# Enables the __riscv_vector inline paths (e.g. Slice::compare) and
+# compiler auto-vectorization. Extensions beyond V (Zvbc) stay per-TU
+# with runtime hwprobe dispatch above.
+ifeq ($(RISCV_RVV),1)
+CXXFLAGS += -march=rv64gcv
+CFLAGS += -march=rv64gcv
+endif
 endif
 
 export JAVAC_ARGS
