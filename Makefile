@@ -298,15 +298,6 @@ CFLAGS += -DHAVE_RVV_CRC32C
 $(OBJ_DIR)/util/crc32c_riscv64.o: private CXXFLAGS += -march=rv64gcv_zvbc
 jl/util/crc32c_riscv64.o: private CXXFLAGS += -march=rv64gcv_zvbc
 endif
-# RISCV_RVV=1: deliverable RVV build — whole-program -march=rv64gcv
-# (the RV64GCV target guarantees V; VLEN adaptivity is runtime vsetvl).
-# Enables the __riscv_vector inline paths (e.g. Slice::compare) and
-# compiler auto-vectorization. Extensions beyond V (Zvbc) stay per-TU
-# with runtime hwprobe dispatch above.
-ifeq ($(RISCV_RVV),1)
-CXXFLAGS += -march=rv64gcv
-CFLAGS += -march=rv64gcv
-endif
 endif
 
 export JAVAC_ARGS
@@ -534,6 +525,20 @@ endif
 
 CFLAGS += $(C_WARNING_FLAGS) $(WARNING_FLAGS) -I. -I./include $(PLATFORM_CCFLAGS) $(OPT)
 CXXFLAGS += $(WARNING_FLAGS) -I. -I./include $(PLATFORM_CXXFLAGS) $(OPT) -Woverloaded-virtual -Wnon-virtual-dtor -Wno-missing-field-initializers
+
+# RISCV_RVV=1: deliverable RVV build — whole-program -march=rv64gcv
+# (the RV64GCV target guarantees V; VLEN adaptivity is runtime vsetvl).
+# Enables the __riscv_vector inline paths (e.g. Slice::compare, xxHash,
+# bloom probe) and compiler auto-vectorization. Extensions beyond V
+# (Zvbc) stay per-TU with runtime hwprobe dispatch. Must be appended
+# AFTER $(PLATFORM_CXXFLAGS) so it overrides the PORTABLE -march=rv64gc
+# (with gcc, the last -march on the command line wins).
+ifneq (,$(findstring riscv64,$(MACHINE)))
+ifeq ($(RISCV_RVV),1)
+CXXFLAGS += -march=rv64gcv
+CFLAGS += -march=rv64gcv
+endif
+endif
 
 # Allow offsetof to work on non-standard layout types. Some compiler could
 # completely reject our usage of offsetof, but we will solve that when it
