@@ -17,6 +17,10 @@
 #include "rocksdb/slice.h"
 #include "util/hash.h"
 
+#if defined(__riscv) && defined(__riscv_vector)
+#include <riscv_vector.h>
+#endif
+
 #ifdef __AVX2__
 #include <immintrin.h>
 #endif
@@ -228,10 +232,54 @@ class FastLocalBloomImpl {
     return HashMayMatchPrepared(h2, num_probes, data + bytes_to_cache_line);
   }
 
+#if defined(__riscv) && defined(__riscv_vector)
+  // Powers of the 32-bit golden ratio mod 2**32 (same math as the AVX2
+  // path below): multiplying h by kGoldenPow[i] equals i sequential
+  // multiplications by 0x9e3779b9, so all probe hashes come out in one
+  // vector multiply. Bit addressing is identical to the scalar path
+  // under little-endian (word = h >> 28, bit-in-word = (h >> 23) & 31).
+  static constexpr uint32_t kGoldenPow[9] = {
+      0x00000001, 0x9e3779b9, 0xe35e67b1, 0x734297e9, 0x35fbe861,
+      0xdeb7c719, 0x0448b211, 0x3459b749, 0xab25f4c1};
+#endif
+
   static inline bool HashMayMatchPrepared(uint32_t h2, int num_probes,
                                           const char* data_at_cache_line) {
     uint32_t h = h2;
-#ifdef __AVX2__
+#if defined(__riscv) && defined(__riscv_vector)
+    // RVV single-key probe, mirroring the AVX2 path: up to 8 probes per
+    // vector iteration; vsetvl on the remaining probe count replaces the
+    // AVX2 k_selector mask. Bit-identical to the scalar path.
+    // VLEN-portability: vsetvl may grant FEWER lanes than requested
+    // (e32m2 still guarantees 8 at VLEN>=128, but never assume) — advance
+    // by the granted vl and step h by golden^vl from the table.
+    int rem_probes = num_probes;
+    const uint8_t* line = reinterpret_cast<const uint8_t*>(data_at_cache_line);
+    for (;;) {
+      size_t vl =
+          __riscv_vsetvl_e32m2(rem_probes < 8 ? (size_t)rem_probes : 8);
+      vuint32m2_t mult = __riscv_vle32_v_u32m2(kGoldenPow, vl);
+      vuint32m2_t hv = __riscv_vmul_vx_u32m2(mult, h, vl);
+      // Byte offset of each probed 32-bit word within the 64-byte line.
+      vuint32m2_t byte_off = __riscv_vsll_vx_u32m2(
+          __riscv_vsrl_vx_u32m2(hv, 28, vl), 2, vl);
+      vuint32m2_t words = __riscv_vluxei32_v_u32m2(
+          reinterpret_cast<const uint32_t*>(line), byte_off, vl);
+      vuint32m2_t bit_addr = __riscv_vand_vx_u32m2(
+          __riscv_vsrl_vx_u32m2(hv, 23, vl), 31, vl);
+      vuint32m2_t bits = __riscv_vand_vx_u32m2(
+          __riscv_vsrl_vv_u32m2(words, bit_addr, vl), 1, vl);
+      vbool16_t missing = __riscv_vmseq_vx_u32m2_b16(bits, 0, vl);
+      bool match = __riscv_vfirst_m_b16(missing, vl) < 0;
+      if ((size_t)rem_probes <= vl) {
+        return match;
+      } else if (!match) {
+        return false;
+      }
+      h *= kGoldenPow[vl];  // golden ratio to the vl-th power
+      rem_probes -= (int)vl;
+    }
+#elif defined(__AVX2__)
     int rem_probes = num_probes;
 
     // NOTE: For better performance for num_probes in {1, 2, 9, 10, 17, 18,

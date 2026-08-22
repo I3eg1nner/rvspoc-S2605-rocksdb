@@ -9,7 +9,8 @@ set -eu
 cd "$(dirname "$0")/.."
 CXX="${CXX:-riscv64-linux-gnu-g++}"
 OUT=/tmp/rvv_matrix_bin
-$CXX -O2 -static -march=rv64gcv_zvbc -DHAVE_RVV_CRC32C -I. -Iinclude \
+$CXX -O2 -static -march=rv64gcv_zvbc -DHAVE_RVV_CRC32C \
+  -DROCKSDB_PLATFORM_POSIX -DOS_LINUX -I. -Iinclude \
   "$@" -o $OUT
 echo "build ok: $CXX $*"
 rc=0
