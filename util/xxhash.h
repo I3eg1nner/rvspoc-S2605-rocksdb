@@ -3193,6 +3193,7 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
     XXH_NEON   = 4,  /*!< NEON for most ARMv7-A and all AArch64 */
     XXH_VSX    = 5,  /*!< VSX and ZVector for POWER8/z13 (64-bit) */
     XXH_SVE    = 6,  /*!< SVE for some ARMv8-A and ARMv9-A */
+    XXH_RVV    = 7,  /*!< RVV 1.0 for RISC-V rv64gcv (S2605 port) */
 };
 /*!
  * @ingroup tuning
@@ -3215,6 +3216,7 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
 #  define XXH_NEON   4
 #  define XXH_VSX    5
 #  define XXH_SVE    6
+#  define XXH_RVV    7
 #endif
 
 #ifndef XXH_VECTOR    /* can be defined on command line */
@@ -3238,6 +3240,8 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
      || (defined(__s390x__) && defined(__VEC__)) \
      && defined(__GNUC__) /* TODO: IBM XL */
 #    define XXH_VECTOR XXH_VSX
+#  elif defined(__riscv) && defined(__riscv_vector)
+#    define XXH_VECTOR XXH_RVV
 #  else
 #    define XXH_VECTOR XXH_SCALAR
 #  endif
@@ -3274,6 +3278,8 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
 #  elif XXH_VECTOR == XXH_AVX512  /* avx512 */
 #     define XXH_ACC_ALIGN 64
 #  elif XXH_VECTOR == XXH_SVE   /* sve */
+#     define XXH_ACC_ALIGN 64
+#  elif XXH_VECTOR == XXH_RVV   /* rvv */
 #     define XXH_ACC_ALIGN 64
 #  endif
 #endif
@@ -4907,6 +4913,71 @@ XXH3_accumulate_sve(xxh_u64* XXH_RESTRICT acc,
 
 #endif
 
+#if (XXH_VECTOR == XXH_RVV)
+/*
+ * RVV 1.0 path (S2605 RISC-V port). Bit-identical to the scalar path:
+ * per-lane the scalar loop does two independent commutative additions
+ * (acc[lane^1] += data_val; acc[lane] += mult32to64(lo(dk), hi(dk))),
+ * so computing them lane-parallel yields the same accumulators.
+ * e64 with LMUL=4 guarantees all XXH_ACC_NB(=8) lanes in one vl even at
+ * VLEN=128; larger VLEN just clamps vl to 8 (vsetvl semantics).
+ */
+#include <riscv_vector.h>
+
+XXH_FORCE_INLINE void
+XXH3_accumulate_512_rvv(void* XXH_RESTRICT acc,
+                        const void* XXH_RESTRICT input,
+                        const void* XXH_RESTRICT secret)
+{
+    XXH_ASSERT((((size_t)acc) & (XXH_ACC_ALIGN-1)) == 0);
+    {
+        xxh_u64* const xacc = (xxh_u64*) acc;
+        const xxh_u64* const xinput = (const xxh_u64*) input;
+        const xxh_u64* const xsecret = (const xxh_u64*) secret;
+        size_t vl = __riscv_vsetvl_e64m4(XXH_ACC_NB);
+        vuint64m4_t data_vec = __riscv_vle64_v_u64m4(xinput, vl);
+        vuint64m4_t key_vec = __riscv_vle64_v_u64m4(xsecret, vl);
+        vuint64m4_t acc_vec = __riscv_vle64_v_u64m4(xacc, vl);
+        vuint64m4_t data_key = __riscv_vxor_vv_u64m4(data_vec, key_vec, vl);
+        /* mult32to64(dk & 0xFFFFFFFF, dk >> 32): both operands fit in 32
+         * bits, so the low-64 product of a plain vmul is exact. */
+        vuint64m4_t dk_lo =
+            __riscv_vand_vx_u64m4(data_key, 0xFFFFFFFFULL, vl);
+        vuint64m4_t dk_hi = __riscv_vsrl_vx_u64m4(data_key, 32, vl);
+        vuint64m4_t prod = __riscv_vmul_vv_u64m4(dk_lo, dk_hi, vl);
+        /* swap adjacent lanes of data_vec: index vector = vid ^ 1 */
+        vuint64m4_t idx = __riscv_vid_v_u64m4(vl);
+        idx = __riscv_vxor_vx_u64m4(idx, 1, vl);
+        vuint64m4_t data_swap =
+            __riscv_vrgather_vv_u64m4(data_vec, idx, vl);
+        acc_vec = __riscv_vadd_vv_u64m4(acc_vec, data_swap, vl);
+        acc_vec = __riscv_vadd_vv_u64m4(acc_vec, prod, vl);
+        __riscv_vse64_v_u64m4(xacc, acc_vec, vl);
+    }
+}
+XXH_FORCE_INLINE XXH3_ACCUMULATE_TEMPLATE(rvv)
+
+XXH_FORCE_INLINE void
+XXH3_scrambleAcc_rvv(void* XXH_RESTRICT acc, const void* XXH_RESTRICT secret)
+{
+    XXH_ASSERT((((size_t)acc) & (XXH_ACC_ALIGN-1)) == 0);
+    {
+        xxh_u64* const xacc = (xxh_u64*) acc;
+        const xxh_u64* const xsecret = (const xxh_u64*) secret;
+        size_t vl = __riscv_vsetvl_e64m4(XXH_ACC_NB);
+        vuint64m4_t acc_vec = __riscv_vle64_v_u64m4(xacc, vl);
+        vuint64m4_t key_vec = __riscv_vle64_v_u64m4(xsecret, vl);
+        /* acc = ((acc ^ (acc >> 47)) ^ key) * XXH_PRIME32_1 (low 64) */
+        vuint64m4_t shifted = __riscv_vsrl_vx_u64m4(acc_vec, 47, vl);
+        acc_vec = __riscv_vxor_vv_u64m4(acc_vec, shifted, vl);
+        acc_vec = __riscv_vxor_vv_u64m4(acc_vec, key_vec, vl);
+        acc_vec = __riscv_vmul_vx_u64m4(
+            acc_vec, (xxh_u64)XXH_PRIME32_1, vl);
+        __riscv_vse64_v_u64m4(xacc, acc_vec, vl);
+    }
+}
+#endif /* XXH_VECTOR == XXH_RVV */
+
 /* scalar variants - universal */
 
 /*!
@@ -5110,6 +5181,12 @@ typedef void (*XXH3_f_initCustomSecret)(void* XXH_RESTRICT, xxh_u64);
 #define XXH3_accumulate_512 XXH3_accumulate_512_sve
 #define XXH3_accumulate     XXH3_accumulate_sve
 #define XXH3_scrambleAcc    XXH3_scrambleAcc_scalar
+#define XXH3_initCustomSecret XXH3_initCustomSecret_scalar
+
+#elif (XXH_VECTOR == XXH_RVV)
+#define XXH3_accumulate_512 XXH3_accumulate_512_rvv
+#define XXH3_accumulate     XXH3_accumulate_rvv
+#define XXH3_scrambleAcc    XXH3_scrambleAcc_rvv
 #define XXH3_initCustomSecret XXH3_initCustomSecret_scalar
 
 #else /* scalar */

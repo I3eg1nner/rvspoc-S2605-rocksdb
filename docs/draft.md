@@ -129,6 +129,24 @@ diff + 非对齐矩阵。
 预期：db_bench 百分位级（perf: 读 memcmp ~8% + 写 skiplist 比较
 ~14%），微基准上限 1.7–2.5x。
 
+## 候选 3 设计：xxHash XXH_VECTOR=RVV（kernel-hash-rvv inferred + migration-neon-to-rvv）
+
+90% NEON 条款的主要合规项。util/xxhash.h（v0.8.x vendored）新增
+`XXH_RVV`（=7）分支：`__riscv_vector` 自动选择。实现
+`XXH3_accumulate_512_rvv` / `XXH3_scrambleAcc_rvv`（e64、vl=8，
+m4 保证 VLEN=128 时单发 8 lane）：
+- accumulate：dk=in^sec；prod=vmul(dk&0xFFFFFFFF, dk>>32)（低 64 位
+  精确）；acc += vrgather(in, idx^1) + prod——标量版逐 lane 两次 +=
+  可交换 → **位相同**。
+- scramble：acc=((acc^(acc>>47))^sec)*PRIME32_1（vmul_vx）。
+- initCustomSecret 沿用 scalar。
+持久化警示（kernel-hash-rvv caveat a）：XXH3 喂 bloom/cache key →
+位相同强制；差分 harness 用 XXH_INLINE_ALL 双 TU（一个强制
+XXH_VECTOR=0）比对 XXH3_64/128bits 全长度 0..5000 × 多 seed。
+util/xxph3.h（旧 fork，持久化 hash 用）不动——范围锁定 xxhash.h。
+GetRestartKey 12.5% 热点判定为 cache-miss 主导（wont-vectorize case），
+不强行向量化；后续可选标量预取候选。
+
 ## 会话日志
 
 ### 2026-08-22/23 会话 1（进行中）
