@@ -346,16 +346,16 @@ inline int Slice::compare(const Slice& b) const {
 }
 
 inline size_t Slice::difference_offset(const Slice& b) const {
+  size_t off = 0;
   const size_t len = (size_ < b.size_) ? size_ : b.size_;
 #if defined(__riscv) && defined(__riscv_vector)
-  return detail::RvvCommonPrefix(data_, b.data_, len);
+  off = detail::RvvCommonPrefix(data_, b.data_, len);
 #else
-  size_t off = 0;
   for (; off < len; off++) {
     if (data_[off] != b.data_[off]) break;
   }
-  return off;
 #endif
+  return off;
 }
 
 }  // namespace ROCKSDB_NAMESPACE
