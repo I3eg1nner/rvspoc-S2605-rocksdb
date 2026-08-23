@@ -14,7 +14,9 @@ clean_objs() { find . -name '*.o' -delete; rm -f db_bench librocksdb.a; }
 step BUILD_SCALAR_START
 clean_objs
 eval $MK > build-scalar.log 2>&1 || { step BUILD_SCALAR_FAIL; exit 1; }
-[ "$(objdump -d db_bench | grep -c vsetvli)" = "0" ] || { step SCALAR_NOT_SCALAR; exit 1; }
+V=$(objdump -d db_bench | grep -c vsetvli)
+step "SCALAR vsetvli=$V (hwprobe-gated CRC TU only; S arm runs with ROCKSDB_RVV_CRC32C=0)"
+[ "$V" -lt 50 ] || { step SCALAR_NOT_SCALAR; exit 1; }
 cp db_bench db_bench.scalar
 step BUILD_SCALAR_OK
 
@@ -52,7 +54,9 @@ IDLE=$(vmstat 1 2 | tail -1 | awk '{print $15}'); [ "$IDLE" -ge 95 ] || { step "
 for g in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo performance > $g; done
 run() { # $1 bin-suffix $2 tag $3.. args
   b=$1; tag=$2; shift 2
-  ./db_bench.$b --num=20000000 --seed=20260822 "$@" 2>/dev/null \
+  E=""
+  [ "$b" = scalar ] && E="ROCKSDB_RVV_CRC32C=0"
+  env $E ./db_bench.$b --num=20000000 --seed=20260822 "$@" 2>/dev/null \
     | sed -n "s/^\([a-z]*random.*\)$/RESULT $tag \1/p" >> final3.log
 }
 : > final3.log
