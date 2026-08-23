@@ -37,6 +37,12 @@ benchmark.csv `scalar-baseline` 行。
 miss(7.6%)，现有 kernel 覆盖面之外。候选路线（memmove RVV、预取）
 评估中。LX5000 上比例可能不同。
 
+**规范性引用**：全部向量代码遵循官方
+[riscv-rvv-intrinsic-doc](https://github.com/riscv-non-isa/riscv-rvv-intrinsic-doc)
+（赛题指定参考）的 `__riscv_` intrinsics API（含 tuple 段式加载
+`vlseg2e64` 等 v0.12+ 形式）；无第三方 RISC-V 适配代码；唯一内联
+汇编为 toku_time 的 `rdtime`（Linux≥6.6 用户态 rdcycle SIGILL 修复）。
+
 ## 三、正确性证据链
 
 1. 每 kernel 差分（板 + QEMU 3 VLEN × 敌意 ta/ma）：crc 4438/0、
