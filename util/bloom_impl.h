@@ -255,6 +255,19 @@ class FastLocalBloomImpl {
     // by the granted vl and step h by golden^vl from the table.
     int rem_probes = num_probes;
     const uint8_t* line = reinterpret_cast<const uint8_t*>(data_at_cache_line);
+    if (reinterpret_cast<uintptr_t>(line) & 3) {
+      // Filter block base not 4-byte aligned (possible for mmap'd or
+      // custom-allocated blocks): vluxei32 would be element-misaligned,
+      // which may trap on hardware we cannot test. Scalar fallback.
+      for (int i = 0; i < num_probes; ++i, h *= uint32_t{0x9e3779b9}) {
+        int bitpos = h >> (32 - 9);
+        if ((data_at_cache_line[bitpos >> 3] & (char(1) << (bitpos & 7))) ==
+            0) {
+          return false;
+        }
+      }
+      return true;
+    }
     for (;;) {
       size_t vl =
           __riscv_vsetvl_e32m2(rem_probes < 8 ? (size_t)rem_probes : 8);

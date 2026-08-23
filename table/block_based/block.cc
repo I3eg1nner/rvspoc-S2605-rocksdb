@@ -810,6 +810,38 @@ bool BlockIter<TValue>::BinarySeekRestartPointIndex(const Slice& target,
     int64_t mid = left + (right - left + 1) / 2;
     assert(left < mid && mid <= right);
 
+#if defined(__riscv)
+    // S2605: binary-search restart probes miss cache on nearly every
+    // iteration (dominant flat-profile cost of index seeks on riscv
+    // boards). Prefetch both possible next probe targets so the miss
+    // overlaps the current key's decode+compare.
+    {
+      // Raw bounds-checked restart-entry reads (not GetRestartPoint):
+      // on a corrupt block a speculative index must not trip asserts or
+      // produce a wild dereference-able address; PREFETCH itself never
+      // faults but the offset read must stay in-bounds.
+      int64_t next_lo = mid + (right - mid + 1) / 2;      // taken if cmp < 0
+      int64_t next_hi = left + (mid - left) / 2;          // taken if cmp > 0
+      const uint32_t keys_end = GetKeysEndOffset();
+      if (next_lo > mid && next_lo <= right) {
+        uint32_t off = DecodeFixed32(data_ + restarts_ +
+                                     static_cast<uint32_t>(next_lo) *
+                                         sizeof(uint32_t));
+        if (off < keys_end) {
+          PREFETCH(data_ + off, 0, 1);
+        }
+      }
+      if (next_hi > left && next_hi < mid) {
+        uint32_t off = DecodeFixed32(data_ + restarts_ +
+                                     static_cast<uint32_t>(next_hi) *
+                                         sizeof(uint32_t));
+        if (off < keys_end) {
+          PREFETCH(data_ + off, 0, 1);
+        }
+      }
+    }
+#endif
+
     Slice mid_key;
     if (!GetRestartKey<DecodeKeyFunc>(static_cast<uint32_t>(mid), &mid_key)) {
       return false;

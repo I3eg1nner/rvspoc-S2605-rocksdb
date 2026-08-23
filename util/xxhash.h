@@ -4932,10 +4932,15 @@ XXH3_accumulate_512_rvv(void* XXH_RESTRICT acc,
     XXH_ASSERT((((size_t)acc) & (XXH_ACC_ALIGN-1)) == 0);
     {
         xxh_u64* const xacc = (xxh_u64*) acc;
-        const xxh_u64* const xinput = (const xxh_u64*) input;
         const xxh_u64* const xsecret = (const xxh_u64*) secret;
         size_t vl = __riscv_vsetvl_e64m4(XXH_ACC_NB);
-        vuint64m4_t data_vec = __riscv_vle64_v_u64m4(xinput, vl);
+        /* Input has no alignment guarantee (scalar path uses memcpy
+         * reads) -- load it as bytes (alignment-free by construction)
+         * and reinterpret; little-endian lane order matches
+         * XXH_readLE64. Secret and acc are 8/64-byte aligned. */
+        size_t vl8 = __riscv_vsetvl_e8m4(XXH_STRIPE_LEN);
+        vuint64m4_t data_vec = __riscv_vreinterpret_v_u8m4_u64m4(
+            __riscv_vle8_v_u8m4((const xxh_u8*) input, vl8));
         vuint64m4_t key_vec = __riscv_vle64_v_u64m4(xsecret, vl);
         vuint64m4_t acc_vec = __riscv_vle64_v_u64m4(xacc, vl);
         vuint64m4_t data_key = __riscv_vxor_vv_u64m4(data_vec, key_vec, vl);

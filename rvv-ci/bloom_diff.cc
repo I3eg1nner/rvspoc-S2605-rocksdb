@@ -80,6 +80,24 @@ int main() {
     }
   }
 
+  // Misaligned base (exercises the scalar-fallback guard for mmap'd /
+  // custom-allocated filter blocks).
+  alignas(64) char buf2[64 + 8];
+  for (int off = 1; off <= 3; off++) {
+    char* mline = buf2 + off;
+    for (int trial = 0; trial < 200; trial++) {
+      for (int i = 0; i < 64; i++) mline[i] = (char)(rnd() | rnd());
+      for (int k = 1; k <= 24; k += 5) {
+        uint32_t h2 = rnd();
+        if (FastLocalBloomImpl::HashMayMatchPrepared(h2, k, mline) !=
+            RefMayMatch(h2, k, mline)) {
+          if (fails++ < 8) printf("FAIL misaligned off=%d k=%d\n", off, k);
+        }
+        checks++;
+      }
+    }
+  }
+
   printf("bloom_diff: %ld checks, %ld failures\n", checks, fails);
   return fails ? 1 : 0;
 }
