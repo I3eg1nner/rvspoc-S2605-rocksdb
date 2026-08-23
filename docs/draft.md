@@ -147,7 +147,22 @@ util/xxph3.h（旧 fork，持久化 hash 用）不动——范围锁定 xxhash.h
 GetRestartKey 12.5% 热点判定为 cache-miss 主导（wont-vectorize case），
 不强行向量化；后续可选标量预取候选。
 
-## A/B 判决（2026-08-23，K3 空载，中位数，seed=20260822）
+## ⚠ 测量事故与作废（2026-08-23 13:2x 发现）
+
+**下文"A/B 判决"全部作废**：RocketMQ smoke 的 `timeout 45 sh
+producer.sh` 只杀了 sh 外壳，java Producer 子进程逃逸存活（PID
+1032923，05:05 起，322% CPU，累计 1607 CPU 分钟，broker 关闭后空转
+重试）——污染了 rvv-full 与 crc-only 两轮 A/B 及 RVV perf profile。
+判决性证据：同一 crc-only 二进制 `ROCKSDB_RVV_CRC32C=0`（等效标量）
+在污染环境同样只有 333k ops/s（干净基线 469k）。标量基线本身早于
+污染源出生，仍有效。benchmark.csv 中受染行已标
+`-INVALID(rocketmq-producer-contamination)`（生数据保留）。
+**教训（回灌 wiki）**：timeout 不会级联杀 JVM 子进程——收尾必须
+pkill 类名；每次测量前后强制空载自检（load + pgrep java）——已把
+quiet-board gate 写进两个 A/B 脚本（load<0.9 且无 java 才准跑）。
+XXH3/memcmp/bloom 的"更慢"结论一并撤销，待干净重测重审。
+
+## A/B 判决（作废存档，2026-08-23，见上）
 
 **RISCV_RVV=1 全局 gcv 构建 vs 标量基线：全面回退**——
 cfg A：fill -3.4%，read t=1 -12.1%，**read t=8 -40.8%**，seek t=8 -38.5%；
