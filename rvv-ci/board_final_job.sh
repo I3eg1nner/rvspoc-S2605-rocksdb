@@ -11,6 +11,9 @@ step() { echo "$(date +%H:%M:%S) $1" >> $ST; }
 MK="env PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 CC=ccache\ gcc CXX=ccache\ g++ make -j6 db_bench DEBUG_LEVEL=0"
 clean_objs() { find . -name '*.o' -delete; rm -f db_bench librocksdb.a; }
 
+if [ "${SKIP_BUILD:-0}" = "1" ] && [ -x db_bench.scalar ] && [ -x db_bench.final ] && [ -x db_bench.rva23 ]; then
+  step SKIP_BUILD_REUSING_BINARIES
+else
 step BUILD_SCALAR_START
 clean_objs
 eval $MK > build-scalar.log 2>&1 || { step BUILD_SCALAR_FAIL; exit 1; }
@@ -48,9 +51,17 @@ for b in scalar final rva23; do
     || { step SANITY_FAIL_$b; exit 1; }
 done
 step SANITY_OK
+fi
 
 # ---- 3-arm interleaved acceptance A/B ----
-IDLE=$(vmstat 1 2 | tail -1 | awk '{print $15}'); [ "$IDLE" -ge 95 ] || { step "BOARD_BUSY idle=$IDLE"; exit 3; }
+# settle gate: wait up to 10 min for true idle instead of hard-failing
+N=0
+while :; do
+  IDLE=$(vmstat 1 2 | tail -1 | awk '{print $15}')
+  [ "$IDLE" -ge 95 ] && break
+  N=$((N+1)); [ "$N" -gt 20 ] && { step "BOARD_BUSY idle=$IDLE"; exit 3; }
+  step "settle idle=$IDLE"; sleep 30
+done
 for g in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo performance > $g; done
 run() { # $1 bin-suffix $2 tag $3.. args
   b=$1; tag=$2; shift 2
