@@ -810,7 +810,7 @@ bool BlockIter<TValue>::BinarySeekRestartPointIndex(const Slice& target,
     int64_t mid = left + (right - left + 1) / 2;
     assert(left < mid && mid <= right);
 
-#if defined(__riscv)
+#if defined(__riscv) && !defined(ROCKSDB_DISABLE_BINSEEK_PREFETCH)
     // S2605: binary-search restart probes miss cache on nearly every
     // iteration (dominant flat-profile cost of index seeks on riscv
     // boards). Prefetch both possible next probe targets so the miss

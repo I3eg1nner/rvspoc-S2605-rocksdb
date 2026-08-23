@@ -3240,7 +3240,8 @@ enum XXH_VECTOR_TYPE /* fake enum */ {
      || (defined(__s390x__) && defined(__VEC__)) \
      && defined(__GNUC__) /* TODO: IBM XL */
 #    define XXH_VECTOR XXH_VSX
-#  elif defined(__riscv) && defined(__riscv_vector)
+#  elif defined(__riscv) && defined(__riscv_vector) \
+     && !defined(ROCKSDB_DISABLE_RVV_XXHASH)
 #    define XXH_VECTOR XXH_RVV
 #  else
 #    define XXH_VECTOR XXH_SCALAR

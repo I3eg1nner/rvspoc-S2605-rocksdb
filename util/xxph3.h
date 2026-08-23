@@ -780,7 +780,8 @@ static const xxh_u64 PRIME64_5 = 0x27D4EB2F165667C5ULL;   /* 0b00100111110101001
 #    define XXPH_VECTOR XXPH_NEON
 #  elif defined(__PPC64__) && defined(__POWER8_VECTOR__) && defined(__GNUC__)
 #    define XXPH_VECTOR XXPH_VSX
-#  elif defined(__riscv) && defined(__riscv_vector)
+#  elif defined(__riscv) && defined(__riscv_vector) \
+     && !defined(ROCKSDB_DISABLE_RVV_XXHASH)
 #    define XXPH_VECTOR XXPH_RVV
 #  else
 #    define XXPH_VECTOR XXPH_SCALAR

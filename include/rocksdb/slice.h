@@ -26,7 +26,8 @@
 #include <string>
 #include <string_view>
 
-#if defined(__riscv) && defined(__riscv_vector)
+#if defined(__riscv) && defined(__riscv_vector) && \
+    !defined(ROCKSDB_DISABLE_RVV_MEMCMP)
 #include <riscv_vector.h>
 #endif
 
@@ -284,7 +285,8 @@ inline bool operator==(const Slice& x, const Slice& y) {
 
 inline bool operator!=(const Slice& x, const Slice& y) { return !(x == y); }
 
-#if defined(__riscv) && defined(__riscv_vector)
+#if defined(__riscv) && defined(__riscv_vector) && \
+    !defined(ROCKSDB_DISABLE_RVV_MEMCMP)
 namespace detail {
 // First-difference byte compare with exact memcmp semantics (unsigned
 // bytes, sign of first differing byte). Masked vector loads never touch
@@ -331,7 +333,8 @@ inline size_t RvvCommonPrefix(const char* a, const char* b, size_t n) {
 inline int Slice::compare(const Slice& b) const {
   assert(data_ != nullptr && b.data_ != nullptr);
   const size_t min_len = (size_ < b.size_) ? size_ : b.size_;
-#if defined(__riscv) && defined(__riscv_vector)
+#if defined(__riscv) && defined(__riscv_vector) && \
+    !defined(ROCKSDB_DISABLE_RVV_MEMCMP)
   int r = detail::RvvMemcmp(data_, b.data_, min_len);
 #else
   int r = memcmp(data_, b.data_, min_len);
@@ -348,7 +351,8 @@ inline int Slice::compare(const Slice& b) const {
 inline size_t Slice::difference_offset(const Slice& b) const {
   size_t off = 0;
   const size_t len = (size_ < b.size_) ? size_ : b.size_;
-#if defined(__riscv) && defined(__riscv_vector)
+#if defined(__riscv) && defined(__riscv_vector) && \
+    !defined(ROCKSDB_DISABLE_RVV_MEMCMP)
   off = detail::RvvCommonPrefix(data_, b.data_, len);
 #else
   for (; off < len; off++) {

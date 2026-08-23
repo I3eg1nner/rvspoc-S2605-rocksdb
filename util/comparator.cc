@@ -43,11 +43,15 @@ class BytewiseComparatorImpl : public Comparator {
                              const Slice& limit) const override {
     // Find length of common prefix
     size_t min_length = std::min(start->size(), limit.size());
+#if defined(__riscv) && defined(__riscv_vector)
+    size_t diff_index = Slice(*start).difference_offset(limit);
+#else
     size_t diff_index = 0;
     while ((diff_index < min_length) &&
            ((*start)[diff_index] == limit[diff_index])) {
       diff_index++;
     }
+#endif
 
     if (diff_index >= min_length) {
       // Do not shorten if one string is a prefix of the other
@@ -164,11 +168,15 @@ class ReverseBytewiseComparatorImpl : public BytewiseComparatorImpl {
                              const Slice& limit) const override {
     // Find length of common prefix
     size_t min_length = std::min(start->size(), limit.size());
+#if defined(__riscv) && defined(__riscv_vector)
+    size_t diff_index = Slice(*start).difference_offset(limit);
+#else
     size_t diff_index = 0;
     while ((diff_index < min_length) &&
            ((*start)[diff_index] == limit[diff_index])) {
       diff_index++;
     }
+#endif
 
     assert(diff_index <= min_length);
     if (diff_index == min_length) {

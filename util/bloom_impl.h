@@ -232,7 +232,8 @@ class FastLocalBloomImpl {
     return HashMayMatchPrepared(h2, num_probes, data + bytes_to_cache_line);
   }
 
-#if defined(__riscv) && defined(__riscv_vector)
+#if defined(__riscv) && defined(__riscv_vector) && \
+    !defined(ROCKSDB_DISABLE_RVV_BLOOM)
   // Powers of the 32-bit golden ratio mod 2**32 (same math as the AVX2
   // path below): multiplying h by kGoldenPow[i] equals i sequential
   // multiplications by 0x9e3779b9, so all probe hashes come out in one
@@ -246,7 +247,8 @@ class FastLocalBloomImpl {
   static inline bool HashMayMatchPrepared(uint32_t h2, int num_probes,
                                           const char* data_at_cache_line) {
     uint32_t h = h2;
-#if defined(__riscv) && defined(__riscv_vector)
+#if defined(__riscv) && defined(__riscv_vector) && \
+    !defined(ROCKSDB_DISABLE_RVV_BLOOM)
     // RVV single-key probe, mirroring the AVX2 path: up to 8 probes per
     // vector iteration; vsetvl on the remaining probe count replaces the
     // AVX2 k_selector mask. Bit-identical to the scalar path.
