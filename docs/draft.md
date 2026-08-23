@@ -147,6 +147,36 @@ util/xxph3.h（旧 fork，持久化 hash 用）不动——范围锁定 xxhash.h
 GetRestartKey 12.5% 热点判定为 cache-miss 主导（wont-vectorize case），
 不强行向量化；后续可选标量预取候选。
 
+## A/B 判决（2026-08-23，K3 空载，中位数，seed=20260822）
+
+**RISCV_RVV=1 全局 gcv 构建 vs 标量基线：全面回退**——
+cfg A：fill -3.4%，read t=1 -12.1%，**read t=8 -40.8%**，seek t=8 -38.5%；
+cfg B：fill -6.6%，read t=1 -1.4%，**read t=8 -25.6%**，seek t=8 -32.5%。
+CRC 微基准仍 7194 vs 902 MB/s（**7.97x**，kernel 级成立）。
+
+perf 对照（cfg B read t=8，RVV vs 标量）定责：
+- XXH3 RVV **更慢**（share 3.7%→6.0%，绝对 ~2.2x 慢；e64m4 vrgather
+  在 X100 上代价大——候选修正：vlseg2 去交织免 shuffle，需独立微基准）。
+- RvvMemcmp 短 key（16–24B）不敌 libc/内联标量（wiki 工件数字是独立
+  循环语境；树内短 key 场景差异）。
+- bloom 单 key vluxei probe 更慢（share 3.5%→4.1%）——wiki 单 key
+  警告言中；per rvv-task-flow"诚实 reject"。
+- t=8 崩塌远超 t=1（非热降频：62°C/2.4GHz 恒定）——疑与共享向量
+  资源/内存子系统并发有关，待微基准定性（1 vs 8 实例）。
+
+**cfg A（默认 flags，贴近评委场景）标量 profile**：memmove(libc)
+**14.7%**、snappy 解压 ~9.3%、GetRestartKey 7.6%、memcmp 3.0%、
+XXH3 2.6%；CRC 不入 top10。=> +30% 的真实杠杆在
+memmove/预取/（snappy），而非现有四 kernel。
+
+**交付架构修正**：默认交付 = 标量基线 + per-TU 运行时分派 kernel
+（CRC 模式）；全局 gcv 层记录为已测量负结果保留可选。xxhash/bloom/
+memcmp 的 RVV 版本以"存在 + 差分绿 + 实测数字"满足清单条款，
+在 K3 上默认关闭（诚实取舍）。
+进行中：仅-CRC 构建完整 A/B；下一候选评估顺序：RVV memmove
+（cfg A 14.7% 大头，先测 Bianbu glibc 是否已向量化）→ 查找预取 →
+xxh3 vlseg2 变体（微基准先行）。
+
 ## 会话日志
 
 ### 2026-08-22/23 会话 1（进行中）
