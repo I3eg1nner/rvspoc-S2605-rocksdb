@@ -18,6 +18,10 @@ JAVA_HOME=<jdk21> PORTABLE=1 RISCV_RVV=1 DISABLE_WARNING_AS_ERROR=1 make -j6 roc
 ```
 
 要点：
+- **交叉构建注意**：Makefile 用 `MACHINE ?= $(uname -m)` 判定 riscv64
+  ——交叉编译时必须显式传 `MACHINE=riscv64`，否则 CRC TU 与 RVV 层
+  静默失活（板上原生构建不受影响）。CMake 路径未接入 RVV（构建可用
+  但纯标量）——评测请用 Makefile。
 - `PORTABLE=1` 在 riscv64 钉 `-march=rv64gc`。不加则 Bianbu gcc 默认
   arch 含 V，"标量基线"会被静默向量化（用
   `objdump -d db_bench | grep -c vsetvli` 验证：标量=0）。

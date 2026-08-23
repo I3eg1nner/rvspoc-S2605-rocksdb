@@ -60,6 +60,8 @@
 - [ ] **PR 暂缓（用户 2026-08-23 指示）**：先出验收报告（结果汇总 +
       复现文档 + 全部证据）交用户验收，用户确认后才开 PR → upstream
       11.1.fb（届时再核实 base）
+- [ ] **PR 前必做（审计 M1）**：恢复上游 CLAUDE.md（工作区任务指令
+      不进 PR——单独 commit revert 或 PR 分支剔除）
 - [ ] 耐久发现回灌 wiki（运行页 + performance_claims + validate 绿）
 
 ## Blockers
