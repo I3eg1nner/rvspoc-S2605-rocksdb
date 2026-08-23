@@ -766,6 +766,7 @@ static const xxh_u64 PRIME64_5 = 0x27D4EB2F165667C5ULL;   /* 0b00100111110101001
 #define XXPH_AVX2   2
 #define XXPH_NEON   3
 #define XXPH_VSX    4
+#define XXPH_RVV    5
 
 #ifndef XXPH_VECTOR    /* can be defined on command line */
 #  if defined(__AVX2__)
@@ -779,9 +780,15 @@ static const xxh_u64 PRIME64_5 = 0x27D4EB2F165667C5ULL;   /* 0b00100111110101001
 #    define XXPH_VECTOR XXPH_NEON
 #  elif defined(__PPC64__) && defined(__POWER8_VECTOR__) && defined(__GNUC__)
 #    define XXPH_VECTOR XXPH_VSX
+#  elif defined(__riscv) && defined(__riscv_vector)
+#    define XXPH_VECTOR XXPH_RVV
 #  else
 #    define XXPH_VECTOR XXPH_SCALAR
 #  endif
+#endif
+
+#if XXPH_VECTOR == XXPH_RVV
+#include <riscv_vector.h>
 #endif
 
 /* control alignment of accumulator,
@@ -797,6 +804,8 @@ static const xxh_u64 PRIME64_5 = 0x27D4EB2F165667C5ULL;   /* 0b00100111110101001
 #     define XXPH_ACC_ALIGN 16
 #  elif XXPH_VECTOR == 4  /* vsx */
 #     define XXPH_ACC_ALIGN 16
+#  elif XXPH_VECTOR == 5  /* rvv */
+#     define XXPH_ACC_ALIGN 64
 #  endif
 #endif
 
@@ -1200,6 +1209,42 @@ XXPH3_accumulate_512(      void* XXPH_RESTRICT acc,
             }
     }   }
 
+#elif (XXPH_VECTOR == XXPH_RVV)
+
+    /* RVV 1.0 (S2605 port). Same per-lane math as the scalar path with
+     * commutative adds only -> bit-identical (Hash64 feeds persisted
+     * bloom bits, so this is mandatory, differential-tested).
+     * e64m4 guarantees vl == ACC_NB(8) at any VLEN >= 128; input and
+     * secret are loaded as bytes (alignment-free) and reinterpreted. */
+    XXPH_ASSERT((((size_t)acc) & (XXPH_ACC_ALIGN-1)) == 0);
+    {
+        xxh_u64* const xacc = (xxh_u64*) acc;
+        size_t vl = __riscv_vsetvl_e64m4(ACC_NB);
+        size_t vl8 = __riscv_vsetvl_e8m4(STRIPE_LEN);
+        vuint64m4_t data_vec = __riscv_vreinterpret_v_u8m4_u64m4(
+            __riscv_vle8_v_u8m4((const xxh_u8*) input, vl8));
+        vuint64m4_t key_vec = __riscv_vreinterpret_v_u8m4_u64m4(
+            __riscv_vle8_v_u8m4((const xxh_u8*) secret, vl8));
+        vuint64m4_t acc_vec = __riscv_vle64_v_u64m4(xacc, vl);
+        vuint64m4_t data_key = __riscv_vxor_vv_u64m4(data_vec, key_vec, vl);
+        /* mult32to64: both halves fit 32 bits, low-64 vmul is exact */
+        vuint64m4_t dk_lo =
+            __riscv_vand_vx_u64m4(data_key, 0xFFFFFFFFULL, vl);
+        vuint64m4_t dk_hi = __riscv_vsrl_vx_u64m4(data_key, 32, vl);
+        vuint64m4_t prod = __riscv_vmul_vv_u64m4(dk_lo, dk_hi, vl);
+        if (accWidth == XXPH3_acc_64bits) {
+            acc_vec = __riscv_vadd_vv_u64m4(acc_vec, data_vec, vl);
+        } else {  /* XXPH3_acc_128bits: swap adjacent lanes */
+            vuint64m4_t idx = __riscv_vid_v_u64m4(vl);
+            idx = __riscv_vxor_vx_u64m4(idx, 1, vl);
+            vuint64m4_t data_swap =
+                __riscv_vrgather_vv_u64m4(data_vec, idx, vl);
+            acc_vec = __riscv_vadd_vv_u64m4(acc_vec, data_swap, vl);
+        }
+        acc_vec = __riscv_vadd_vv_u64m4(acc_vec, prod, vl);
+        __riscv_vse64_v_u64m4(xacc, acc_vec, vl);
+    }
+
 #elif (XXPH_VECTOR == XXPH_NEON)
 
     XXPH_ASSERT((((size_t)acc) & 15) == 0);
@@ -1391,6 +1436,24 @@ XXPH3_scrambleAcc(void* XXPH_RESTRICT acc, const void* XXPH_RESTRICT secret)
             __m128i const prod_hi     = _mm_mul_epu32     (data_key_hi, prime32);
             xacc[i] = _mm_add_epi64(prod_lo, _mm_slli_epi64(prod_hi, 32));
         }
+    }
+
+#elif (XXPH_VECTOR == XXPH_RVV)
+
+    /* acc = ((acc ^ (acc >> 47)) ^ secret) * PRIME32_1 (low 64 bits) */
+    XXPH_ASSERT((((size_t)acc) & (XXPH_ACC_ALIGN-1)) == 0);
+    {
+        xxh_u64* const xacc = (xxh_u64*) acc;
+        size_t vl = __riscv_vsetvl_e64m4(ACC_NB);
+        size_t vl8 = __riscv_vsetvl_e8m4(STRIPE_LEN);
+        vuint64m4_t acc_vec = __riscv_vle64_v_u64m4(xacc, vl);
+        vuint64m4_t key_vec = __riscv_vreinterpret_v_u8m4_u64m4(
+            __riscv_vle8_v_u8m4((const xxh_u8*) secret, vl8));
+        vuint64m4_t shifted = __riscv_vsrl_vx_u64m4(acc_vec, 47, vl);
+        acc_vec = __riscv_vxor_vv_u64m4(acc_vec, shifted, vl);
+        acc_vec = __riscv_vxor_vv_u64m4(acc_vec, key_vec, vl);
+        acc_vec = __riscv_vmul_vx_u64m4(acc_vec, (xxh_u64)PRIME32_1, vl);
+        __riscv_vse64_v_u64m4(xacc, acc_vec, vl);
     }
 
 #elif (XXPH_VECTOR == XXPH_NEON)
