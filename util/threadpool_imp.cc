@@ -33,6 +33,11 @@
 #include "test_util/sync_point.h"
 #include "util/string_util.h"
 
+#if defined(__riscv) && defined(OS_LINUX)
+#include <pthread.h>
+#include <sched.h>
+#endif
+
 namespace ROCKSDB_NAMESPACE {
 
 void ThreadPoolImpl::PthreadCall(const char* label, int result) {
@@ -320,10 +325,80 @@ struct BGThreadMetadata {
       : thread_pool_(thread_pool), thread_id_(thread_id) {}
 };
 
+#if defined(__riscv) && defined(OS_LINUX)
+namespace {
+// S2605 heterogeneous-core scheduling hook (opt-in, riscv-only): pin a
+// background pool's threads to a CPU list from the environment, e.g.
+//   ROCKSDB_BG_LOW_CPUS=32-47   # compaction -> efficiency cores
+//   ROCKSDB_BG_HIGH_CPUS=32-47  # flush
+//   ROCKSDB_BG_BOTTOM_CPUS=...
+// Unset variables change nothing. Intended for parts like the LX5000
+// (32 performance + 16 efficiency cores): batch/throughput background
+// work moves off the performance cores that serve foreground reads and
+// writes (the P99-critical path). Parse errors and setaffinity failures
+// are ignored (the thread simply keeps the default mask).
+void MaybePinBackgroundThread(Env::Priority pri) {
+  const char* env = nullptr;
+  switch (pri) {
+    case Env::Priority::LOW:
+      env = getenv("ROCKSDB_BG_LOW_CPUS");
+      break;
+    case Env::Priority::HIGH:
+      env = getenv("ROCKSDB_BG_HIGH_CPUS");
+      break;
+    case Env::Priority::BOTTOM:
+      env = getenv("ROCKSDB_BG_BOTTOM_CPUS");
+      break;
+    default:
+      return;
+  }
+  if (env == nullptr || env[0] == '\0') {
+    return;
+  }
+  cpu_set_t set;
+  CPU_ZERO(&set);
+  bool any = false;
+  const char* p = env;
+  while (*p != '\0') {
+    char* end = nullptr;
+    long lo = strtol(p, &end, 10);
+    if (end == p || lo < 0 || lo >= CPU_SETSIZE) {
+      return;  // malformed: pin nothing rather than something wrong
+    }
+    long hi = lo;
+    p = end;
+    if (*p == '-') {
+      p++;
+      hi = strtol(p, &end, 10);
+      if (end == p || hi < lo || hi >= CPU_SETSIZE) {
+        return;
+      }
+      p = end;
+    }
+    for (long c = lo; c <= hi; c++) {
+      CPU_SET(static_cast<int>(c), &set);
+      any = true;
+    }
+    if (*p == ',') {
+      p++;
+    } else if (*p != '\0') {
+      return;
+    }
+  }
+  if (any) {
+    (void)pthread_setaffinity_np(pthread_self(), sizeof(set), &set);
+  }
+}
+}  // namespace
+#endif  // __riscv && OS_LINUX
+
 void ThreadPoolImpl::Impl::BGThreadWrapper(void* arg) {
   BGThreadMetadata* meta = static_cast<BGThreadMetadata*>(arg);
   size_t thread_id = meta->thread_id_;
   ThreadPoolImpl::Impl* tp = meta->thread_pool_;
+#if defined(__riscv) && defined(OS_LINUX)
+  MaybePinBackgroundThread(tp->GetThreadPriority());
+#endif
 #ifndef NROCKSDB_THREAD_STATUS
   // initialize it because compiler isn't good enough to see we don't use it
   // uninitialized

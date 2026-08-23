@@ -68,6 +68,31 @@ TEST_TMPDIR=$HOME/rocksdb-test-tmp PORTABLE=1 [RISCV_RVV=1] make -j6 J=6 check
 见 benchmark.csv（生数据逐行）与 profile/env-board-*.txt。命令模板见
 rocksdb-s2605-rvv 树内 run_baseline.sh / run_ab_rvv.sh。
 
+## 异构多核（32P+16E，LX5000）调度优化
+
+**机制**（本工程新增，riscv-only、默认关闭）：RocksDB 后台线程池
+亲和性钩子（util/threadpool_imp.cc），按池设置环境变量：
+```bash
+# compaction（LOW 池，吞吐型批处理）→ 能效核；flush（HIGH）同理
+ROCKSDB_BG_LOW_CPUS=<E核列表>  ROCKSDB_BG_HIGH_CPUS=<E核列表>  ./db_bench ...
+# 前台（db_bench worker / RocketMQ broker JVM）绑性能核：
+taskset -c <P核列表> ...
+```
+原理：compaction/flush 与前台争抢核与内存带宽；将其迁往 E 核后
+P 核专事前台 Get/Put——直接服务 RocketMQ P99 门槛。变量不设 = 行为
+与原版完全一致；非 riscv 构建逐字节不变（预处理输出已验证）。
+
+**评测机 P/E 编号发现**（LX5000 上先跑）：
+```bash
+for p in /sys/devices/system/cpu/cpufreq/policy*; do
+  echo "$p: cpus=$(cat $p/affected_cpus) max=$(cat $p/cpuinfo_max_freq)"
+done   # max_freq 高的一簇 = P 核；亦可对照 /proc/cpuinfo 的 uarch/marchid
+```
+
+**测量告诫**：t=1 基准若不绑核可能落到 E 核，基线与优化档双向失真
+——所有单线程点必须 `taskset` 绑 P 核（K3 上 A100 簇被内核保留、
+进程天然只落 X100，故 K3 历史数据无此风险；实测记录见 draft.md）。
+
 ## RocketMQ 5.5.0（riscv64）
 
 1. `apt install openjdk-21-jdk`；下载 rocketmq-all-5.5.0-bin-release。
