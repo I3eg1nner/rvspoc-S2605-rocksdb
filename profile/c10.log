@@ -1,0 +1,28 @@
+RESULT F-A-fill fillrandom   :      11.570 micros/op 86427 ops/sec 231.408 seconds 20000000 operations;    9.6 MB/s
+RESULT T-A-fill fillrandom   :      11.814 micros/op 84646 ops/sec 236.278 seconds 20000000 operations;    9.4 MB/s
+RESULT F-A-fill fillrandom   :      11.378 micros/op 87887 ops/sec 227.563 seconds 20000000 operations;    9.7 MB/s
+RESULT T-A-fill fillrandom   :      11.925 micros/op 83858 ops/sec 238.498 seconds 20000000 operations;    9.3 MB/s
+RESULT F-A-fill fillrandom   :      11.176 micros/op 89475 ops/sec 223.526 seconds 20000000 operations;    9.9 MB/s
+RESULT T-A-fill fillrandom   :      11.560 micros/op 86504 ops/sec 231.203 seconds 20000000 operations;    9.6 MB/s
+RESULT W readrandom   :      66.186 micros/op 119635 ops/sec 133.740 seconds 16000000 operations;    9.0 MB/s (2000000 of 2000000 found)
+RESULT F-A-read readrandom   :      47.682 micros/op 166911 ops/sec 95.859 seconds 16000000 operations;   12.5 MB/s (2000000 of 2000000 found)
+RESULT T-A-read readrandom   :      48.629 micros/op 163944 ops/sec 97.594 seconds 16000000 operations;   12.3 MB/s (2000000 of 2000000 found)
+RESULT F-A-read readrandom   :      48.459 micros/op 164113 ops/sec 97.493 seconds 16000000 operations;   12.3 MB/s (2000000 of 2000000 found)
+RESULT T-A-read readrandom   :      48.467 micros/op 164211 ops/sec 97.435 seconds 16000000 operations;   12.3 MB/s (2000000 of 2000000 found)
+RESULT F-A-read readrandom   :      48.190 micros/op 165646 ops/sec 96.591 seconds 16000000 operations;   12.4 MB/s (2000000 of 2000000 found)
+RESULT T-A-read readrandom   :      48.301 micros/op 164847 ops/sec 97.060 seconds 16000000 operations;   12.4 MB/s (2000000 of 2000000 found)
+RESULT F-A-read readrandom   :      48.715 micros/op 163438 ops/sec 97.896 seconds 16000000 operations;   12.3 MB/s (2000000 of 2000000 found)
+RESULT T-A-read readrandom   :      48.397 micros/op 164019 ops/sec 97.549 seconds 16000000 operations;   12.3 MB/s (2000000 of 2000000 found)
+RESULT F-A-read readrandom   :      46.506 micros/op 171003 ops/sec 93.565 seconds 16000000 operations;   12.8 MB/s (2000000 of 2000000 found)
+RESULT T-A-read readrandom   :      48.736 micros/op 163355 ops/sec 97.946 seconds 16000000 operations;   12.3 MB/s (2000000 of 2000000 found)
+RESULT W readrandom   :      42.701 micros/op 168894 ops/sec 94.734 seconds 16000000 operations;   12.7 MB/s (2000000 of 2000000 found)
+RESULT F-B-read readrandom   :      12.487 micros/op 475058 ops/sec 33.680 seconds 16000000 operations;   35.6 MB/s (2000000 of 2000000 found)
+RESULT T-B-read readrandom   :      12.502 micros/op 474253 ops/sec 33.737 seconds 16000000 operations;   35.6 MB/s (2000000 of 2000000 found)
+RESULT F-B-read readrandom   :      12.538 micros/op 471259 ops/sec 33.952 seconds 16000000 operations;   35.3 MB/s (2000000 of 2000000 found)
+RESULT T-B-read readrandom   :      12.529 micros/op 476206 ops/sec 33.599 seconds 16000000 operations;   35.7 MB/s (2000000 of 2000000 found)
+RESULT F-B-read readrandom   :      12.339 micros/op 484298 ops/sec 33.037 seconds 16000000 operations;   36.3 MB/s (2000000 of 2000000 found)
+RESULT T-B-read readrandom   :      12.507 micros/op 474035 ops/sec 33.753 seconds 16000000 operations;   35.6 MB/s (2000000 of 2000000 found)
+RESULT F-B-read readrandom   :      12.472 micros/op 473864 ops/sec 33.765 seconds 16000000 operations;   35.5 MB/s (2000000 of 2000000 found)
+RESULT T-B-read readrandom   :      12.562 micros/op 475477 ops/sec 33.650 seconds 16000000 operations;   35.7 MB/s (2000000 of 2000000 found)
+RESULT F-B-read readrandom   :      12.580 micros/op 474177 ops/sec 33.743 seconds 16000000 operations;   35.6 MB/s (2000000 of 2000000 found)
+RESULT T-B-read readrandom   :      12.517 micros/op 474074 ops/sec 33.750 seconds 16000000 operations;   35.6 MB/s (2000000 of 2000000 found)
