@@ -512,14 +512,46 @@ TEST_F(OptionsSettableTest, DBOptionsAllFieldsSettable) {
 TEST_F(OptionsSettableTest, ColumnFamilyOptionsAllFieldsSettable) {
   // options in the excluded set need to appear in the same order as in
   // ColumnFamilyOptions.
+  // Alignment padding holes (e.g. after a bool that precedes an 8-byte
+  // member) must be excluded from the unset-byte scan: whether the
+  // compiler's constructor codegen writes them is target-specific (on
+  // riscv64, gcc store-merging covers them; the options parser never
+  // does), so counting them makes the test depend on codegen. Each hole
+  // is expressed with offsetof so the width is 0 on targets without it.
   const OffsetGap kColumnFamilyOptionsExcluded = {
+      {offsetof(struct ColumnFamilyOptions, inplace_update_support) +
+           sizeof(bool),
+       offsetof(struct ColumnFamilyOptions, inplace_update_num_locks) -
+           offsetof(struct ColumnFamilyOptions, inplace_update_support) -
+           sizeof(bool)},
       {offsetof(struct ColumnFamilyOptions, inplace_callback),
        sizeof(UpdateStatus (*)(char*, uint32_t*, Slice, std::string*))},
+      {offsetof(struct ColumnFamilyOptions, memtable_whole_key_filtering) +
+           sizeof(bool),
+       offsetof(struct ColumnFamilyOptions, memtable_huge_page_size) -
+           offsetof(struct ColumnFamilyOptions, memtable_whole_key_filtering) -
+           sizeof(bool)},
       {offsetof(struct ColumnFamilyOptions,
                 memtable_insert_with_hint_prefix_extractor),
        sizeof(std::shared_ptr<const SliceTransform>)},
+      {offsetof(struct ColumnFamilyOptions, bloom_locality) + sizeof(uint32_t),
+       offsetof(struct ColumnFamilyOptions, arena_block_size) -
+           offsetof(struct ColumnFamilyOptions, bloom_locality) -
+           sizeof(uint32_t)},
       {offsetof(struct ColumnFamilyOptions, compression_per_level),
        sizeof(std::vector<CompressionType>)},
+      {offsetof(struct ColumnFamilyOptions, level0_stop_writes_trigger) +
+           sizeof(int),
+       offsetof(struct ColumnFamilyOptions, target_file_size_base) -
+           offsetof(struct ColumnFamilyOptions, level0_stop_writes_trigger) -
+           sizeof(int)},
+      {offsetof(struct ColumnFamilyOptions,
+                level_compaction_dynamic_level_bytes) +
+           sizeof(bool),
+       offsetof(struct ColumnFamilyOptions, max_bytes_for_level_multiplier) -
+           offsetof(struct ColumnFamilyOptions,
+                    level_compaction_dynamic_level_bytes) -
+           sizeof(bool)},
       {offsetof(struct ColumnFamilyOptions,
                 max_bytes_for_level_multiplier_additional),
        sizeof(std::vector<int>)},
