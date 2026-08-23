@@ -112,6 +112,35 @@ inline const char* GetVarint32Ptr(const char* p, const char* limit,
       return p + 1;
     }
   }
+#if defined(__riscv) && defined(__riscv_zbb) && \
+    !defined(ROCKSDB_DISABLE_ZBB_VARINT)
+  // Branchless multi-byte decode (S2605): one 8-byte load, find the
+  // terminator with ctz (Zbb), SWAR-combine the 7-bit groups. Removes
+  // the data-dependent branch per byte that mispredicts on mixed-length
+  // varints (index-block value offsets are 2-4 bytes). Semantics match
+  // GetVarint32PtrFallback bit-for-bit, including truncation of
+  // non-canonical high bits and nullptr on >5-byte encodings.
+  if (limit - p >= 8) {
+    uint64_t x;
+    memcpy(&x, p, 8);
+    const uint64_t term = ~x & 0x8080808080808080ULL;
+    if (term == 0) {
+      return nullptr;  // 8+ continuation bytes: invalid varint32
+    }
+    const unsigned len = (unsigned)(__builtin_ctzll(term) >> 3) + 1;
+    if (len > 5) {
+      return nullptr;
+    }
+    uint64_t m = x & (~uint64_t{0} >> (64 - 8 * len));
+    m &= 0x7f7f7f7f7f7f7f7fULL;
+    const uint64_t v = (m & 0x7f) | ((m >> 1) & (uint64_t{0x7f} << 7)) |
+                       ((m >> 2) & (uint64_t{0x7f} << 14)) |
+                       ((m >> 3) & (uint64_t{0x7f} << 21)) |
+                       ((m >> 4) & (uint64_t{0x7f} << 28));
+    *value = static_cast<uint32_t>(v);
+    return p + len;
+  }
+#endif
   return GetVarint32PtrFallback(p, limit, value);
 }
 

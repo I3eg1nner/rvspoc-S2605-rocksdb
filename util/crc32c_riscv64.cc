@@ -289,6 +289,13 @@ uint32_t ExtendRVV(uint32_t crc, const char* data, size_t n) {
     p += head;
     n -= head;
   }
+  // Heterogeneous-VLEN guard (wiki vlen-portability slip #6): st.w was
+  // derived once at init; if the scheduler moved us to a hart with a
+  // smaller VLEN, vsetvl grants less than w and the stride math below
+  // would silently compute a WRONG crc. Verify the grant, else scalar.
+  if (__riscv_vsetvl_e64m2(w) != w) {
+    return ~CrcRaw(init, p, n);
+  }
 #ifdef RVV_DISPATCH_COUNTERS
   dispatch_count.fetch_add(1, std::memory_order_relaxed);
 #endif

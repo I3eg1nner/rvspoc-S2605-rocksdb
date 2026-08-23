@@ -538,7 +538,14 @@ CXXFLAGS += $(WARNING_FLAGS) -I. -I./include $(PLATFORM_CXXFLAGS) $(OPT) -Woverl
 # PORTABLE -march=rv64gc (with gcc, the last -march wins).
 ifneq (,$(findstring riscv64,$(MACHINE)))
 ifeq ($(RISCV_RVV),1)
+# Default includes Zicbop (RVA23-mandatory, present on K3): without it
+# __builtin_prefetch and every existing RocksDB PREFETCH() site emit
+# ZERO instructions under a bare -march=rv64gcv (empirically verified).
+ifeq (,$(shell $(CXX) -fsyntax-only -march=rv64gcv_zicbop -xc /dev/null 2>&1))
+RISCV_RVV_MARCH ?= rv64gcv_zicbop
+else
 RISCV_RVV_MARCH ?= rv64gcv
+endif
 CXXFLAGS += -march=$(RISCV_RVV_MARCH)
 CFLAGS += -march=$(RISCV_RVV_MARCH)
 endif
