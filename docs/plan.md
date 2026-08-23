@@ -40,6 +40,16 @@
 - [ ] autovec 扫尾：-fopt-info-vec 清点
 - [ ] RVA23 档 build tier 实验（-march=rv64gcv_zba_zbb_zbs_zicond —
       LX500 保证集，wiki hw-lanxin-lx5000 source-reported；不含 zvbc）
+- [ ] **异构调度协议**：测量脚本补 taskset 绑 X100/P 核（wiki
+      technique-benchmark-methodology 第 1 条，此前漏做）+ 拓扑快照
+      （lscpu/marchid/offline 表）入 env 快照；板上复核 A100 是否
+      online/可调度（SSH 恢复后）——若可调度 → A100 VLEN-1024 差分
+      （"VLEN 128/256/512 自适应"条款的超额实机证据）+ 报告"主核 vs
+      协处理核"调度分析（RocksDB 驻留 X100 的实测理由）
+- [ ] **加分项评估**：多核并发与锁优化（AMO/写路径锁/WAL 分配/
+      MemTable 并发插入；官网原文已入 wiki contest-rvspoc-s2605）——
+      独立实现 amomaxu/pause（披露与 PR#1 对照）或 WAL 分配安全改良；
+      60min 零损坏门槛下不做激进锁重构
 - [ ] op-inventory 90% 覆盖核算
 
 ## 阶段 2 — 全矩阵验证

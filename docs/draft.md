@@ -206,6 +206,19 @@ technique-benchmark-methodology。
 其余排雷：Bianbu glibc memcpy/memmove 已向量化（libc 内 995 处
 vsetvli）——memmove 杠杆排除。
 
+## K3 异构拓扑实测（2026-08-24，回应赛题"异构多核调度"）
+
+- /proc/cpuinfo 暴露 **16 hart**：0-7 hart isa `rv64imafdcvh`（X100），
+  **8-15 `rv64imafdcv`（无 H）= A100 簇**，A100 亦带 V/zvbc。
+- sysfs online=0-15，但全系统进程 `Cpus_allowed: 0-7`，
+  `sched_setaffinity(8..15)` 返回 EINVAL → **A100 被内核级保留
+  （疑 isolcpus，留给 AI 栈），通用调度不可达**。
+- 推论：① 既往全部测量天然只落 X100，回溯性安全；② K3 上异构调度
+  优化的可交付形态 = 协议显式化（绑核+拓扑快照入 env 记录）+ 主核/
+  协处理核调度分析文档；③ P1 授予值校验是异构 VLEN 场景的正确防御
+  （赛题关切场景的直接工程回应）；④ LX5000 32P+16E 预计可调度，
+  taskset 绑 P 核已写入 REPRODUCE 评测指引。
+
 ## 会话日志
 
 ### 2026-08-22/23 会话 1（进行中）
@@ -300,3 +313,28 @@ vsetvli）——memmove 杠杆排除。
 6. 行动项：新增 **RVA23 档 tier**（-march=rv64gcv_zba_zbb_zbs_zicond，
    规格内且 LX5000 保证，白拿 bitmanip；不含 zvbc）做 A/B；确认 CMake
    构建路径同样带 flags（评审可能用 CMake/LLVM）；争取 LX5000 访问。
+
+## ≥30% 达标思路盘点（2026-08-23）
+
+官方评测 repo（rv2036/rvspoc-S2605-rocksdb main）无评测脚本，协议以
+rvspoc.org/S2605 为准，需向主办方索要评测命令 + LX500 访问。按预期
+贡献排序（LX500，估计区间，未经实测）：
+
+1. **比较器 fast-path**（8 字节先行整数比较，未做——最大单点）：
+   FindSpliceForLevel 13.9% + 读侧 memcmp 8.2% 两边通吃。内联
+   first-8-bytes 比较避开 libc memcmp 调用开销与 RVV 短 key 劣势
+   （他实测 RVV 比较 0.90-1.00x glibc）。预期 fill +6~10%，read +3~5%。
+2. **RVA23 档 tier**（已入 plan 阶段 1）：+3~6%。
+3. **PGO + LTO**（灰色地带：编译技术非架构作弊，但需向主办方确认并在
+   报告披露）：CPU-bound 5~10%。
+4. **clang 构建对比**（LX500 生态 LLVM 主力；换编译器同为灰色，至少
+   测量留底）。
+5. prefetch 深化（DDR5 延迟更大，K3 +0.3/+1.2% 可能翻倍）。
+6. XXH3/memcmp RVV 复判（污染后欠账）。
+7. block_builder：**优先级下调**——LX500 48 核上 flush 与前台竞争小，
+   他这项优势在评审机上缩水。
+
+排除项（诚实）：varint 单点解码、bloom 单 key、WAL/IO、memcpy（libc
+已向量化）。叠加估计：fillrandom +20~35%（贴线），read/seek +10~18%
+——30% 若要求三 bench 全达标，纯计算侧不可达，需 latency 论证 +
+ 与主办方确认 rubric（任一/平均/全部）。
