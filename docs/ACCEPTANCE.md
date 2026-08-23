@@ -37,6 +37,18 @@ benchmark.csv `scalar-baseline` 行。
 miss(7.6%)，现有 kernel 覆盖面之外。候选路线（memmove RVV、预取）
 评估中。LX5000 上比例可能不同。
 
+**工具链兼容矩阵**（评审环境公告"以 LLVM 为核心"→ clang++ 按潜在
+评测工具链全量验证）：
+
+| 工具链 | 内核差分（QEMU 3×VLEN+敌意） | CRC Zvbc TU |
+|---|---|---|
+| gcc 14.2（交叉）/ 15.2（板原生） | 6/6 全绿 | 启用（探测通过） |
+| clang 18.1 / **19.1** | 5/5 全绿（memcmp/xxh3/bloom/xxph3/varint，位相同） | **自动优雅排除**——clang ≤19 无 `__riscv_vclmul_*` intrinsics（riscv_vector.h 实测零命中；intrinsic-doc 的 clang 19 指 v1.0 基础集，向量密码类另有时间线）→ 分派走 slice-by-8，恰为 RVA23 评审机（无 zvbc 硬件）的预期路径 |
+
+关键工程点：Makefile 的 `HAVE_RVV_CRC32C` 探测编译 intrinsic 本身而非
+march 字符串——否则 clang 18/19 会接受 `-march=..._zvbc` 却在编译
+CRC TU 时构建失败。
+
 **规范性引用**：全部向量代码遵循官方
 [riscv-rvv-intrinsic-doc](https://github.com/riscv-non-isa/riscv-rvv-intrinsic-doc)
 （赛题指定参考）的 `__riscv_` intrinsics API（含 tuple 段式加载
