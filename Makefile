@@ -526,17 +526,21 @@ endif
 CFLAGS += $(C_WARNING_FLAGS) $(WARNING_FLAGS) -I. -I./include $(PLATFORM_CCFLAGS) $(OPT)
 CXXFLAGS += $(WARNING_FLAGS) -I. -I./include $(PLATFORM_CXXFLAGS) $(OPT) -Woverloaded-virtual -Wnon-virtual-dtor -Wno-missing-field-initializers
 
-# RISCV_RVV=1: deliverable RVV build — whole-program -march=rv64gcv
-# (the RV64GCV target guarantees V; VLEN adaptivity is runtime vsetvl).
-# Enables the __riscv_vector inline paths (e.g. Slice::compare, xxHash,
-# bloom probe) and compiler auto-vectorization. Extensions beyond V
-# (Zvbc) stay per-TU with runtime hwprobe dispatch. Must be appended
-# AFTER $(PLATFORM_CXXFLAGS) so it overrides the PORTABLE -march=rv64gc
-# (with gcc, the last -march on the command line wins).
+# RISCV_RVV=1: deliverable RVV build — whole-program -march (default
+# rv64gcv; the RV64GCV target guarantees V, VLEN adaptivity is runtime
+# vsetvl). Enables the __riscv_vector inline paths (e.g. Slice::compare,
+# xxHash, bloom probe) and compiler auto-vectorization. Extensions
+# beyond the guaranteed set stay per-TU with runtime hwprobe dispatch.
+# RISCV_RVV_MARCH overrides the arch string — e.g. the RVA23 mandatory
+# profile set rv64gcv_zba_zbb_zbs_zicond (scalar bitmanip + cond ops are
+# guaranteed on RVA23 targets like the LX5000; zbc/zvbb/zvbc are NOT).
+# Must be appended AFTER $(PLATFORM_CXXFLAGS) so it overrides the
+# PORTABLE -march=rv64gc (with gcc, the last -march wins).
 ifneq (,$(findstring riscv64,$(MACHINE)))
 ifeq ($(RISCV_RVV),1)
-CXXFLAGS += -march=rv64gcv
-CFLAGS += -march=rv64gcv
+RISCV_RVV_MARCH ?= rv64gcv
+CXXFLAGS += -march=$(RISCV_RVV_MARCH)
+CFLAGS += -march=$(RISCV_RVV_MARCH)
 endif
 endif
 
