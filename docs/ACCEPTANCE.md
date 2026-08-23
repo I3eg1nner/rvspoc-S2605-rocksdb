@@ -18,7 +18,7 @@ vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。
 | `#ifdef __riscv_vector` 隔离 / x86 ARM 不变 | ✅ | aarch64 g++ 预处理输出 token 级一致（slice/xxhash/bloom）；新 TU 非 riscv 下零代码 |
 | 禁第三方 RISC-V 适配代码 | ✅ | 全部第一方（rvv-wiki 自有工件移植 + 本会话新写）；常数运行时推导非拷贝 |
 | make check / db_test 全过 | ✅（标量参考树） | 38934 项：18 失败全部归因并修复/排除——16×range_locking = v11.1.1 上游 bug（用户态 rdcycle SIGILL→rdtime 修复，17/17 过）；options_settable = padding 计数脆弱（offsetof 可移植排除，4/4 过）；prefetch_test 过载 flaky（串行 104/104 过）。**RVV 构建全量 check：TBD（排程中）** |
-| RocketMQ 5.5.0 60min 压测 | 🔶 链路已通，压测待跑 | riscv64 OpenJDK21 + broker 以我们的 rocksdbjni-11.1.1 启动成功（捆绑 jar 无 riscv64 原生库，替换即通）；producer smoke 6162 TPS/0 失败；60min 脚本就绪（rvv-ci/rocketmq_stress.sh） |
+| RocketMQ 5.5.0 60min 压测 | ✅ **PASS**（2026-08-24） | 交付树 rocksdbjni-11.1.1（RVV 档）：全程 60min 持续负载，avg Send TPS **6056** / Consume TPS **6117**（各 361×10s 采样）；**Send/Response/Consume Failed 全 0**（零丢失零损坏）；broker RSS 1.9→3.0G 无 OOM；put/get TPS 收支平衡。生数据 profile/rmq-{samples.csv,stress-run.log} |
 | AI 披露 | ✅ | 本工作区 git 历史 + rvv-wiki 页引用轨迹（draft.md 逐候选记录页 id/置信度）+ wiki 回灌记录 |
 
 ## 二、性能（K3，中位数，seed=20260822，空载+performance governor）
@@ -48,8 +48,9 @@ R = RVA23 档（+zba/zbb/zbs/zicond，含 zbb-varint 无分支解码）：
 （zbb-varint 的贡献可见）；A fill +12.7% 为 zicbop 真预取 + 内联路径
 的最高单点。样本量：t8 每臂 5、t1 每臂 3、fill 每臂 2（生数据齐存
 benchmark.csv `interleaved-3arm` 行）。
-候选 #10（IterKey 微拷贝，归因 memmove 14.7% 大头）判决轮由主线
-会话在板上进行中，结果补入本表。
+候选 #10（IterKey 微拷贝，归因 memmove 14.7% 大头）已判决
+**REJECT 并 revert**：交替协议 A-fill -3.7% / A-read -1.0% /
+B-read 0.0%（正确性差分曾全绿，纯性能否决；candidates.jsonl 存档）。
 CRC 微基准：7319–7327 vs 902–903 MB/s（**8.1x**，@4KB，多轮复现）。
 
 ⚠ 诚实记录：+30% 端到端门槛在 K3 上尚未达成（当前最好单点
@@ -80,8 +81,9 @@ CRC TU 时构建失败。
 
 1. 每 kernel 差分（板 + QEMU 3 VLEN × 敌意 ta/ma）：crc 4438/0、
    memcmp 49279/0、xxh3 30032/0、bloom 603990/0。
-2. 持久化位相同：标量构建写 12.6M 条 DB → RVV 构建 readseq 全扫零
-   Corruption（块 CRC 全验）；（反向 RVV 写→标量读：TBD 最终轮）。
+2. 持久化位相同**双向闭环**：标量写 12.6M 条 → RVV 读全扫零
+   Corruption；RVV 写 12.64M 条 → 标量读全扫零 Corruption
+   （2026-08-24，块 CRC 双向全验）。
 3. 分派证明：LOG "Fast CRC32 supported: Supported on RISC-V (Zvbc)"；
    ROCKSDB_RVV_CRC32C=0/1 开关 A/B 微基准 8.1x 差；objdump 向量指令
    限于 ExtendRVV 符号（crc-only 构建）。
