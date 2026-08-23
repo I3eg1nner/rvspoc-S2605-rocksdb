@@ -292,7 +292,12 @@ endif
 # riscv_hwprobe(2), so every other translation unit keeps the build's
 # (scalar) -march and the binary stays correct on hardware without RVV.
 ifneq (,$(findstring riscv64,$(MACHINE)))
-ifeq (,$(shell $(CXX) -fsyntax-only -march=rv64gcv_zvbc -xc /dev/null 2>&1))
+# Probe the Zvbc INTRINSIC, not just the -march string: clang 18 accepts
+# -march=rv64gcv_zvbc yet ships no __riscv_vclmul_* intrinsics (added in
+# clang 19), so a march-only probe would break the build there. Without
+# the intrinsic the CRC TU is excluded and dispatch stays on slice-by-8.
+ZVBC_PROBE_SRC := \#include <riscv_vector.h>\nvuint64m1_t zp(vuint64m1_t a, unsigned long b, unsigned long l) { return __riscv_vclmul_vx_u64m1(a, b, l); }
+ifeq (,$(shell printf '$(ZVBC_PROBE_SRC)\n' | $(CXX) -fsyntax-only -march=rv64gcv_zvbc -xc++ - 2>&1))
 CXXFLAGS += -DHAVE_RVV_CRC32C
 CFLAGS += -DHAVE_RVV_CRC32C
 $(OBJ_DIR)/util/crc32c_riscv64.o: private CXXFLAGS += -march=rv64gcv_zvbc
