@@ -218,6 +218,14 @@ vsetvli）——memmove 杠杆排除。
   协处理核调度分析文档；③ P1 授予值校验是异构 VLEN 场景的正确防御
   （赛题关切场景的直接工程回应）；④ LX5000 32P+16E 预计可调度，
   taskset 绑 P 核已写入 REPRODUCE 评测指引。
+- **更新（2026-08-24，用户提供）**：A100 可经厂商私有接口调度——
+  `echo $PID > /proc/set_ai_thread`（进程+子进程绑到 cpu8-15，绕过
+  sched_setaffinity 的 EINVAL；来源 sanderjo/SpacemiT-K3-X100-A100）。
+  解锁实验（排三臂作业后）：A100 vlenb 实测（疑 VLEN 1024 → 第四种
+  真硅 VLEN 验证点）；全部差分 harness 上 A100；P1 守卫活体证明
+  （A100 初始化 CRC → 迁回 X100 → 授予不足触发标量回退）；db_bench
+  A100 vs X100 调度对照。**告诫**：该文档记载迁移中的 gcc 会 ICE
+  段错误——构建期间绝不触碰此接口；实验用独立进程。
 
 ## 会话日志
 
