@@ -618,6 +618,39 @@ class IterKey {
 
   void Clear() { key_size_ = 0; }
 
+#if defined(__riscv) && defined(__riscv_vector)
+  // S2605: key reconstruction runs 10..50 times per point lookup with
+  // 8..24-byte fragments; routing those through the libc memcpy PLT
+  // (ifunc + vector-memcpy startup) dominates the flat memmove profile
+  // on riscv boards. Copy small fragments inline with two overlapping
+  // word moves instead. Semantics identical to memcpy for the
+  // non-overlapping src/dst this class guarantees (src is block/user
+  // memory, dst is buf_).
+  static void SmallNonOverlapCopy(char* dst, const char* src, size_t n) {
+    if (n > 16) {
+      memcpy(dst, src, n);
+      return;
+    }
+    if (n >= 8) {
+      uint64_t head, tail;
+      memcpy(&head, src, 8);          // plain loads/stores at -O2,
+      memcpy(&tail, src + n - 8, 8);  // no libc call
+      memcpy(dst, &head, 8);
+      memcpy(dst + n - 8, &tail, 8);
+    } else if (n >= 4) {
+      uint32_t head, tail;
+      memcpy(&head, src, 4);
+      memcpy(&tail, src + n - 4, 4);
+      memcpy(dst, &head, 4);
+      memcpy(dst + n - 4, &tail, 4);
+    } else {
+      for (size_t i = 0; i < n; i++) {
+        dst[i] = src[i];
+      }
+    }
+  }
+#endif
+
   // Append "non_shared_data" to its back, from "shared_len"
   // This function is used in Block::Iter::ParseNextKey
   // shared_len: bytes in [0, shard_len-1] would be remained
@@ -630,7 +663,11 @@ class IterKey {
     if (IsKeyPinned() /* key is not in buf_ */) {
       // Copy the key from external memory to buf_ (copy shared_len bytes)
       EnlargeBufferIfNeeded(total_size);
+#if defined(__riscv) && defined(__riscv_vector)
+      SmallNonOverlapCopy(buf_, key_, shared_len);
+#else
       memcpy(buf_, key_, shared_len);
+#endif
     } else if (total_size > buf_size_) {
       // Need to allocate space, delete previous space
       char* p = new char[total_size];
@@ -644,7 +681,11 @@ class IterKey {
       buf_size_ = total_size;
     }
 
+#if defined(__riscv) && defined(__riscv_vector)
+    SmallNonOverlapCopy(buf_ + shared_len, non_shared_data, non_shared_len);
+#else
     memcpy(buf_ + shared_len, non_shared_data, non_shared_len);
+#endif
     key_ = buf_;
     key_size_ = total_size;
   }
