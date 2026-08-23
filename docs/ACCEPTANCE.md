@@ -95,12 +95,36 @@ CRC TU 时构建失败。
 - build_detect_platform RISC_ISA/RISCV_ISA 笔误（已记录；本工程用
   显式 flag 绕过，未直接改死代码路径）。
 
-## 五、验收前待办（按序）
+## 五、AI 披露（比赛硬性要求）
 
-1. rvv-full 干净 A/B（跑中）→ 按结果裁决 xxh3/memcmp/bloom 默认开关。
-2. 预取候选 A/B；（可选）memmove RVV 评估。
-3. RVV 构建全量 make check（过夜）。
-4. RocketMQ 60min 压测（rvv-ci/rocketmq_stress.sh）。
-5. 独立审计 agent 结论并入（进行中）。
-6. wiki 促进收尾（run 记录 + performance_claims）。
-7. 用户验收 → 确认后 PR → upstream `11.1.fb`。
+方法：本移植由 Claude（Anthropic）代理会话在人工监督下完成，全程
+KDA 式契约工作流——知识层为第一方 rvv-wiki（查询先于设计、逐候选
+引用页 id 与置信度），证据层为 rvv-measure（板/QEMU 实测、生数据
+落盘）。**披露载体即工程本身**：本仓库 git 历史（每个 commit 记录
+候选、门槛与测量）、candidates.jsonl（含被拒候选与理由）、
+benchmark.csv（含被污染后标 INVALID 的生数据）、docs/draft.md
+（决策/事故/教训全记录）。
+
+使用的 wiki 知识页（页 id / 置信度）：kernel-crc32c-rvv
+（verified/benchmarked）、kernel-memcmp-rvv（verified）、
+kernel-hash-rvv、kernel-varint-codec-rvv、kernel-bloom-filter-rvv
+（inferred→本工程实测后升级）、technique-clmul-folding、
+technique-vlen-dispatch、technique-benchmark-methodology、
+technique-tail-mask-policy、pattern-vlen-portability、
+pattern-wont-vectorize、lang-autovec、migration-neon-to-rvv、
+hw-spacemit-k3-a100、hw-lanxin-lx5000、hw-qemu-virt、
+doc-rvv-intrinsic、contest-rvspoc-s2605。
+反向促进（本工程回灌 wiki 的一手证据）：run-k3-bloom-20260823、
+run-k3-3arm-20260824、pattern-vlen-portability 滑点 #8、
+technique-benchmark-methodology 条目 10/11、kernel-crc32c-rvv 的
+clang intrinsic 门控证据。
+人类决策点：分支/base 选择、测试排期、PR 暂缓验收、板子代理与
+清理、LX5000/LLVM 情报输入、会话分工裁决。
+
+## 六、验收前待办（按序，板上执行权归主线会话）
+
+1. 候选 #10（IterKey 微拷贝）交替判决（板上进行中）→ 补入主表。
+2. RocketMQ 60min 压测（rvv-ci/rocketmq_stress.sh）。
+3. RVV 构建全量 make check + 子集测试（含 crc32c_test 等 DEBUG 树）。
+4. RVV 写 → 标量读 的反向持久化交叉验证。
+5. 用户验收 → 恢复上游 CLAUDE.md → 确认后 PR → upstream `11.1.fb`。
