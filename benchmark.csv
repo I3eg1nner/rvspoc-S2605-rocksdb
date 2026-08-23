@@ -383,3 +383,4 @@ date,commit,branch,board,build_flags,config,bench,threads,num,reads,value_size,k
 2026-08-24,4e6d0a02c-tree,s2605-rvv,spacemit-k3-picoitx,3arm-gcv-zicbop,B,seekrandom,1,20000000,500000,100,16,20260822,3,21867,45.729,interleaved-3arm
 2026-08-24,4e6d0a02c-tree,s2605-rvv,spacemit-k3-picoitx,3arm-rva23,B,readrandom,1,20000000,2000000,100,16,20260822,3,69995,14.287,interleaved-3arm
 2026-08-24,4e6d0a02c-tree,s2605-rvv,spacemit-k3-picoitx,3arm-rva23,B,seekrandom,1,20000000,500000,100,16,20260822,3,22178,45.088,interleaved-3arm
+2026-08-24,delivery-tree,s2605-rvv,spacemit-k3-picoitx,RISCV_RVV=1 rocksdbjni-11.1.1,stress,rocketmq-60min,8w+consumer,,,1024,,,,6056,,avg-send-tps; consume 6117; SendFailed=0 ResponseFailed=0 ConsumeFail=0; RSS 1.9-3.0G no OOM; 361x10s samples

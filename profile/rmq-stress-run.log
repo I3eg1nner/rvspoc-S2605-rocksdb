@@ -1,0 +1,26 @@
+== clean pre-existing instances ==
+== start services ==
+broker pid 240013
+== start load ==
+== sampling for 3600 s ==
+== stop load, account ==
+--- producer tail ---
+Current Time: 2026-08-24 05:49:31,615 | Send TPS: 6160 | Max RT(ms): 710 | Average RT(ms):   1.298 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-24 05:49:41,616 | Send TPS: 6054 | Max RT(ms): 710 | Average RT(ms):   1.320 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-24 05:49:51,615 | Send TPS: 6063 | Max RT(ms): 710 | Average RT(ms):   1.318 | Send Failed: 0 | Response Failed: 0
+--- consumer tail ---
+Current Time: 2026-08-24 05:49:30,712 | Consume TPS: 6079 | AVG(B2C) RT(ms):   2.182 | AVG(S2C) RT(ms):   1.552 | MAX(B2C) RT(ms): 109 | MAX(S2C) RT(ms): 109 | Consume Fail: 0
+Current Time: 2026-08-24 05:49:40,712 | Consume TPS: 6039 | AVG(B2C) RT(ms):   2.555 | AVG(S2C) RT(ms):   1.913 | MAX(B2C) RT(ms): 91 | MAX(S2C) RT(ms): 90 | Consume Fail: 0
+Current Time: 2026-08-24 05:49:50,712 | Consume TPS: 6051 | AVG(B2C) RT(ms):   2.316 | AVG(S2C) RT(ms):   1.673 | MAX(B2C) RT(ms): 31 | MAX(S2C) RT(ms): 30 | Consume Fail: 0
+--- failure counters (must all be 0) ---
+Send Failed: 0
+Response Failed: 0
+Consume Fail: 0
+--- broker health ---
+commitLogDirCapacity            : Total : 116.8 GiB, Free : 23.3 GiB.
+getTransferredTps               : 1477.604479104179 5304.82218705755 6008.052490307188
+putTps                          : 1476.8046390721856 5304.68893145665 6008.044159570267
+8
+== shutdown ==
+BROKER_STILL_UP
+STRESS_DONE
