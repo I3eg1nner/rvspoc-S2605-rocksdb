@@ -23,6 +23,11 @@ for bad in "[d]b_bench" "[c]c1plus" "[m]ake -j"; do
   pgrep -f "$bad" >/dev/null && { echo "BOARD_BUSY $bad"; exit 3; }
 done
 
+echo "== clean pre-existing instances =="
+sh $RMQ/bin/mqshutdown broker >/dev/null 2>&1
+sh $RMQ/bin/mqshutdown namesrv >/dev/null 2>&1
+sleep 5
+
 echo "== start services =="
 cd $RMQ
 nohup sh bin/mqnamesrv > $OUT/namesrv.log 2>&1 < /dev/null &
@@ -31,7 +36,7 @@ grep -q "boot success" $OUT/namesrv.log || { echo NAMESRV_FAIL; exit 1; }
 nohup sh bin/mqbroker -n 127.0.0.1:9876 > $OUT/broker.log 2>&1 < /dev/null &
 sleep 40
 grep -q "boot success" $OUT/broker.log || { echo BROKER_FAIL; exit 1; }
-BROKER_PID=$(pgrep -f "[B]rokerStartup")
+BROKER_PID=$(pgrep -f "[j]ava.*BrokerStartup" | head -1)
 echo "broker pid $BROKER_PID"
 
 echo "== start load =="
