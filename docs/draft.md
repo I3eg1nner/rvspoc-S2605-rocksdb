@@ -263,6 +263,40 @@ vsetvli）——memmove 杠杆排除。
 ## 开放问题
 
 - PR base 官方确认（默认 11.1.fb）。
-- LX5000 实际 VLEN/扩展未知 → fallback（标量 slice-by-8 等）是大概率
-  被评测路径，质量不能降；运行时探测（hwprobe/HWCAP）必须优雅降级。
+- LX5000 情报已更新（2026-08-23，用户提供 vendor 公告；已回灌 wiki：
+  新 source blog-lanxin-lx5000 + hw-lanxin-lx5000 升为 source-reported，
+  validate 0 error）：48 核 32P+16E 异构、声称原生 RVV1.0 + RVA23 +
+  Server Platform 1.0、DDR5/CXL 2.0（≤2TB）。RVA23 必选集 = RV64GC
+  +Zba/Zbb/Zbs+Zicond+Zihintpause(+Zicntr/Zihpm/Zimop/Zcmop)+V；
+  **zbc/zvbb/zvbc 不在 RVA23** → 大概率缺失。VLEN 仍未披露。
+  → 我方 hwprobe 运行时探测架构正是该场景的正确形态；建议加 RVA23
+  档 build tier（见竞争分析节）。
 - riscv64 JVM 成熟度（60min RocketMQ 压测硬门槛）→ 尽早 smoke。
+
+## 竞争分析：PR #1（rv2036/rvspoc-S2605-rocksdb，velonica0，2026-08-23）
+
+用户问询"为何他的 db_bench +31.4%/+18.6%/+6.5% 高我们一个量级"。
+分析结论（证据：/tmp/pr1.diff 全量 diff + 本工作区 benchmark.csv）：
+
+1. **口径差异 >> 优化水平差异**。他的标量基线 fillrandom 72.0k，我们
+   同板族同参数标量基线 ~85.5k（低 18.8%）；他的优化版 94.6k 只比我们
+   rvv-full 87.9k 高 ~8%。readrandom 绝对数他 24.0k 甚至低于我们 26.4k。
+   seekrandom 两边一致（14.4k→15.3k vs 13.9k→14.4k，+6.5% vs +3~4%）。
+2. 他的优化侧 = 全 ISA 全局 march（含 zbb/zvbb/zbc/zvbc）+ 改 upstream
+   build_detect（PORTABLE=1 在 riscv64 变成 rv64gcv；硬回退 march
+   rv64gcv_zbc_zvbc）。我们只上 gcv 全局 + CRC 单 TU zvbc + hwprobe。
+   他额外多了：block_builder 共享前缀 RVV（flush 路径写停顿减免）、
+   amomaxu、pause hint；他把 RVV memcmp 排除在比较器外（实测输 glibc）。
+3. 测量协议：他 num=3M 单跑一次、无交替、无空载门控；我们 20M、
+   3~5 跑、交替 A/B、空载门控（technique-benchmark-methodology：
+   未静默方差可达 ~30%）。
+4. 板状态佐证：同代码标量 CRC 他 793 MB/s vs 我们板测 901 MB/s——
+   机器状态整体偏慢 ~12%，低基线大部分是环境而非代码。
+5. **LX5000 评审含义**：他的 CRC 门控是编译期 `__riscv_zbc`、无运行时
+   探测——在无 zbc 的 LX5000 重编译 → kernel 静默消失（+31.4% 不可复
+   现）；若触发其回退 march 则二进制带 clmul → SIGILL。我们的探测架构
+   在 LX5000 自动降级且安全。评审 bar "≥30% vs 标量基线" 以 LX5000
+   基线判定，两边都未在 LX5000 实测过。
+6. 行动项：新增 **RVA23 档 tier**（-march=rv64gcv_zba_zbb_zbs_zicond，
+   规格内且 LX5000 保证，白拿 bitmanip；不含 zvbc）做 A/B；确认 CMake
+   构建路径同样带 flags（评审可能用 CMake/LLVM）；争取 LX5000 访问。

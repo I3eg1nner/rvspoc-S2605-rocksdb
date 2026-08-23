@@ -1,0 +1,56 @@
+=== rvv config A fillrandom ===
+RESULT A fillrandom t=1 fillrandom   :      12.252 micros/op 81619 ops/sec 245.041 seconds 20000000 operations;    9.0 MB/s
+RESULT A fillrandom t=1 fillrandom   :      11.800 micros/op 84743 ops/sec 236.008 seconds 20000000 operations;    9.4 MB/s
+RESULT A fillrandom t=1 fillrandom   :      12.119 micros/op 82512 ops/sec 242.388 seconds 20000000 operations;    9.1 MB/s
+=== rvv config A readrandom ===
+RESULT A readrandom t=1 readrandom   :      54.126 micros/op 18475 ops/sec 108.252 seconds 2000000 operations;    2.0 MB/s (2000000 of 2000000 found)
+RESULT A readrandom t=1 readrandom   :      40.870 micros/op 24467 ops/sec 81.741 seconds 2000000 operations;    2.7 MB/s (2000000 of 2000000 found)
+RESULT A readrandom t=1 readrandom   :      40.030 micros/op 24981 ops/sec 80.061 seconds 2000000 operations;    2.8 MB/s (2000000 of 2000000 found)
+RESULT A readrandom t=1 readrandom   :      40.161 micros/op 24899 ops/sec 80.322 seconds 2000000 operations;    2.8 MB/s (2000000 of 2000000 found)
+RESULT A readrandom t=1 readrandom   :      40.608 micros/op 24625 ops/sec 81.216 seconds 2000000 operations;    2.7 MB/s (2000000 of 2000000 found)
+RESULT A readrandom t=8 readrandom   :      47.168 micros/op 167902 ops/sec 95.293 seconds 16000000 operations;   12.6 MB/s (2000000 of 2000000 found)
+RESULT A readrandom t=8 readrandom   :      47.609 micros/op 166495 ops/sec 96.098 seconds 16000000 operations;   12.5 MB/s (2000000 of 2000000 found)
+RESULT A readrandom t=8 readrandom   :      48.397 micros/op 164558 ops/sec 97.230 seconds 16000000 operations;   12.3 MB/s (2000000 of 2000000 found)
+RESULT A readrandom t=8 readrandom   :      47.682 micros/op 166737 ops/sec 95.959 seconds 16000000 operations;   12.5 MB/s (2000000 of 2000000 found)
+RESULT A readrandom t=8 readrandom   :      49.886 micros/op 159474 ops/sec 100.330 seconds 16000000 operations;   12.0 MB/s (2000000 of 2000000 found)
+=== rvv config A seekrandom ===
+RESULT A seekrandom t=1 seekrandom   :      75.259 micros/op 13287 ops/sec 37.630 seconds 500000 operations;   14.7 MB/s (408308 of 500000 found)
+RESULT A seekrandom t=1 seekrandom   :      74.212 micros/op 13474 ops/sec 37.106 seconds 500000 operations;   14.9 MB/s (408308 of 500000 found)
+RESULT A seekrandom t=1 seekrandom   :      75.045 micros/op 13325 ops/sec 37.523 seconds 500000 operations;   14.7 MB/s (408308 of 500000 found)
+RESULT A seekrandom t=1 seekrandom   :      75.407 micros/op 13261 ops/sec 37.703 seconds 500000 operations;   14.7 MB/s (408308 of 500000 found)
+RESULT A seekrandom t=1 seekrandom   :      74.831 micros/op 13363 ops/sec 37.415 seconds 500000 operations;   14.8 MB/s (408308 of 500000 found)
+RESULT A seekrandom t=8 seekrandom   :      85.039 micros/op 93466 ops/sec 42.796 seconds 4000000 operations;  103.4 MB/s (408308 of 500000 found)
+RESULT A seekrandom t=8 seekrandom   :      84.430 micros/op 94071 ops/sec 42.521 seconds 4000000 operations;  104.1 MB/s (408308 of 500000 found)
+RESULT A seekrandom t=8 seekrandom   :      84.701 micros/op 94041 ops/sec 42.534 seconds 4000000 operations;  104.0 MB/s (408308 of 500000 found)
+RESULT A seekrandom t=8 seekrandom   :      84.893 micros/op 93621 ops/sec 42.725 seconds 4000000 operations;  103.6 MB/s (408308 of 500000 found)
+RESULT A seekrandom t=8 seekrandom   :      83.940 micros/op 94972 ops/sec 42.118 seconds 4000000 operations;  105.1 MB/s (408308 of 500000 found)
+=== rvv config B fillrandom ===
+RESULT B fillrandom t=1 fillrandom   :      12.020 micros/op 83197 ops/sec 240.392 seconds 20000000 operations;    9.2 MB/s
+RESULT B fillrandom t=1 fillrandom   :      11.865 micros/op 84282 ops/sec 237.297 seconds 20000000 operations;    9.3 MB/s
+RESULT B fillrandom t=1 fillrandom   :      12.584 micros/op 79465 ops/sec 251.682 seconds 20000000 operations;    8.8 MB/s
+=== rvv config B readrandom ===
+RESULT B readrandom t=1 readrandom   :      17.923 micros/op 55792 ops/sec 35.847 seconds 2000000 operations;    6.2 MB/s (2000000 of 2000000 found)
+RESULT B readrandom t=1 readrandom   :      15.146 micros/op 66025 ops/sec 30.292 seconds 2000000 operations;    7.3 MB/s (2000000 of 2000000 found)
+RESULT B readrandom t=1 readrandom   :      14.839 micros/op 67388 ops/sec 29.679 seconds 2000000 operations;    7.5 MB/s (2000000 of 2000000 found)
+RESULT B readrandom t=1 readrandom   :      14.978 micros/op 66765 ops/sec 29.955 seconds 2000000 operations;    7.4 MB/s (2000000 of 2000000 found)
+RESULT B readrandom t=1 readrandom   :      15.322 micros/op 65267 ops/sec 30.643 seconds 2000000 operations;    7.2 MB/s (2000000 of 2000000 found)
+RESULT B readrandom t=8 readrandom   :      12.510 micros/op 475869 ops/sec 33.623 seconds 16000000 operations;   35.7 MB/s (2000000 of 2000000 found)
+RESULT B readrandom t=8 readrandom   :      12.644 micros/op 463376 ops/sec 34.529 seconds 16000000 operations;   34.8 MB/s (2000000 of 2000000 found)
+RESULT B readrandom t=8 readrandom   :      12.533 micros/op 472784 ops/sec 33.842 seconds 16000000 operations;   35.5 MB/s (2000000 of 2000000 found)
+RESULT B readrandom t=8 readrandom   :      12.465 micros/op 475921 ops/sec 33.619 seconds 16000000 operations;   35.7 MB/s (2000000 of 2000000 found)
+RESULT B readrandom t=8 readrandom   :      12.582 micros/op 466699 ops/sec 34.283 seconds 16000000 operations;   35.0 MB/s (2000000 of 2000000 found)
+=== rvv config B seekrandom ===
+RESULT B seekrandom t=1 seekrandom   :      46.248 micros/op 21622 ops/sec 23.124 seconds 500000 operations;   23.9 MB/s (408308 of 500000 found)
+RESULT B seekrandom t=1 seekrandom   :      46.867 micros/op 21336 ops/sec 23.433 seconds 500000 operations;   23.6 MB/s (408308 of 500000 found)
+RESULT B seekrandom t=1 seekrandom   :      46.415 micros/op 21544 ops/sec 23.208 seconds 500000 operations;   23.8 MB/s (408308 of 500000 found)
+RESULT B seekrandom t=1 seekrandom   :      46.497 micros/op 21506 ops/sec 23.248 seconds 500000 operations;   23.8 MB/s (408308 of 500000 found)
+RESULT B seekrandom t=1 seekrandom   :      46.684 micros/op 21420 ops/sec 23.342 seconds 500000 operations;   23.7 MB/s (408308 of 500000 found)
+RESULT B seekrandom t=8 seekrandom   :      46.817 micros/op 169203 ops/sec 23.640 seconds 4000000 operations;  187.2 MB/s (408308 of 500000 found)
+RESULT B seekrandom t=8 seekrandom   :      47.116 micros/op 168657 ops/sec 23.717 seconds 4000000 operations;  186.6 MB/s (408308 of 500000 found)
+RESULT B seekrandom t=8 seekrandom   :      46.756 micros/op 169408 ops/sec 23.612 seconds 4000000 operations;  187.4 MB/s (408308 of 500000 found)
+RESULT B seekrandom t=8 seekrandom   :      46.872 micros/op 169934 ops/sec 23.538 seconds 4000000 operations;  188.0 MB/s (408308 of 500000 found)
+RESULT B seekrandom t=8 seekrandom   :      46.469 micros/op 170396 ops/sec 23.475 seconds 4000000 operations;  188.5 MB/s (408308 of 500000 found)
+=== crc32c microbench (rvv on / forced off) ===
+RESULT_MICRO rvv crc32c       :       0.591 micros/op 1691935 ops/sec 0.757 seconds 1280000 operations; 6609.1 MB/s (4096 per op)
+RESULT_MICRO scalar crc32c       :       4.721 micros/op 211798 ops/sec 6.043 seconds 1280000 operations;  827.3 MB/s (4096 per op)
+AB_DONE

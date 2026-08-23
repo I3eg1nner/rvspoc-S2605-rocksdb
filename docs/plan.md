@@ -38,6 +38,8 @@
 - [ ] varint 解码：vmsbf 批量解码（inferred → 完整差分）
 - [ ] bloom：批量 reader 形态（单 key 保持标量，记录取舍）
 - [ ] autovec 扫尾：-fopt-info-vec 清点
+- [ ] RVA23 档 build tier 实验（-march=rv64gcv_zba_zbb_zbs_zicond —
+      LX500 保证集，wiki hw-lanxin-lx5000 source-reported；不含 zvbc）
 - [ ] op-inventory 90% 覆盖核算
 
 ## 阶段 2 — 全矩阵验证
