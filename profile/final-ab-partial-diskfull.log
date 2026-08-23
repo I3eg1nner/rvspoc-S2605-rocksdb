@@ -1,0 +1,28 @@
+=== A fill (alternating, fresh DB each) ===
+RESULT S-A-fill fillrandom   :      11.302 micros/op 88479 ops/sec 226.041 seconds 20000000 operations;    9.8 MB/s
+RESULT F-A-fill fillrandom   :      11.196 micros/op 89320 ops/sec 223.912 seconds 20000000 operations;    9.9 MB/s
+RESULT S-A-fill fillrandom   :      11.109 micros/op 90016 ops/sec 222.181 seconds 20000000 operations;   10.0 MB/s
+RESULT F-A-fill fillrandom   :      11.547 micros/op 86604 ops/sec 230.935 seconds 20000000 operations;    9.6 MB/s
+RESULT S-A-fill fillrandom   :      11.849 micros/op 84393 ops/sec 236.986 seconds 20000000 operations;    9.3 MB/s
+RESULT F-A-fill fillrandom   :      11.347 micros/op 88131 ops/sec 226.934 seconds 20000000 operations;    9.7 MB/s
+=== A reads (warmup then alternating) ===
+RESULT S-A-read-t8 readrandom   :      51.765 micros/op 151657 ops/sec 105.501 seconds 16000000 operations;   11.4 MB/s (2000000 of 2000000 found)
+RESULT F-A-read-t8 readrandom   :      49.812 micros/op 159003 ops/sec 100.627 seconds 16000000 operations;   11.9 MB/s (2000000 of 2000000 found)
+RESULT S-A-seek-t8 seekrandom   :      81.437 micros/op 97171 ops/sec 41.165 seconds 4000000 operations;  107.5 MB/s (408308 of 500000 found)
+RESULT F-A-seek-t8 seekrandom   :      83.978 micros/op 94649 ops/sec 42.261 seconds 4000000 operations;  104.7 MB/s (408308 of 500000 found)
+RESULT S-A-read-t1 readrandom   :      40.215 micros/op 24866 ops/sec 80.431 seconds 2000000 operations;    2.8 MB/s (2000000 of 2000000 found)
+RESULT F-A-read-t1 readrandom   :      39.428 micros/op 25362 ops/sec 78.856 seconds 2000000 operations;    2.8 MB/s (2000000 of 2000000 found)
+RESULT S-A-seek-t1 seekrandom   :      72.207 micros/op 13848 ops/sec 36.104 seconds 500000 operations;   15.3 MB/s (408308 of 500000 found)
+RESULT F-A-seek-t1 seekrandom   :      71.973 micros/op 13894 ops/sec 35.987 seconds 500000 operations;   15.4 MB/s (408308 of 500000 found)
+RESULT S-A-read-t8 readrandom   :      67.646 micros/op 116252 ops/sec 137.632 seconds 16000000 operations;    8.7 MB/s (2000000 of 2000000 found)
+RESULT F-A-read-t8 readrandom   :      66.364 micros/op 118618 ops/sec 134.886 seconds 16000000 operations;    8.9 MB/s (2000000 of 2000000 found)
+RESULT S-A-seek-t8 seekrandom   :     121.100 micros/op 64751 ops/sec 61.775 seconds 4000000 operations;   71.6 MB/s (408308 of 500000 found)
+RESULT F-A-seek-t8 seekrandom   :      87.361 micros/op 90868 ops/sec 44.020 seconds 4000000 operations;  100.5 MB/s (408308 of 500000 found)
+RESULT S-A-read-t1 readrandom   :      39.250 micros/op 25477 ops/sec 78.500 seconds 2000000 operations;    2.8 MB/s (2000000 of 2000000 found)
+RESULT F-A-read-t1 readrandom   :      38.479 micros/op 25988 ops/sec 76.958 seconds 2000000 operations;    2.9 MB/s (2000000 of 2000000 found)
+RESULT S-A-seek-t1 seekrandom   :      72.016 micros/op 13885 ops/sec 36.008 seconds 500000 operations;   15.4 MB/s (408308 of 500000 found)
+RESULT F-A-seek-t1 seekrandom   :      69.063 micros/op 14479 ops/sec 34.531 seconds 500000 operations;   16.0 MB/s (408308 of 500000 found)
+RESULT S-A-read-t8 readrandom   :      67.626 micros/op 117551 ops/sec 136.110 seconds 16000000 operations;    8.8 MB/s (2000000 of 2000000 found)
+RESULT F-A-read-t8 readrandom   :      67.852 micros/op 116640 ops/sec 137.173 seconds 16000000 operations;    8.7 MB/s (2000000 of 2000000 found)
+RESULT S-A-seek-t8 seekrandom   :     120.937 micros/op 64240 ops/sec 62.266 seconds 4000000 operations;   71.1 MB/s (408308 of 500000 found)
+RESULT F-A-seek-t8 seekrandom   :     118.125 micros/op 66938 ops/sec 59.756 seconds 4000000 operations;   74.1 MB/s (408308 of 500000 found)
