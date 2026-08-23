@@ -11,11 +11,24 @@ zvbb/zvbc，Bianbu Linux，gcc 15.2.0）。评测目标 LX5000 的 VLEN/扩展
 ```bash
 # 标量基线（A/B 的 A 侧；也是回退路径的质量基准）
 PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 make -j6 db_bench DEBUG_LEVEL=0
-# 交付 RVV 构建（全程序 -march=rv64gcv + 运行时分派的 Zvbc CRC）
+# 交付 RVV 构建（全程序 -march=rv64gcv_zicbop + 运行时分派的 Zvbc CRC）
 PORTABLE=1 RISCV_RVV=1 DISABLE_WARNING_AS_ERROR=1 make -j6 db_bench DEBUG_LEVEL=0
+# RVA23 档（评审机保证集：+zba/zbb/zbs/zicond，启用 zbb-varint）
+PORTABLE=1 RISCV_RVV=1 RISCV_RVV_MARCH=rv64gcv_zba_zbb_zbs_zicbop_zicond \
+  DISABLE_WARNING_AS_ERROR=1 make -j6 db_bench DEBUG_LEVEL=0
 # RocksJava（RocketMQ 用）
 JAVA_HOME=<jdk21> PORTABLE=1 RISCV_RVV=1 DISABLE_WARNING_AS_ERROR=1 make -j6 rocksdbjava DEBUG_LEVEL=0
 ```
+
+**双工具链**（评审环境公告"以 LLVM 为核心"）：以上配方对 gcc 与
+clang 均适用——clang 用 `CC=clang CXX=clang++`（交叉再加
+`--target=riscv64-linux-gnu` 与 sysroot）。已验证矩阵：gcc 14.2/15.2
+六内核差分全绿；clang 18/19 五内核全绿位相同、CRC Zvbc TU 因
+clang≤19 无 `__riscv_vclmul_*` intrinsics 被 Makefile 的 intrinsic
+探测**自动优雅排除**（分派回 slice-by-8，构建不会失败；clang 20+/
+gcc 14+ 自动启用）。切换 march/工具链后务必
+`find . -name '*.o' -delete`——Makefile 依赖不追踪 flag 变化，旧对象
+会被静默复用。
 
 要点：
 - **交叉构建注意**：Makefile 用 `MACHINE ?= $(uname -m)` 判定 riscv64

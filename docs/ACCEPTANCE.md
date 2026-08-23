@@ -26,16 +26,37 @@ vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。
 标量基线（PORTABLE=1 rv64gc，objdump 零向量指令验证）：见
 benchmark.csv `scalar-baseline` 行。
 
-| 构建 | 结论 |
-|---|---|
-| crc-only（交付默认：标量基线 + CRC 运行时分派） | 端到端与基线打平（±3%，cfg A fill +3.2%）；CRC 微基准 8.1x |
-| rvv-full（RISCV_RVV=1 全局 gcv + 全部内联 kernel） | **TBD：干净轮测量中**（首轮数据因 RocketMQ producer 逃逸进程污染作废，已入档） |
-| binary-seek 双路预取（标量, __riscv 门控） | **TBD：待 A/B** |
+**主表：三臂同会话交替 A/B（2026-08-24，暖机弃置、严格交替、生数据
+中位数；协议动机见 draft.md"跨轮次噪声"节）**
+S = 标量基线（stock 等价）；F = 交付档 gcv+zicbop；
+R = RVA23 档（+zba/zbb/zbs/zicond，含 zbb-varint 无分支解码）：
 
-⚠ 诚实记录：+30% 端到端目标在 K3 上尚未达成；cfg A（默认 flags）
-标量 profile 显示大头是 memmove(14.7%)/snappy(~9%)/索引解码 cache
-miss(7.6%)，现有 kernel 覆盖面之外。候选路线（memmove RVV、预取）
-评估中。LX5000 上比例可能不同。
+| 测点 | S (ops/s) | F | R | F-Δ | R-Δ |
+|---|---|---|---|---|---|
+| A fillrandom | 78745 | 88733 | 86687 | **+12.7%** | +10.1% |
+| A readrandom t8 | 162377 | 165084 | 166240 | +1.7% | +2.4% |
+| A seekrandom t8 | 90764 | 91109 | 93123 | +0.4% | +2.6% |
+| A readrandom t1 | 24181 | 25121 | 25249 | +3.9% | +4.4% |
+| A seekrandom t1 | 13232 | 13511 | 13745 | +2.1% | +3.9% |
+| B fillrandom | 80666 | 85300 | 82370 | +5.7% | +2.1% |
+| B readrandom t8 | 451588 | 481238 | 481740 | +6.6% | **+6.7%** |
+| B seekrandom t8 | 164728 | 170328 | 172453 | +3.4% | +4.7% |
+| B readrandom t1 | 65041 | 69196 | 70378 | +6.4% | **+8.2%** |
+| B seekrandom t1 | 20948 | 21970 | 22094 | +4.9% | +5.5% |
+
+判读：**两档全部 10 点为正、零回退**；R 在全部读/seek 点 ≥ F
+（zbb-varint 的贡献可见）；A fill +12.7% 为 zicbop 真预取 + 内联路径
+的最高单点。样本量：t8 每臂 5、t1 每臂 3、fill 每臂 2（生数据齐存
+benchmark.csv `interleaved-3arm` 行）。
+候选 #10（IterKey 微拷贝，归因 memmove 14.7% 大头）判决轮由主线
+会话在板上进行中，结果补入本表。
+CRC 微基准：7319–7327 vs 902–903 MB/s（**8.1x**，@4KB，多轮复现）。
+
+⚠ 诚实记录：+30% 端到端门槛在 K3 上尚未达成（当前最好单点
++12.7%、读侧典型 +4~8%）；cfg A 剩余大头 memmove（14.7%，#10 判决
+中）、snappy（~9%，两臂共模、结构上非差分项）、索引解码 cache
+miss。LX5000（DDR5+CXL、48 异构核）上各占比不可从 K3 外推，唯有
+评审机实测能定。
 
 **工具链兼容矩阵**（评审环境公告"以 LLVM 为核心"→ clang++ 按潜在
 评测工具链全量验证）：
