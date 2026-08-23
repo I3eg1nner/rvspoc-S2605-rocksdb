@@ -57,7 +57,9 @@
 
 - [ ] 复现文档 + AI 披露（wiki 页引用轨迹）
 - [ ] 生数据齐全：benchmark.csv/candidates.jsonl/profile/results
-- [ ] PR → upstream 11.1.fb（提交前核实 base）
+- [ ] **PR 暂缓（用户 2026-08-23 指示）**：先出验收报告（结果汇总 +
+      复现文档 + 全部证据）交用户验收，用户确认后才开 PR → upstream
+      11.1.fb（届时再核实 base）
 - [ ] 耐久发现回灌 wiki（运行页 + performance_claims + validate 绿）
 
 ## Blockers
