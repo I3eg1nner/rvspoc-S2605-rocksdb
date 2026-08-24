@@ -3,20 +3,25 @@
 # on the same DBs with per-round order alternation and per-variant
 # discarded warmups.
 #
-# PRE-REGISTERED ADJUDICATION RULES (fixed before data; also recorded in
+# PRE-REGISTERED ADJUDICATION RULES (fixed before data; mirrored in
 # docs/ACCEPTANCE.md — no goalpost moves):
-#   For each variant V, compute paired deltas d_i = fullF_i - V_i per
-#   workload point (positive d => the kernel HELPS).
-#   KEEP default-on  : median(d) > 0 on the kernel's primary point AND
-#                      >= 4 of 6 pairs positive there, AND no point shows
-#                      median regression worse than -1%.
-#   NEUTRAL-KEEP     : all |median(d)| <= 1% -> keep on (correctness is
-#                      proven; K3-neutral does not imply LX5000-neutral),
-#                      label "neutral on K3".
-#   DEFAULT-OFF      : any point median regression < -1% with >= 4/6
-#                      pairs agreeing.
-#   Primary points: xxhash -> B-read + fill; bloom -> B-read;
-#   memcmp -> B-read + fill; prefetch -> A-seek; pause -> fill-t8.
+#   For each variant V and each workload point, compute paired PERCENT
+#   deltas d_i = 100 * (fullF_i / V_i - 1)  (d > 0 => kernel HELPS).
+#   All points use N = 6 pairs.
+#   KEEP default-on  : on EVERY primary point of that kernel,
+#                      median(d) > 0 AND >= 4/6 pairs positive; AND on
+#                      no point (primary or secondary) median(d) < -1%.
+#   NEUTRAL-KEEP     : every point |median(d)| <= 1% -> keep on
+#                      (correctness proven; K3-neutral does not imply
+#                      LX5000-neutral). Label "neutral on K3".
+#   DEFAULT-OFF      : any point median(d) < -1% with >= 4/6 pairs
+#                      negative there.
+#   INCONCLUSIVE     : anything not matching the above (e.g. median >1%
+#                      with only 3/6 agreement) -> DEFAULT-OFF.
+#                      Rationale: unproven benefit does not ship.
+#   Primary points (conjunctive where two are listed):
+#     xxhash -> B-read AND fill-t1; bloom -> B-read;
+#     memcmp -> B-read AND fill-t1; prefetch -> A-seek; pause -> fill-t8.
 set -u
 cd "$(dirname "$0")"
 ST=bisect2.status
@@ -73,12 +78,13 @@ read_pairs() { # $1 variant : 6 interleaved read+seek pairs, alternating order, 
     i=$((i+1))
   done
 }
-fill_pairs() { # $1 variant $2 threads : 4 alternating fill pairs (fresh DB each), warmup first
+fill_pairs() { # $1 variant $2 threads : 6 alternating fill pairs (fresh DB each), both arms warmed
   v=$1; t=$2
   step "BISECT_fill_$v"
-  rm -rf /root/bx-F; run $v W --benchmarks=fillrandom --threads=$t --db=/root/bx-F $B  # warmup (discard)
+  rm -rf /root/bx-F; run $v W --benchmarks=fillrandom --threads=$t --db=/root/bx-F $B     # variant warmup (discard)
+  rm -rf /root/bx-F; run fullF W --benchmarks=fillrandom --threads=$t --db=/root/bx-F $B  # fullF warmup at same thread count (discard)
   i=0
-  while [ $i -lt 4 ]; do
+  while [ $i -lt 6 ]; do
     if [ $((i % 2)) -eq 0 ]; then A1=fullF; A2=$v; else A1=$v; A2=fullF; fi
     rm -rf /root/bx-F; run $A1 "$A1-fill-t$t" --benchmarks=fillrandom --threads=$t --db=/root/bx-F $B
     rm -rf /root/bx-F; run $A2 "$A2-fill-t$t" --benchmarks=fillrandom --threads=$t --db=/root/bx-F $B

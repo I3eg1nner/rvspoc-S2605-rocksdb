@@ -158,14 +158,18 @@ clang intrinsic 门控证据。
 
 ## 六、逐 kernel 默认开关的预注册裁决规则（数据未出前锁定，防移门槛）
 
-对每变体 V 计算配对差值 d=fullF−V（d>0 = 该 kernel 有益）：
-- **保留默认开**：主要测点 median(d)>0 且 ≥4/6 对同号，且任何测点
-  的中位回退不劣于 −1%。
-- **中性保留**：所有测点 |median(d)|≤1% → 保留（正确性已证，K3 中性
+对每变体 V 在每测点计算**配对百分比差** d_i = 100×(fullF_i/V_i − 1)
+（d>0 = 该 kernel 有益）；所有测点统一 **N=6 对**：
+- **保留默认开**：该 kernel 的**每个**主要测点均满足 median(d)>0 且
+  ≥4/6 对为正（双主点为合取），且任何测点（含次要）median(d) 不劣于
+  −1%。
+- **中性保留**：全部测点 |median(d)|≤1% → 保留（正确性已证，K3 中性
   不外推 LX5000 中性），标注"K3 中性"。
-- **默认关**：任一测点中位回退 <−1% 且 ≥4/6 对同号。
-- 主要测点：xxhash→B-read+fill；bloom→B-read；memcmp→B-read+fill；
-  prefetch→A-seek；pause→fill-t8。
+- **默认关**：任一测点 median(d) < −1% 且该点 ≥4/6 对为负。
+- **无结论区间**（如 median>1% 但仅 3/6 同号等不匹配上述者）→
+  **默认关**。理由：未证实的收益不进交付。
+- 主要测点（双点为合取）：xxhash→B-read 且 fill-t1；bloom→B-read；
+  memcmp→B-read 且 fill-t1；prefetch→A-seek；pause→fill-t8。
 
 ## 七、验收前待办（按序；已完成项从此清单移除）
 

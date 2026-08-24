@@ -56,10 +56,28 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   fi
   sleep 15
   pgrep -f "[b]enchmark.Producer" >/dev/null || die "producer_start $CELL"
-  sleep $((DUR - 15))
-  pkill -f "[b]enchmark.Producer"; sleep 5
+  if [ "$4" = "normal" ]; then
+    pgrep -f "[b]enchmark.Consumer" >/dev/null || die "consumer_start $CELL"
+    sleep $((DUR - 15))
+  else
+    sleep $((DUR / 2))
+    sleep 15
+    pgrep -f "[b]enchmark.Consumer" >/dev/null || die "consumer_start_backlog $CELL"
+    sleep $((DUR - DUR / 2 - 30))
+  fi
+  pkill -f "[b]enchmark.Producer"
+  # confirm producer exit, then lock PUT_TARGET once the counter is
+  # stable across two consecutive polls (no in-flight messages left)
+  sleep 5; pgrep -f "[b]enchmark.Producer" >/dev/null && { sleep 5; pkill -9 -f "[b]enchmark.Producer"; sleep 3; }
   PP=$(put_total); [ -n "$PP" ] || die "empty_counters_put $CELL"
-  # drain: consumer catches up to the produced total (bounded)
+  S=0
+  while [ $S -lt 12 ]; do
+    sleep 10; PN=$(put_total); [ -n "$PN" ] || die "empty_counters_put2 $CELL"
+    [ "$PN" = "$PP" ] && break
+    PP=$PN; S=$((S+1))
+  done
+  [ $S -lt 12 ] || die "put_counter_never_stabilized $CELL"
+  # drain: consumer catches up to the locked target (bounded)
   DRAIN=0; GG=$(get_total)
   while [ "${GG:-0}" -lt "$PP" ] && [ $DRAIN -lt 900 ]; do
     sleep 15; DRAIN=$((DRAIN+15)); GG=$(get_total)
@@ -68,11 +86,16 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   P1=$(put_total); G1=$(get_total)
   PUT=$((P1-P0)); GET=$((G1-G0)); REM=$((P1-G1))
   echo "cell=$CELL put=$PUT get=$GET remaining=$REM drain_s=$DRAIN" >> $OUT/accounting.txt
-  # failure gates
-  grep -oE "Send Failed: [0-9]+" $D/producer.log | awk '{if($3+0>0) exit 1}' || die "send_failed $CELL"
-  grep -oE "Response Failed: [0-9]+" $D/producer.log | awk '{if($3+0>0) exit 1}' || die "response_failed $CELL"
-  [ -f $D/consumer.log ] && { grep -oE "Consume Fail: [0-9]+" $D/consumer.log | awk '{if($3+0>0) exit 1}' || die "consume_failed $CELL"; }
-  [ "$REM" -le 0 ] || step "WARN_remaining=$REM $CELL (recorded, drain timed out)"
+  # failure gates: require the counter fields to EXIST, then all-zero
+  fgate() { # $1 file $2 pattern $3 label
+    C=$(grep -coE "$2: [0-9]+" "$1" 2>/dev/null) || C=0
+    [ "${C:-0}" -ge 1 ] || die "${3}_fields_missing $CELL"
+    grep -oE "$2: [0-9]+" "$1" | awk -v L=3 '{if($NF+0>0) exit 1}' || die "${3}_nonzero $CELL"
+  }
+  fgate $D/producer.log "Send Failed" send_failed
+  fgate $D/producer.log "Response Failed" response_failed
+  fgate $D/consumer.log "Consume Fail" consume_failed
+  [ "$REM" -le 0 ] || die "drain_timeout_remaining=$REM $CELL"
   step "CELL_DONE $CELL put=$PUT get=$GET rem=$REM"
 }
 
