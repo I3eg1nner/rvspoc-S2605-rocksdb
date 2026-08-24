@@ -17,7 +17,7 @@ vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。
 | VLEN 128/256/512 自适应 | ✅ | 全部 vsetvl 驱动；QEMU 三 VLEN + 敌意 flags 矩阵全绿；无任何编译期 VLEN 假设 |
 | `#ifdef __riscv_vector` 隔离 / x86 ARM 不变 | ✅ | aarch64 g++ 预处理输出 token 级一致（slice/xxhash/bloom）；新 TU 非 riscv 下零代码 |
 | 禁第三方 RISC-V 适配代码 | ✅ | 全部第一方（rvv-wiki 自有工件移植 + 本会话新写）；常数运行时推导非拷贝 |
-| make check / db_test 全过 | ✅（标量参考树） | 38934 项：18 失败全部归因并修复/排除——16×range_locking = v11.1.1 上游 bug（用户态 rdcycle SIGILL→rdtime 修复，17/17 过）；options_settable = padding 计数脆弱（offsetof 可移植排除，4/4 过）；prefetch_test 过载 flaky（串行 104/104 过）。**RVV 构建全量 check：TBD（排程中）** |
+| make check / db_test 全过 | ✅（标量参考树） | 38934 项：18 失败全部归因并修复/排除——16×range_locking = v11.1.1 上游 bug（用户态 rdcycle SIGILL→rdtime 修复，17/17 过）；options_settable = padding 计数脆弱（offsetof 可移植排除，4/4 过）；prefetch_test 过载 flaky（串行 104/104 过）。**RVV 构建全量 check ✅（2026-08-24 第三轮）：38934 项全过**——首轮 161 失败系 gcc 15.2 对 XXH3 RVV 混 SEW 模式的错误代码生成（已修复并三工具链复验），第三轮仅余 2 项报告失败且均系环境残留/负载 flaky（串行复跑全绿） |
 | RocketMQ 5.5.0 60min 压测 | ✅ **PASS**（2026-08-24） | 交付树 rocksdbjni-11.1.1（RVV 档）：全程 60min 持续负载，avg Send TPS **6056** / Consume TPS **6117**（各 361×10s 采样）；**Send/Response/Consume Failed 全 0**（零丢失零损坏）；broker RSS 1.9→3.0G 无 OOM；put/get TPS 收支平衡。生数据 profile/rmq-{samples.csv,stress-run.log} |
 | AI 披露 | ✅ | 本工作区 git 历史 + rvv-wiki 页引用轨迹（draft.md 逐候选记录页 id/置信度）+ wiki 回灌记录 |
 
@@ -57,8 +57,7 @@ CRC 微基准：7319–7327 vs 902–903 MB/s（**8.1x**，@4KB，多轮复现�
 readrandom / seekrandom 三项各自 ≥+30%**（主办方澄清前的工作目标）。
 
 ⚠ 诚实记录：+30% 端到端门槛在 K3 上尚未达成（当前最好单点
-+12.7%、读侧典型 +4~8%）；cfg A 剩余大头 memmove（14.7%，#10 判决
-中）、snappy（~9%，两臂共模、结构上非差分项）、索引解码 cache
++12.7%、读侧典型 +4~8%）；cfg A 剩余大头 memmove（14.7%，候选 #10 已判 REJECT）、snappy（~9%，两臂共模、结构上非差分项）、索引解码 cache
 miss。LX5000（DDR5+CXL、48 异构核）上各占比不可从 K3 外推，唯有
 评审机实测能定。
 
