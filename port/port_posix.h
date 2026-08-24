@@ -174,6 +174,12 @@ static inline void AsmVolatilePause() {
   asm volatile("or 27,27,27");
 #elif defined(__loongarch64)
   asm volatile("dbar 0");
+#elif defined(__riscv)
+  // Zihintpause PAUSE (raw encoding so it assembles under any -march;
+  // architecturally a HINT that retires as a no-op on cores without the
+  // extension). Backs off contended spin waits (write-group leader
+  // waits, mutex backoff) instead of burning the core at full speed.
+  asm volatile(".4byte 0x0100000F");
 #endif
   // it's okay for other platforms to be no-ops
 }

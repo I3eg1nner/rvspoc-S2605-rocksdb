@@ -13,7 +13,7 @@ vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。
 | CRC32C 向量化 | ✅ | vclmul 多流折叠 + GF(2) 运行时常数推导 + hwprobe 分派；差分 4438/0（板）+ QEMU 矩阵绿；微基准 **8.1x**（7319 vs 903 MB/s @4KB，K3 空载） |
 | bloom 位图查找向量化 | ✅（实现+验证；K3 默认收益待干净复测） | AVX2 路径 RVV 镜像；板+QEMU 603990/0；QEMU vlen=128 抓到 vsetvl 授予 bug 并修复 |
 | SST 序列化/反序列化加速 | ✅ | CRC（块尾校验）+ Slice::compare/difference_offset 向量化 + XXH3（kv 校验/缓存键）+ 全程序自动向量化层（RISCV_RVV=1，可选） |
-| ≥90% NEON 算子有 RVV 版 | ✅ | RocksDB NEON 面 = xxHash XXH_VECTOR（已加 XXH_RVV 分支，位相同差分 30032/0）+ ARM CRC 守卫（由 crc32c_riscv64 对位替代）+ memcmp 形态（slice.h RVV 比较）；均差分绿 |
+| ≥90% NEON 算子有 RVV 版 | ✅ **100%**（审计表见下） | v11.1.1 全树 ARM 优化面逐条盘点，RVV/RISC-V 对位实现 6/6 |
 | VLEN 128/256/512 自适应 | ✅ | 全部 vsetvl 驱动；QEMU 三 VLEN + 敌意 flags 矩阵全绿；无任何编译期 VLEN 假设 |
 | `#ifdef __riscv_vector` 隔离 / x86 ARM 不变 | ✅ | aarch64 g++ 预处理输出 token 级一致（slice/xxhash/bloom）；新 TU 非 riscv 下零代码 |
 | 禁第三方 RISC-V 适配代码 | ✅ | 全部第一方（rvv-wiki 自有工件移植 + 本会话新写）；常数运行时推导非拷贝 |
@@ -76,6 +76,32 @@ CRC TU 时构建失败。
 （赛题指定参考）的 `__riscv_` intrinsics API（含 tuple 段式加载
 `vlseg2e64` 等 v0.12+ 形式）；无第三方 RISC-V 适配代码；唯一内联
 汇编为 toku_time 的 `rdtime`（Linux≥6.6 用户态 rdcycle SIGILL 修复）。
+
+### NEON/ARM 优化面审计表（≥90% 条款的可核查证据）
+
+v11.1.1 全树 ARM 专属优化共 6 处（`grep -rl 'arm_neon|__aarch64__|ARM_FEATURE'` 全量盘点）：
+
+| # | ARM 原位 | 类型 | RISC-V 对位 | 默认状态 | 正确性 |
+|---|---|---|---|---|---|
+| 1 | util/xxhash.h:4590 `XXH3_accumulate_512_neon` | NEON 向量 | `XXH3_accumulate_512_rvv`（同文件） | RVV 档启用（bisect 复判中） | 差分 30032/0 ×3 VLEN ×3 工具链 |
+| 2 | util/xxhash.h:4678 `XXH3_scrambleAcc_neon` | NEON 向量 | `XXH3_scrambleAcc_rvv` | 同上 | 同上 |
+| 3 | util/xxph3.h:1251 `XXPH3_accumulate_512` NEON 分支 | NEON 向量 | XXPH_RVV 分支（同文件） | 同上 | 差分 20028/0 |
+| 4 | util/xxph3.h:1462 `XXPH3_scrambleAcc` NEON 分支 | NEON 向量 | XXPH_RVV 分支 | 同上 | 同上 |
+| 5 | util/crc32c_arm64.{h,cc} ARMv8-CRC/PMULL | ARM 专用指令 | util/crc32c_riscv64.cc（Zvbc vclmul + hwprobe，回退 slice-by-8） | 探测启用 | 差分 4438/0 + 双向持久化闭环 |
+| 6 | port/port_posix.h `AsmVolatilePause` ARM `isb` | ARM 内联汇编 | Zihintpause `pause`（原始编码，无扩展核退化 nop）——**本次审计新发现并补齐** | 恒启用 | 双 CPU 模型执行验证 |
+
+（port_posix.h 的 aarch64 PREFETCH 特调对位 = zicbop 交付 march；CACHE_LINE_SIZE riscv 走默认 64 正确。）
+
+### SST 序列化/反序列化直接证据（条款对位）
+
+| 路径 | 文件:符号 | 优化 |
+|---|---|---|
+| 反序列化：块内 key 解码 | util/coding.h `GetVarint32Ptr`（DecodeEntry/DecodeKeyV4 的唯一多字节路径） | Zbb 无分支 varint32（RVA23 档） |
+| 反序列化：restart 二分 | table/block_based/block.cc `BinarySeekRestartPointIndex` | 双路预取（zicbop） |
+| 序列化：块构建共享前缀 | block_builder.cc:287 → `Slice::difference_offset` | vfirst 向量前缀 |
+| 序列化：索引分隔键 | util/comparator.cc `FindShortestSeparator` | 同上 |
+| 序列化：块尾校验 | util/crc32c.cc `Extend` | vclmul CRC（探测启用） |
+| 双向：kv 校验/缓存键 | util/xxhash.h / xxph3.h | RVV 分支 |
 
 ## 三、正确性证据链
 
