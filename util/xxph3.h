@@ -1221,11 +1221,13 @@ XXPH3_accumulate_512(      void* XXPH_RESTRICT acc,
     {
         xxh_u64* const xacc = (xxh_u64*) acc;
         size_t vl = __riscv_vsetvl_e64m4(ACC_NB);
-        size_t vl8 = __riscv_vsetvl_e8m4(STRIPE_LEN);
-        vuint64m4_t data_vec = __riscv_vreinterpret_v_u8m4_u64m4(
-            __riscv_vle8_v_u8m4((const xxh_u8*) input, vl8));
-        vuint64m4_t key_vec = __riscv_vreinterpret_v_u8m4_u64m4(
-            __riscv_vle8_v_u8m4((const xxh_u8*) secret, vl8));
+        /* stage through aligned locals: input/secret alignment-free and
+         * avoids the gcc 15.2 mixed-SEW miscompile (see xxhash.h) */
+        xxh_u64 stripe[ACC_NB]; xxh_u64 key[ACC_NB];
+        memcpy(stripe, input, STRIPE_LEN);
+        memcpy(key, secret, STRIPE_LEN);
+        vuint64m4_t data_vec = __riscv_vle64_v_u64m4(stripe, vl);
+        vuint64m4_t key_vec = __riscv_vle64_v_u64m4(key, vl);
         vuint64m4_t acc_vec = __riscv_vle64_v_u64m4(xacc, vl);
         vuint64m4_t data_key = __riscv_vxor_vv_u64m4(data_vec, key_vec, vl);
         /* mult32to64: both halves fit 32 bits, low-64 vmul is exact */
@@ -1446,10 +1448,10 @@ XXPH3_scrambleAcc(void* XXPH_RESTRICT acc, const void* XXPH_RESTRICT secret)
     {
         xxh_u64* const xacc = (xxh_u64*) acc;
         size_t vl = __riscv_vsetvl_e64m4(ACC_NB);
-        size_t vl8 = __riscv_vsetvl_e8m4(STRIPE_LEN);
+        xxh_u64 key[ACC_NB];
+        memcpy(key, secret, STRIPE_LEN);  /* alignment-free */
         vuint64m4_t acc_vec = __riscv_vle64_v_u64m4(xacc, vl);
-        vuint64m4_t key_vec = __riscv_vreinterpret_v_u8m4_u64m4(
-            __riscv_vle8_v_u8m4((const xxh_u8*) secret, vl8));
+        vuint64m4_t key_vec = __riscv_vle64_v_u64m4(key, vl);
         vuint64m4_t shifted = __riscv_vsrl_vx_u64m4(acc_vec, 47, vl);
         acc_vec = __riscv_vxor_vv_u64m4(acc_vec, shifted, vl);
         acc_vec = __riscv_vxor_vv_u64m4(acc_vec, key_vec, vl);

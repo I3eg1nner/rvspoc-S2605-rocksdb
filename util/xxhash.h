@@ -4933,16 +4933,20 @@ XXH3_accumulate_512_rvv(void* XXH_RESTRICT acc,
     XXH_ASSERT((((size_t)acc) & (XXH_ACC_ALIGN-1)) == 0);
     {
         xxh_u64* const xacc = (xxh_u64*) acc;
-        const xxh_u64* const xsecret = (const xxh_u64*) secret;
         size_t vl = __riscv_vsetvl_e64m4(XXH_ACC_NB);
-        /* Input has no alignment guarantee (scalar path uses memcpy
-         * reads) -- load it as bytes (alignment-free by construction)
-         * and reinterpret; little-endian lane order matches
-         * XXH_readLE64. Secret and acc are 8/64-byte aligned. */
-        size_t vl8 = __riscv_vsetvl_e8m4(XXH_STRIPE_LEN);
-        vuint64m4_t data_vec = __riscv_vreinterpret_v_u8m4_u64m4(
-            __riscv_vle8_v_u8m4((const xxh_u8*) input, vl8));
-        vuint64m4_t key_vec = __riscv_vle64_v_u64m4(xsecret, vl);
+        /* Neither input (user buffers in the streaming path) nor secret
+         * (kSecret + 8*n) is 8-aligned in general, and mixing a vle8 +
+         * vreinterpret with the e64 ops miscompiled under gcc 15.2
+         * (register-allocator clobber, SIGSEGV in streaming tests).
+         * Stage both through aligned locals instead: XXH_memcpy of a
+         * fixed 64 bytes compiles to plain scalar loads/stores (no libc
+         * call, alignment-free) and keeps every vector access aligned. */
+        xxh_u64 stripe[XXH_ACC_NB];
+        xxh_u64 key[XXH_ACC_NB];
+        XXH_memcpy(stripe, input, XXH_STRIPE_LEN);
+        XXH_memcpy(key, secret, XXH_STRIPE_LEN);
+        vuint64m4_t data_vec = __riscv_vle64_v_u64m4(stripe, vl);
+        vuint64m4_t key_vec = __riscv_vle64_v_u64m4(key, vl);
         vuint64m4_t acc_vec = __riscv_vle64_v_u64m4(xacc, vl);
         vuint64m4_t data_key = __riscv_vxor_vv_u64m4(data_vec, key_vec, vl);
         /* mult32to64(dk & 0xFFFFFFFF, dk >> 32): both operands fit in 32
@@ -4969,10 +4973,11 @@ XXH3_scrambleAcc_rvv(void* XXH_RESTRICT acc, const void* XXH_RESTRICT secret)
     XXH_ASSERT((((size_t)acc) & (XXH_ACC_ALIGN-1)) == 0);
     {
         xxh_u64* const xacc = (xxh_u64*) acc;
-        const xxh_u64* const xsecret = (const xxh_u64*) secret;
         size_t vl = __riscv_vsetvl_e64m4(XXH_ACC_NB);
+        xxh_u64 key[XXH_ACC_NB];
+        XXH_memcpy(key, secret, XXH_STRIPE_LEN);  /* alignment-free */
         vuint64m4_t acc_vec = __riscv_vle64_v_u64m4(xacc, vl);
-        vuint64m4_t key_vec = __riscv_vle64_v_u64m4(xsecret, vl);
+        vuint64m4_t key_vec = __riscv_vle64_v_u64m4(key, vl);
         /* acc = ((acc ^ (acc >> 47)) ^ key) * XXH_PRIME32_1 (low 64) */
         vuint64m4_t shifted = __riscv_vsrl_vx_u64m4(acc_vec, 47, vl);
         acc_vec = __riscv_vxor_vv_u64m4(acc_vec, shifted, vl);
