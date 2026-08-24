@@ -60,6 +60,9 @@
 其后：逐 kernel bisect（6 变体，预注册规则）→ 默认开关落地 → 终版
 三臂复测 → RocketMQ 双臂矩阵（24 runs）→ 验收报告交用户。
 
+## 30% 口径（用户裁决）：三项各自 ≥30%（最严）；seek 最难 →
+restart sidecar（P3）权重上调，bisect 后立即实现
+
 ## 阶段 2 — 全矩阵验证
 
 - [ ] 板全量 make check + db_test（RVV 构建）

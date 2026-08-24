@@ -53,6 +53,9 @@ benchmark.csv `interleaved-3arm` 行）。
 B-read 0.0%（正确性差分曾全绿，纯性能否决；candidates.jsonl 存档）。
 CRC 微基准：7319–7327 vs 902–903 MB/s（**8.1x**，@4KB，多轮复现）。
 
+**30% 口径（用户 2026-08-24 决定）：按最严解释执行——fillrandom /
+readrandom / seekrandom 三项各自 ≥+30%**（主办方澄清前的工作目标）。
+
 ⚠ 诚实记录：+30% 端到端门槛在 K3 上尚未达成（当前最好单点
 +12.7%、读侧典型 +4~8%）；cfg A 剩余大头 memmove（14.7%，#10 判决
 中）、snappy（~9%，两臂共模、结构上非差分项）、索引解码 cache
