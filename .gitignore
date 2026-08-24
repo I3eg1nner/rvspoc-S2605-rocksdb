@@ -102,3 +102,7 @@ cmake-build-*
 third-party/folly/
 .cache
 *.sublime-*
+
+# S2605 workspace-internal (never ship)
+.claude/
+profile/c10.log
