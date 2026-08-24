@@ -156,10 +156,25 @@ clang intrinsic 门控证据。
 人类决策点：分支/base 选择、测试排期、PR 暂缓验收、板子代理与
 清理、LX5000/LLVM 情报输入、会话分工裁决。
 
-## 六、验收前待办（按序，板上执行权归主线会话）
+## 六、逐 kernel 默认开关的预注册裁决规则（数据未出前锁定，防移门槛）
 
-1. 候选 #10（IterKey 微拷贝）交替判决（板上进行中）→ 补入主表。
-2. RocketMQ 60min 压测（rvv-ci/rocketmq_stress.sh）。
-3. RVV 构建全量 make check + 子集测试（含 crc32c_test 等 DEBUG 树）。
-4. RVV 写 → 标量读 的反向持久化交叉验证。
+对每变体 V 计算配对差值 d=fullF−V（d>0 = 该 kernel 有益）：
+- **保留默认开**：主要测点 median(d)>0 且 ≥4/6 对同号，且任何测点
+  的中位回退不劣于 −1%。
+- **中性保留**：所有测点 |median(d)|≤1% → 保留（正确性已证，K3 中性
+  不外推 LX5000 中性），标注"K3 中性"。
+- **默认关**：任一测点中位回退 <−1% 且 ≥4/6 对同号。
+- 主要测点：xxhash→B-read+fill；bloom→B-read；memcmp→B-read+fill；
+  prefetch→A-seek；pause→fill-t8。
+
+## 七、验收前待办（按序；已完成项从此清单移除）
+
+1. RVV 构建全量 make check 第三轮（gcc15.2 误编译修复后，**板上进行
+   中**）→ 失败分诊至标量树 flaky 水平。
+2. 逐 kernel bisect（6 变体，脚本就绪）→ 按上节规则落默认开关 →
+   终版构建。
+3. 终版三臂复测（fill 样本 ×4、顺序轮换）。
+4. RocketMQ 双臂矩阵（24 runs：2 臂 ×3 尺寸 ×2 场景 ×AB/BA，排空
+   核账 + 失败即停 + jar 身份链；脚本就绪）。
 5. 用户验收 → 恢复上游 CLAUDE.md → 确认后 PR → upstream `11.1.fb`。
+6. wiki 促进收尾（3arm/压测/误编译 run 记录）。

@@ -36,7 +36,7 @@
 - [x] memcmp/comparator：移植 memcmp-rvv 到 Slice::compare 热路径
 - [x] xxHash：XXH_VECTOR RVV 分支（90% NEON 条款主秀，位相同差分）
 - [ ] varint 解码：vmsbf 批量解码（inferred → 完整差分）
-- [x] bloom：批量 reader 形态（单 key 保持标量，记录取舍）
+- [~] bloom：单 key RVV probe 已实现且默认开（与 wiki 推荐的批量形态不同——诚实记录）；默认与否待 bisect 裁决
 - [ ] autovec 扫尾：-fopt-info-vec 清点
 - [x] RVA23 档 build tier 实验（-march=rv64gcv_zba_zbb_zbs_zicond —
       LX500 保证集，wiki hw-lanxin-lx5000 source-reported；不含 zvbc）
@@ -52,12 +52,13 @@
       60min 零损坏门槛下不做激进锁重构
 - [x] op-inventory 90% 覆盖核算（ACCEPTANCE 审计表 6/6）
 
-## 主线优先级（用户 2026-08-24 指示：先跑通现有思路，A100 组降级）
+## 主线优先级（2026-08-24 刷新；A100 组降级维持）
 
-1. 三臂交替验收 A/B（跑中）→ 2. 候选 #10 交替判决 →
-3. RocketMQ 60min 压测 → 4. RVV 构建全量 make check →
-5. 验收报告交用户。A100 实验组（vlenb/差分/P1 活体证明/调度对照）
-仅在以上全绿且有余力时做。
+已完成：三臂验收表 ✅ / #10 判决(REJECT) ✅ / RocketMQ 60min 稳定性
+门槛 ✅ / 双向持久化 ✅。
+进行中：RVV 全量 check 第三轮（misc 编译修复后）。
+其后：逐 kernel bisect（6 变体，预注册规则）→ 默认开关落地 → 终版
+三臂复测 → RocketMQ 双臂矩阵（24 runs）→ 验收报告交用户。
 
 ## 阶段 2 — 全矩阵验证
 
