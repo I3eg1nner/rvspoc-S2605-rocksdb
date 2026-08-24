@@ -330,9 +330,60 @@ inline size_t RvvCommonPrefix(const char* a, const char* b, size_t n) {
 }  // namespace detail
 #endif  // __riscv && __riscv_vector
 
+#if defined(__riscv) && !defined(ROCKSDB_DISABLE_SHORTKEY_CMP)
+namespace detail {
+// Short-key fast compare (<= 16 bytes): two 64-bit words loaded with
+// memcpy (alignment-free), XOR to find difference, ctz to locate the
+// FIRST DIFFERING BYTE (little-endian: lowest differing byte == first
+// in memory order), then compare that byte - exact memcmp semantics.
+// The second word is only touched when the first eight bytes tie.
+// With Zbb in -march, ctz compiles to a single instruction.
+inline uint64_t LoadPadded64(const char* p, size_t n) {
+  uint64_t w = 0;
+  memcpy(&w, p, n < 8 ? n : 8);
+  return w;
+}
+inline int ShortKeyCompare16(const char* a, const char* b, size_t n) {
+  uint64_t wa = LoadPadded64(a, n);
+  uint64_t wb = LoadPadded64(b, n);
+  uint64_t diff = wa ^ wb;
+  if (diff == 0) {
+    if (n <= 8) {
+      return 0;
+    }
+    wa = LoadPadded64(a + 8, n - 8);
+    wb = LoadPadded64(b + 8, n - 8);
+    diff = wa ^ wb;
+    if (diff == 0) {
+      return 0;
+    }
+  }
+  unsigned byte = static_cast<unsigned>(__builtin_ctzll(diff)) >> 3;
+  unsigned sa = static_cast<unsigned>((wa >> (byte * 8)) & 0xff);
+  unsigned sb = static_cast<unsigned>((wb >> (byte * 8)) & 0xff);
+  return sa < sb ? -1 : 1;
+}
+}  // namespace detail
+#endif  // __riscv && !ROCKSDB_DISABLE_SHORTKEY_CMP
+
 inline int Slice::compare(const Slice& b) const {
   assert(data_ != nullptr && b.data_ != nullptr);
   const size_t min_len = (size_ < b.size_) ? size_ : b.size_;
+  // Three-tier dispatch on riscv (each tier independently switchable
+  // for paired adjudication): <=16B inline word compare (the db_bench /
+  // typical LSM key regime), long keys vector first-diff, middle to
+  // libc memcmp.
+#if defined(__riscv) && !defined(ROCKSDB_DISABLE_SHORTKEY_CMP)
+  if (min_len <= 16) {
+    int rs = detail::ShortKeyCompare16(data_, b.data_, min_len);
+    if (rs == 0) {
+      if (size_ < b.size_) return -1;
+      if (size_ > b.size_) return +1;
+      return 0;
+    }
+    return rs;
+  }
+#endif
 #if defined(__riscv) && defined(__riscv_vector) && \
     !defined(ROCKSDB_DISABLE_RVV_MEMCMP)
   int r = detail::RvvMemcmp(data_, b.data_, min_len);
