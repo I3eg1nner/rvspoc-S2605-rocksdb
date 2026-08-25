@@ -805,7 +805,8 @@ bool BlockIter<TValue>::BinarySeekRestartPointIndex(const Slice& target,
   uint64_t target_prefix = 0;
   if (restart_sidecar_ != nullptr) {
     Block::RestartPrefixSidecar* sc = restart_sidecar_;
-    if (!sc->ready.load(std::memory_order_acquire)) {
+    if (!sc->ready.load(std::memory_order_acquire) &&
+        sc->seek_count.fetch_add(1, std::memory_order_relaxed) >= 1) {
       std::call_once(sc->once, [&] {
         std::vector<uint64_t> p;
         p.reserve(num_restarts_);

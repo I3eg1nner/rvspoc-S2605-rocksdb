@@ -183,6 +183,10 @@ class Block {
     std::once_flag once;
     std::vector<uint64_t> prefixes;
     std::atomic<bool> ready{false};
+    // Build only from the second binary seek on this block: short-lived
+    // blocks (compaction inputs during fills) never pay the build cost;
+    // reused blocks (point-lookup index blocks) amortize it immediately.
+    std::atomic<uint32_t> seek_count{0};
   };
   RestartPrefixSidecar* restart_prefix_sidecar() const {
     return &restart_sidecar_;
