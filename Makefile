@@ -551,6 +551,14 @@ ifneq ($(RISCV_RVV_XXHASH),1)
 CXXFLAGS += -DROCKSDB_DISABLE_RVV_XXHASH
 CFLAGS += -DROCKSDB_DISABLE_RVV_XXHASH
 endif
+# shortkey three-tier compare adjudicated REJECT on K3 (compiler-matrix
+# paired run 2026-08-25: disabling it gains +4.37% Bread 6/6 - the RVV
+# vfirst path beats the XOR+ctz tier at 16B keys in-tree). Re-enable
+# with RISCV_RVV_SHORTKEY=1.
+ifneq ($(RISCV_RVV_SHORTKEY),1)
+CXXFLAGS += -DROCKSDB_DISABLE_SHORTKEY_CMP
+CFLAGS += -DROCKSDB_DISABLE_SHORTKEY_CMP
+endif
 # Default includes Zicbop (RVA23-mandatory, present on K3): without it
 # __builtin_prefetch and every existing RocksDB PREFETCH() site emit
 # ZERO instructions under a bare -march=rv64gcv (empirically verified).
