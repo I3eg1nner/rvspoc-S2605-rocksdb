@@ -796,6 +796,40 @@ bool BlockIter<TValue>::BinarySeekRestartPointIndex(const Slice& target,
   }
 
   *skip_linear_scan = false;
+#if defined(__riscv) && !defined(ROCKSDB_DISABLE_INDEX_SIDECAR)
+  // Build (once per Block) and consult the restart-prefix sidecar: when
+  // the 8-byte big-endian user-key prefixes differ, their integer order
+  // IS the key order and the restart-key decode + full compare can be
+  // skipped. Equal prefixes are inconclusive and take the full path.
+  const uint64_t* sidecar_prefixes = nullptr;
+  uint64_t target_prefix = 0;
+  if (restart_sidecar_ != nullptr) {
+    Block::RestartPrefixSidecar* sc = restart_sidecar_;
+    if (!sc->ready.load(std::memory_order_acquire)) {
+      std::call_once(sc->once, [&] {
+        std::vector<uint64_t> p;
+        p.reserve(num_restarts_);
+        const bool is_user = raw_key_.IsUserKey();
+        for (uint32_t r = 0; r < num_restarts_; r++) {
+          Slice k;
+          if (!GetRestartKey<DecodeKeyFunc>(r, &k) ||
+              (!is_user && k.size() < kNumInternalBytes)) {
+            return;  // corrupt or too short: leave not-ready forever
+          }
+          p.push_back(ReadBe64FromKey(k, is_user, 0));
+        }
+        sc->prefixes = std::move(p);
+        sc->ready.store(true, std::memory_order_release);
+      });
+    }
+    if (sc->ready.load(std::memory_order_acquire) &&
+        sc->prefixes.size() == num_restarts_ &&
+        (raw_key_.IsUserKey() || target.size() >= kNumInternalBytes)) {
+      sidecar_prefixes = sc->prefixes.data();
+      target_prefix = ReadBe64FromKey(target, raw_key_.IsUserKey(), 0);
+    }
+  }
+#endif
   // Loop invariants:
   // - Restart key at index `left` is less than or equal to the target key. The
   //   sentinel index `-1` is considered to have a key that is less than all
@@ -842,14 +876,24 @@ bool BlockIter<TValue>::BinarySeekRestartPointIndex(const Slice& target,
     }
 #endif
 
-    Slice mid_key;
-    if (!GetRestartKey<DecodeKeyFunc>(static_cast<uint32_t>(mid), &mid_key)) {
-      return false;
+    int cmp;
+#if defined(__riscv) && !defined(ROCKSDB_DISABLE_INDEX_SIDECAR)
+    if (sidecar_prefixes != nullptr &&
+        sidecar_prefixes[mid] != target_prefix) {
+      cmp = sidecar_prefixes[mid] < target_prefix ? -1 : 1;
+    } else
+#endif
+    {
+      Slice mid_key;
+      if (!GetRestartKey<DecodeKeyFunc>(static_cast<uint32_t>(mid),
+                                        &mid_key)) {
+        return false;
+      }
+
+      UpdateRawKeyAndMaybePadMinTimestamp(mid_key);
+
+      cmp = CompareCurrentKey(target);
     }
-
-    UpdateRawKeyAndMaybePadMinTimestamp(mid_key);
-
-    int cmp = CompareCurrentKey(target);
     if (cmp < 0) {
       // Key at "mid" is smaller than "target". Therefore all
       // blocks before "mid" are uninteresting.
@@ -1627,6 +1671,13 @@ IndexBlockIter* Block::NewIndexIterator(
         block_contents_pinned, user_defined_timestamps_persisted,
         protection_bytes_per_key_, kv_checksum_, block_restart_interval_,
         values_section_, resolved_search_type);
+#if defined(__riscv) && !defined(ROCKSDB_DISABLE_INDEX_SIDECAR)
+    // Prefix ordering is only equivalent to the block's key order for
+    // the plain bytewise comparator without user-defined timestamps.
+    if (raw_ucmp == BytewiseComparator() && raw_ucmp->timestamp_size() == 0) {
+      ret_iter->SetRestartPrefixSidecar(restart_prefix_sidecar());
+    }
+#endif
   }
 
   return ret_iter;

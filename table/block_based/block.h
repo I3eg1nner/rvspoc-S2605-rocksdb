@@ -12,6 +12,11 @@
 #include <stdint.h>
 
 #include <string>
+#if defined(__riscv) && !defined(ROCKSDB_DISABLE_INDEX_SIDECAR)
+#include <atomic>
+#include <mutex>
+#include <vector>
+#endif
 #include <vector>
 
 #include "db/kv_checksum.h"
@@ -165,6 +170,29 @@ class Block {
   void operator=(const Block&) = delete;
 
   ~Block();
+
+#if defined(__riscv) && !defined(ROCKSDB_DISABLE_INDEX_SIDECAR)
+  // S2605: lazily-built per-block sidecar of big-endian 8-byte user-key
+  // prefixes, one per restart point. Lets index binary search order most
+  // probes by integer compare without decoding the restart key (the
+  // dominant flat-profile cost of point lookups on riscv boards).
+  // Prefix equality is INCONCLUSIVE by construction (zero-padded BE64
+  // preserves lexicographic order; ties fall back to the full compare),
+  // so correctness never depends on the sidecar.
+  struct RestartPrefixSidecar {
+    std::once_flag once;
+    std::vector<uint64_t> prefixes;
+    std::atomic<bool> ready{false};
+  };
+  RestartPrefixSidecar* restart_prefix_sidecar() const {
+    return &restart_sidecar_;
+  }
+
+ private:
+  mutable RestartPrefixSidecar restart_sidecar_;
+
+ public:
+#endif
 
   size_t size() const { return contents_.data.size(); }
   const char* data() const { return contents_.data.data(); }
@@ -732,6 +760,19 @@ class BlockIter : public InternalIteratorBase<TValue> {
  protected:
   template <typename DecodeKeyFunc>
   inline bool GetRestartKey(uint32_t index, Slice* key);
+
+#if defined(__riscv) && !defined(ROCKSDB_DISABLE_INDEX_SIDECAR)
+  // Wired only for index iterators over bytewise-comparator blocks with
+  // no user-defined timestamps (see Block::NewIndexIterator).
+  Block::RestartPrefixSidecar* restart_sidecar_ = nullptr;
+
+ public:
+  void SetRestartPrefixSidecar(Block::RestartPrefixSidecar* s) {
+    restart_sidecar_ = s;
+  }
+
+ protected:
+#endif
 
   template <typename DecodeKeyFunc>
   inline bool BinarySeekRestartPointIndex(const Slice& target, uint32_t* index,
