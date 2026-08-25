@@ -543,6 +543,14 @@ CXXFLAGS += $(WARNING_FLAGS) -I. -I./include $(PLATFORM_CXXFLAGS) $(OPT) -Woverl
 # PORTABLE -march=rv64gc (with gcc, the last -march wins).
 ifneq (,$(findstring riscv64,$(MACHINE)))
 ifeq ($(RISCV_RVV),1)
+# xxhash/xxph3 RVV branches adjudicated DEFAULT-OFF by the K3 paired
+# bisect (2026-08-25: Bread -3.76% 0/6, Aseek -2.25% 0/6, fill -1.76%
+# 1/6 - consistent regression). Code + differentials remain in-tree;
+# re-enable with RISCV_RVV_XXHASH=1 (e.g. on hardware where it wins).
+ifneq ($(RISCV_RVV_XXHASH),1)
+CXXFLAGS += -DROCKSDB_DISABLE_RVV_XXHASH
+CFLAGS += -DROCKSDB_DISABLE_RVV_XXHASH
+endif
 # Default includes Zicbop (RVA23-mandatory, present on K3): without it
 # __builtin_prefetch and every existing RocksDB PREFETCH() site emit
 # ZERO instructions under a bare -march=rv64gcv (empirically verified).
