@@ -14,9 +14,12 @@
 #include <cstring>
 
 #include "util/crc32c_riscv64.h"
+#include "util/crc32c_zbc.h"
 
 using ROCKSDB_NAMESPACE::crc32c::ExtendRVV;
 using ROCKSDB_NAMESPACE::crc32c::RvvCrc32cSupported;
+using ROCKSDB_NAMESPACE::crc32c::ExtendZbc;
+using ROCKSDB_NAMESPACE::crc32c::ZbcCrc32cSupported;
 
 // Independent reference: bit-by-bit reflected CRC-32C, RocksDB Extend
 // semantics (init = crc ^ ~0, final xor ~0). Deliberately table-free so
@@ -101,6 +104,41 @@ int main() {
       if (fails++ < 8) printf("FAIL chain n=%zu cut=%zu\n", n, cut);
     }
     checks++;
+  }
+
+  // ---- Zbc scalar tier (variant C), same reference ----
+  if (ZbcCrc32cSupported()) {
+    for (size_t n = 0; n <= 300; n++) {
+      uint32_t crc = (n % 3 == 0) ? 0 : Rng();
+      if (ExtendZbc(crc, (const char*)buf, n) != RefExtend(crc, buf, n)) {
+        if (fails++ < 8) printf("FAIL zbc n=%zu\n", n);
+      }
+      checks++;
+    }
+    for (size_t n = 60; n <= 300; n += 7) {  // around the 2*stride=128 gate
+      for (int off = 0; off < 8; off++) {
+        uint32_t crc = Rng();
+        if (ExtendZbc(crc, (const char*)(buf + off), n) !=
+            RefExtend(crc, buf + off, n)) {
+          if (fails++ < 8) printf("FAIL zbc off n=%zu off=%d\n", n, off);
+        }
+        checks++;
+      }
+    }
+    for (int t = 0; t < 100; t++) {
+      size_t n = 1 + Rng() % 60000;
+      size_t cut = Rng() % (n + 1);
+      uint32_t whole = ExtendZbc(0, (const char*)buf, n);
+      uint32_t part = ExtendZbc(ExtendZbc(0, (const char*)buf, cut),
+                                (const char*)(buf + cut), n - cut);
+      if (whole != part || whole != RefExtend(0, buf, n)) {
+        if (fails++ < 8) printf("FAIL zbc chain n=%zu\n", n);
+      }
+      checks += 2;
+    }
+    printf("zbc tier exercised\n");
+  } else {
+    printf("zbc tier: not supported here (set ROCKSDB_ZBC_CRC32C=1 under QEMU)\n");
   }
 
   printf("crc32c_diff: %d checks, %d failures\n", checks, fails);

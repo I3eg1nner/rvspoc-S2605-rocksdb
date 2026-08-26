@@ -252,6 +252,7 @@ LIB_SOURCES =                                                   \
   util/crc32c.cc                                                \
   util/crc32c_arm64.cc                                          \
   util/crc32c_riscv64.cc                                        \
+  util/crc32c_zbc.cc                                            \
   util/data_structure.cc                                        \
   util/dynamic_bloom.cc                                         \
   util/hash.cc                                                  \
