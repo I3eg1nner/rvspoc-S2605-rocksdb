@@ -29,9 +29,18 @@ trap cleanup EXIT INT TERM
 
 sha256sum "$SJAR" "$RJAR" >> $OUT/jar-identity.txt
 
-bstat() { sh $RMQ/bin/mqadmin brokerStatus -n 127.0.0.1:9876 -b 127.0.0.1:10911 2>/dev/null; }
-put_total() { bstat | awk '/msgPutTotalTodayNow/{print $3}'; }
-get_total() { bstat | awk '/msgGetTotalTodayNow/{print $3}'; }
+# Accounting via store offsets (exact): brokerStatus msgPut/GetTotal*
+# counters were empirically DEAD in this deployment (stayed 0 after 50k
+# verified sends). topicStatus maxOffset sum = exact messages put;
+# consumerProgress Diff Total = exact backlog.
+put_total() {
+  sh $RMQ/bin/mqadmin topicStatus -n 127.0.0.1:9876 -t BenchmarkTest 2>/dev/null \
+    | awk '$2 ~ /^[0-9]+$/ && $4 ~ /^[0-9]+$/ {s+=$4} END{if(NR>0) print s+0}'
+}
+backlog_total() {
+  sh $RMQ/bin/mqadmin consumerProgress -n 127.0.0.1:9876 -g benchmark_consumer 2>/dev/null \
+    | awk '/^benchmark_consumer[ \t]/{print $NF; found=1} END{if(!found) print -1}'
+}
 
 run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   CELL="$1-s$3-$4-$5"; D=$OUT/$CELL; mkdir -p $D
@@ -45,8 +54,13 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   nohup sh bin/mqbroker -n 127.0.0.1:9876 > $D/broker.log 2>&1 < /dev/null &
   sleep 40; grep -q "boot success" $D/broker.log || die "broker_boot $CELL"
   cat /proc/$(pgrep -f "[j]ava.*BrokerStartup" | head -1)/cmdline | tr '\0' ' ' > $D/broker-cmdline.txt
-  P0=$(put_total); G0=$(get_total)
-  [ -n "$P0" ] && [ -n "$G0" ] || die "empty_counters_pre $CELL"
+  # Pre-create the topic: on a fresh store the auto-create race produces
+  # a burst of Send Failed at producer start, permanently polluting the
+  # cumulative failure counters this matrix gates on.
+  sh $RMQ/bin/mqadmin updateTopic -n 127.0.0.1:9876 -b 127.0.0.1:10911 \
+    -t BenchmarkTest -w 8 -r 8 > $D/topic-create.log 2>&1 || die "topic_create $CELL"
+  sleep 3
+  P0=$(put_total); [ -n "$P0" ] || die "empty_offsets_pre $CELL"
   cd $RMQ/benchmark
   nohup sh producer.sh -n 127.0.0.1:9876 -s "$3" -w 8 > $D/producer.log 2>&1 < /dev/null &
   if [ "$4" = "normal" ]; then
@@ -69,23 +83,23 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   # confirm producer exit, then lock PUT_TARGET once the counter is
   # stable across two consecutive polls (no in-flight messages left)
   sleep 5; pgrep -f "[b]enchmark.Producer" >/dev/null && { sleep 5; pkill -9 -f "[b]enchmark.Producer"; sleep 3; }
-  PP=$(put_total); [ -n "$PP" ] || die "empty_counters_put $CELL"
+  PP=$(put_total); [ -n "$PP" ] || die "empty_offsets_put $CELL"
   S=0
   while [ $S -lt 12 ]; do
-    sleep 10; PN=$(put_total); [ -n "$PN" ] || die "empty_counters_put2 $CELL"
+    sleep 10; PN=$(put_total); [ -n "$PN" ] || die "empty_offsets_put2 $CELL"
     [ "$PN" = "$PP" ] && break
     PP=$PN; S=$((S+1))
   done
-  [ $S -lt 12 ] || die "put_counter_never_stabilized $CELL"
-  # drain: consumer catches up to the locked target (bounded)
-  DRAIN=0; GG=$(get_total)
-  while [ "${GG:-0}" -lt "$PP" ] && [ $DRAIN -lt 900 ]; do
-    sleep 15; DRAIN=$((DRAIN+15)); GG=$(get_total)
+  [ $S -lt 12 ] || die "put_offset_never_stabilized $CELL"
+  PUT=$((PP-P0))
+  [ "$PUT" -gt 0 ] || die "vacuous_accounting_put_zero $CELL"
+  # drain: consumer backlog (Diff Total) must reach 0, bounded
+  DRAIN=0; REM=$(backlog_total)
+  while [ "${REM:--1}" -ne 0 ] && [ $DRAIN -lt 900 ]; do
+    sleep 15; DRAIN=$((DRAIN+15)); REM=$(backlog_total)
   done
   pkill -f "[b]enchmark.Consumer"; sleep 5
-  P1=$(put_total); G1=$(get_total)
-  PUT=$((P1-P0)); GET=$((G1-G0)); REM=$((P1-G1))
-  echo "cell=$CELL put=$PUT get=$GET remaining=$REM drain_s=$DRAIN" >> $OUT/accounting.txt
+  echo "cell=$CELL put=$PUT backlog_final=$REM drain_s=$DRAIN" >> $OUT/accounting.txt
   # failure gates: require the counter fields to EXIST, then all-zero
   fgate() { # $1 file $2 pattern $3 label
     C=$(grep -coE "$2: [0-9]+" "$1" 2>/dev/null) || C=0
@@ -95,7 +109,7 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   fgate $D/producer.log "Send Failed" send_failed
   fgate $D/producer.log "Response Failed" response_failed
   fgate $D/consumer.log "Consume Fail" consume_failed
-  [ "$REM" -le 0 ] || die "drain_timeout_remaining=$REM $CELL"
+  [ "${REM:--1}" -eq 0 ] || die "drain_timeout_backlog=$REM $CELL"
   step "CELL_DONE $CELL put=$PUT get=$GET rem=$REM"
 }
 
