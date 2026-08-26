@@ -384,3 +384,111 @@ date,commit,branch,board,build_flags,config,bench,threads,num,reads,value_size,k
 2026-08-24,4e6d0a02c-tree,s2605-rvv,spacemit-k3-picoitx,3arm-rva23,B,readrandom,1,20000000,2000000,100,16,20260822,3,69995,14.287,interleaved-3arm
 2026-08-24,4e6d0a02c-tree,s2605-rvv,spacemit-k3-picoitx,3arm-rva23,B,seekrandom,1,20000000,500000,100,16,20260822,3,22178,45.088,interleaved-3arm
 2026-08-24,delivery-tree,s2605-rvv,spacemit-k3-picoitx,RISCV_RVV=1 rocksdbjni-11.1.1,stress,rocketmq-60min,8w+consumer,,,1024,,,,6056,,avg-send-tps; consume 6117; SendFailed=0 ResponseFailed=0 ConsumeFail=0; RSS 1.9-3.0G no OOM; 361x10s samples
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,1,358989,17.967,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,1,38852,204.411,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,1,420392,15.203,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,1,65961,120.085,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,1,430435,15.175,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,1,63185,124.499,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,2,428516,15.130,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,2,64158,121.266,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,2,402261,15.883,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,2,65270,120.790,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,2,363835,18.123,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,2,55554,143.228,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,3,411543,15.512,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,3,64231,121.471,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,3,359083,17.925,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,3,72991,107.594,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,3,428268,15.174,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,3,64013,123.224,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,4,347132,18.503,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,4,54699,143.888,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,4,422560,15.007,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,4,64634,122.329,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,4,419324,15.724,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,4,63486,123.101,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,5,432997,14.959,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,5,64494,121.583,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,5,403867,15.790,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,5,62664,125.762,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,5,351964,18.315,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,5,54193,146.068,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,6,412257,15.542,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,6,62726,123.386,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,6,362590,18.327,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,6,56124,139.907,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,8,20000000,,100,16,20260822,6,472429,12.989,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,8,20000000,,100,16,20260822,6,64336,122.391,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,1,69666,14.354,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,1,78041,12.814,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,1,68212,14.660,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,2,62466,16.008,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,2,66287,15.086,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,2,61273,16.320,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,3,66096,15.129,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,3,59012,16.946,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,3,62951,15.885,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,4,54595,18.317,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,4,69516,14.385,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,fillrandom,1,20000000,,100,16,20260822,4,70482,14.188,nosidecar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,1,20000000,,100,16,20260822,1,69931,14.300,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,1,20000000,,100,16,20260822,1,12291,81.360,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,1,20000000,,100,16,20260822,1,88995,11.237,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,1,20000000,,100,16,20260822,1,14960,66.843,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,1,20000000,,100,16,20260822,2,70377,14.209,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,1,20000000,,100,16,20260822,2,12183,82.081,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,1,20000000,,100,16,20260822,2,89235,11.206,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,1,20000000,,100,16,20260822,2,14997,66.676,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,1,20000000,,100,16,20260822,3,70070,14.271,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,1,20000000,,100,16,20260822,3,12227,81.784,scalar-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,B,readrandom,1,20000000,,100,16,20260822,3,90162,11.091,delivery-final3arm
+2026-08-25,final-assembly,s2605-rvv,spacemit-k3-picoitx,S=O2-scalar G=RVA23+PGO+defaults N=G-minus-sidecar latin-rotation,A,seekrandom,1,20000000,,100,16,20260822,3,15158,65.970,delivery-final3arm
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,1,586419,10.332,scr-G2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,1,558098,10.695,scr-N2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,2,558165,10.753,scr-N2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,2,583266,10.378,scr-G2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,3,582417,10.366,scr-G2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,3,569629,10.575,scr-N2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,4,551158,10.798,scr-N2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,4,579656,10.411,scr-G2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,5,580236,10.371,scr-G2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,5,568575,10.614,scr-N2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,6,558105,10.747,scr-N2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,6,561583,10.555,scr-G2-Bread
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,1,78287,12.773,scr-G2-fill
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,1,79801,12.531,scr-N2-fill
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,2,79544,12.572,scr-N2-fill
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,2,76527,13.067,scr-G2-fill
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,3,77333,12.931,scr-G2-fill
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,3,78443,12.748,scr-N2-fill
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,4,80672,12.396,scr-N2-fill
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,4,79409,12.593,scr-G2-fill
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,5,77454,12.911,scr-G2-fill
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,5,80410,12.436,scr-N2-fill
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,6,74022,13.509,scr-N2-fill
+2026-08-26,sidecar-retest,s2605-rvv,spacemit-k3-picoitx,G2/N2 gated-sidecar separate-PGO,.,.,.,20000000,,100,16,20260822,6,80390,12.439,scr-G2-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,1,74499,13.423,scf-GP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,1,71336,14.018,scf-NP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,2,75150,13.307,scf-NP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,2,78632,12.717,scf-GP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,3,77409,12.918,scf-GP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,3,72948,13.708,scf-NP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,4,79599,12.563,scf-NP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,4,79331,12.605,scf-GP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,5,75548,13.236,scf-GP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,5,77209,12.952,scf-NP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,6,74910,13.349,scf-NP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,6,75246,13.290,scf-GP-fill
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,1,508806,11.851,scf-GP-Bread
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,1,495195,11.947,scf-NP-Bread
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,2,496366,12.040,scf-NP-Bread
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,2,506700,11.728,scf-GP-Bread
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,3,511658,11.804,scf-GP-Bread
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,3,287226,21.829,scf-NP-Bread
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,4,323868,20.261,scf-NP-Bread
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,4,511169,11.792,scf-GP-Bread
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,5,505935,11.785,scf-GP-Bread
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,5,492678,12.064,scf-NP-Bread
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,6,494726,12.028,scf-NP-Bread
+2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,6,420939,14.680,scf-GP-Bread

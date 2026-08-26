@@ -1,0 +1,28 @@
+RESULT W fillrandom   :      12.331 micros/op 81098 ops/sec 246.613 seconds 20000000 operations;    9.0 MB/s
+RESULT W fillrandom   :      12.712 micros/op 78668 ops/sec 254.232 seconds 20000000 operations;    8.7 MB/s
+RESULT GP-fill fillrandom   :      13.423 micros/op 74499 ops/sec 268.459 seconds 20000000 operations;    8.2 MB/s
+RESULT NP-fill fillrandom   :      14.018 micros/op 71336 ops/sec 280.362 seconds 20000000 operations;    7.9 MB/s
+RESULT NP-fill fillrandom   :      13.307 micros/op 75150 ops/sec 266.131 seconds 20000000 operations;    8.3 MB/s
+RESULT GP-fill fillrandom   :      12.717 micros/op 78632 ops/sec 254.349 seconds 20000000 operations;    8.7 MB/s
+RESULT GP-fill fillrandom   :      12.918 micros/op 77409 ops/sec 258.367 seconds 20000000 operations;    8.6 MB/s
+RESULT NP-fill fillrandom   :      13.708 micros/op 72948 ops/sec 274.165 seconds 20000000 operations;    8.1 MB/s
+RESULT NP-fill fillrandom   :      12.563 micros/op 79599 ops/sec 251.259 seconds 20000000 operations;    8.8 MB/s
+RESULT GP-fill fillrandom   :      12.605 micros/op 79331 ops/sec 252.106 seconds 20000000 operations;    8.8 MB/s
+RESULT GP-fill fillrandom   :      13.236 micros/op 75548 ops/sec 264.729 seconds 20000000 operations;    8.4 MB/s
+RESULT NP-fill fillrandom   :      12.952 micros/op 77209 ops/sec 259.035 seconds 20000000 operations;    8.5 MB/s
+RESULT NP-fill fillrandom   :      13.349 micros/op 74910 ops/sec 266.986 seconds 20000000 operations;    8.3 MB/s
+RESULT GP-fill fillrandom   :      13.290 micros/op 75246 ops/sec 265.794 seconds 20000000 operations;    8.3 MB/s
+RESULT W readrandom   :     122.504 micros/op 62686 ops/sec 255.238 seconds 16000000 operations;    4.7 MB/s (2000000 of 2000000 found)
+RESULT W readrandom   :      11.993 micros/op 499710 ops/sec 32.019 seconds 16000000 operations;   37.5 MB/s (2000000 of 2000000 found)
+RESULT GP-Bread readrandom   :      11.851 micros/op 508806 ops/sec 31.446 seconds 16000000 operations;   38.2 MB/s (2000000 of 2000000 found)
+RESULT NP-Bread readrandom   :      11.947 micros/op 495195 ops/sec 32.310 seconds 16000000 operations;   37.1 MB/s (2000000 of 2000000 found)
+RESULT NP-Bread readrandom   :      12.040 micros/op 496366 ops/sec 32.234 seconds 16000000 operations;   37.2 MB/s (2000000 of 2000000 found)
+RESULT GP-Bread readrandom   :      11.728 micros/op 506700 ops/sec 31.577 seconds 16000000 operations;   38.0 MB/s (2000000 of 2000000 found)
+RESULT GP-Bread readrandom   :      11.804 micros/op 511658 ops/sec 31.271 seconds 16000000 operations;   38.4 MB/s (2000000 of 2000000 found)
+RESULT NP-Bread readrandom   :      21.829 micros/op 287226 ops/sec 55.705 seconds 16000000 operations;   21.5 MB/s (2000000 of 2000000 found)
+RESULT NP-Bread readrandom   :      20.261 micros/op 323868 ops/sec 49.403 seconds 16000000 operations;   24.3 MB/s (2000000 of 2000000 found)
+RESULT GP-Bread readrandom   :      11.792 micros/op 511169 ops/sec 31.301 seconds 16000000 operations;   38.3 MB/s (2000000 of 2000000 found)
+RESULT GP-Bread readrandom   :      11.785 micros/op 505935 ops/sec 31.625 seconds 16000000 operations;   37.9 MB/s (2000000 of 2000000 found)
+RESULT NP-Bread readrandom   :      12.064 micros/op 492678 ops/sec 32.476 seconds 16000000 operations;   37.0 MB/s (2000000 of 2000000 found)
+RESULT NP-Bread readrandom   :      12.028 micros/op 494726 ops/sec 32.341 seconds 16000000 operations;   37.1 MB/s (2000000 of 2000000 found)
+RESULT GP-Bread readrandom   :      14.680 micros/op 420939 ops/sec 38.010 seconds 16000000 operations;   31.6 MB/s (2000000 of 2000000 found)

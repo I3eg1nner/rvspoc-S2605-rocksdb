@@ -1,0 +1,28 @@
+RESULT W readrandom   :      52.796 micros/op 141278 ops/sec 113.252 seconds 16000000 operations;   10.6 MB/s (2000000 of 2000000 found)
+RESULT W readrandom   :      10.746 micros/op 559441 ops/sec 28.600 seconds 16000000 operations;   42.0 MB/s (2000000 of 2000000 found)
+RESULT G2-Bread readrandom   :      10.332 micros/op 586419 ops/sec 27.284 seconds 16000000 operations;   44.0 MB/s (2000000 of 2000000 found)
+RESULT N2-Bread readrandom   :      10.695 micros/op 558098 ops/sec 28.669 seconds 16000000 operations;   41.9 MB/s (2000000 of 2000000 found)
+RESULT N2-Bread readrandom   :      10.753 micros/op 558165 ops/sec 28.665 seconds 16000000 operations;   41.9 MB/s (2000000 of 2000000 found)
+RESULT G2-Bread readrandom   :      10.378 micros/op 583266 ops/sec 27.432 seconds 16000000 operations;   43.7 MB/s (2000000 of 2000000 found)
+RESULT G2-Bread readrandom   :      10.366 micros/op 582417 ops/sec 27.472 seconds 16000000 operations;   43.7 MB/s (2000000 of 2000000 found)
+RESULT N2-Bread readrandom   :      10.575 micros/op 569629 ops/sec 28.088 seconds 16000000 operations;   42.7 MB/s (2000000 of 2000000 found)
+RESULT N2-Bread readrandom   :      10.798 micros/op 551158 ops/sec 29.030 seconds 16000000 operations;   41.3 MB/s (2000000 of 2000000 found)
+RESULT G2-Bread readrandom   :      10.411 micros/op 579656 ops/sec 27.603 seconds 16000000 operations;   43.5 MB/s (2000000 of 2000000 found)
+RESULT G2-Bread readrandom   :      10.371 micros/op 580236 ops/sec 27.575 seconds 16000000 operations;   43.5 MB/s (2000000 of 2000000 found)
+RESULT N2-Bread readrandom   :      10.614 micros/op 568575 ops/sec 28.140 seconds 16000000 operations;   42.6 MB/s (2000000 of 2000000 found)
+RESULT N2-Bread readrandom   :      10.747 micros/op 558105 ops/sec 28.668 seconds 16000000 operations;   41.9 MB/s (2000000 of 2000000 found)
+RESULT G2-Bread readrandom   :      10.555 micros/op 561583 ops/sec 28.491 seconds 16000000 operations;   42.1 MB/s (2000000 of 2000000 found)
+RESULT W fillrandom   :      11.286 micros/op 88609 ops/sec 225.710 seconds 20000000 operations;    9.8 MB/s
+RESULT W fillrandom   :      12.207 micros/op 81923 ops/sec 244.130 seconds 20000000 operations;    9.1 MB/s
+RESULT G2-fill fillrandom   :      12.773 micros/op 78287 ops/sec 255.469 seconds 20000000 operations;    8.7 MB/s
+RESULT N2-fill fillrandom   :      12.531 micros/op 79801 ops/sec 250.623 seconds 20000000 operations;    8.8 MB/s
+RESULT N2-fill fillrandom   :      12.572 micros/op 79544 ops/sec 251.431 seconds 20000000 operations;    8.8 MB/s
+RESULT G2-fill fillrandom   :      13.067 micros/op 76527 ops/sec 261.343 seconds 20000000 operations;    8.5 MB/s
+RESULT G2-fill fillrandom   :      12.931 micros/op 77333 ops/sec 258.620 seconds 20000000 operations;    8.6 MB/s
+RESULT N2-fill fillrandom   :      12.748 micros/op 78443 ops/sec 254.960 seconds 20000000 operations;    8.7 MB/s
+RESULT N2-fill fillrandom   :      12.396 micros/op 80672 ops/sec 247.917 seconds 20000000 operations;    8.9 MB/s
+RESULT G2-fill fillrandom   :      12.593 micros/op 79409 ops/sec 251.860 seconds 20000000 operations;    8.8 MB/s
+RESULT G2-fill fillrandom   :      12.911 micros/op 77454 ops/sec 258.217 seconds 20000000 operations;    8.6 MB/s
+RESULT N2-fill fillrandom   :      12.436 micros/op 80410 ops/sec 248.724 seconds 20000000 operations;    8.9 MB/s
+RESULT N2-fill fillrandom   :      13.509 micros/op 74022 ops/sec 270.188 seconds 20000000 operations;    8.2 MB/s
+RESULT G2-fill fillrandom   :      12.439 micros/op 80390 ops/sec 248.786 seconds 20000000 operations;    8.9 MB/s
