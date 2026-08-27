@@ -114,7 +114,9 @@ done   # max_freq 高的一簇 = P 核；亦可对照 /proc/cpuinfo 的 uarch/ma
    `make rocksdbjava` 产出的 rocksdbjni-11.1.1 jar 整包替换 lib/ 下
    该 jar。
 3. JVM 脚本适配（JDK21）：runserver/runbroker 压堆
-   （512m/1g，7.7GB 板）；benchmark/runclass.sh 去 JDK8 flags
+   （512m/1g，7.7GB 板）；**runbroker 的 `-XX:MaxDirectMemorySize=15g`
+   必须压到 2g**（小内存板上大消息场景的稳定性隐患）；
+   benchmark/runclass.sh 去 JDK8 flags
    （PermSize/CMS/UseConcMarkSweepGC/java.ext.dirs→classpath 通配）。
 4. 压测：benchmark/{producer,consumer}.sh 60 分钟，监控 RSS/丢失/
    损坏（记录见 benchmark.csv 与验收报告）。
