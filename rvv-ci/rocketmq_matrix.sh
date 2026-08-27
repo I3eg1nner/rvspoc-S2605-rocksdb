@@ -38,8 +38,11 @@ put_total() {
     | awk '$2 ~ /^[0-9]+$/ && $4 ~ /^[0-9]+$/ {s+=$4} END{if(NR>0) print s+0}'
 }
 backlog_total() {
+  # tolerate both output shapes: detail view (-g) footer "Diff Total: N"
+  # and list view row "benchmark_consumer ... N"; -1 = query failed
+  # (treated as "not yet drained" by the caller, only timeout aborts)
   sh $RMQ/bin/mqadmin consumerProgress -n 127.0.0.1:9876 -g benchmark_consumer 2>/dev/null \
-    | awk '/^benchmark_consumer[ \t]/{print $NF; found=1} END{if(!found) print -1}'
+    | awk '/[Dd]iff.?[Tt]otal/{v=$NF} /^benchmark_consumer[ \t]/{v=$NF} END{if(v ~ /^[0-9]+$/) print v; else print -1}'
 }
 
 run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
