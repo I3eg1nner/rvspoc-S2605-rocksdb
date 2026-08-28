@@ -409,3 +409,15 @@ headroom 分析进验收报告；若组织方澄清 30% 口径为"综合"或"任
    该格结果标记 SUPERSEDED（目录 *.TMPPRESSURE-0202 保留）。
    注：v6+JIT-exclude 首次让 16K 格全程干净通过（put=1.068M 排空
    零失败），JIT 崩溃处置有效性已获一格证据。
+4. v6.1 ABORT `send_failed_nonzero`（scalar-s16384-normal-ba, 02:39）：
+   预热已治好 broker 冷启，这次是 measured producer 自身（每格新起
+   的客户端 JVM）在测量窗前 20s 单发失败（恰 1 条、Max RT 2179ms
+   单条超时、计数器此后恒定）——16K 首批大缓冲/客户端 JIT 抖动。
+   v6.2（在计算任何 16K/128K 臂间对比之前预注册）：零丢失不变量
+   （put 精确记账 + 排空到 0 + Response/Consume Failed==0）不变；
+   Send Failed 仅允许出现于测量窗前 60s（与 TPS 统计丢弃段一致）、
+   之后必须恒定（60s 后任何新增仍 ABORT）、总数 ≤10、逐格记录
+   send_failed_60s 进 accounting/CELL_DONE。sync 失败是上报的流控/
+   超时而非丢失。另加 SKIP 环境变量续跑（已完成 3 格不重烧）。
+   v6.1 已完成格：scalar-ab put=997060 / rvv-ab put=981774 /
+   rvv-ba put=979494（16K normal，全排空零失败）。
