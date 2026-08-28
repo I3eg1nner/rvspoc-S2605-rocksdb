@@ -113,7 +113,7 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   fgate $D/producer.log "Response Failed" response_failed
   fgate $D/consumer.log "Consume Fail" consume_failed
   [ "${REM:--1}" -eq 0 ] || die "drain_timeout_backlog=$REM $CELL"
-  step "CELL_DONE $CELL put=$PUT get=$GET rem=$REM"
+  step "CELL_DONE $CELL put=$PUT backlog_final=$REM drain_s=$DRAIN"
 }
 
 for size in 1024 16384 131072; do
