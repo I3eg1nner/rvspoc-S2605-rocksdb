@@ -492,3 +492,5 @@ date,commit,branch,board,build_flags,config,bench,threads,num,reads,value_size,k
 2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,5,492678,12.064,scf-NP-Bread
 2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,6,494726,12.028,scf-NP-Bread
 2026-08-26,sidecar-falsify,s2605-rvv,spacemit-k3-picoitx,GP/NP no-PGO identical-flags,.,.,.,20000000,,100,16,20260822,6,420939,14.680,scf-GP-Bread
+2026-08-29,board2-k3-16g,s2605-rvv,spacemit-k3-16g,crcbench three-tier userspace-governor,micro,crc32c-4k,1,,,,,,1,4922,,zbc-scalar 6.43x vs slice8 765; zvbc 5623 (7.35x)
+2026-08-29,board2-k3-16g,s2605-rvv,spacemit-k3-16g,crcbench three-tier userspace-governor,micro,crc32c-64k,1,,,,,,1,5360,,zbc-scalar 7.00x vs slice8 766; zvbc 9865 (12.88x)
