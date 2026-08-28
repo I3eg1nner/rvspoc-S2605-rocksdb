@@ -346,3 +346,31 @@ rvspoc.org/S2605 为准，需向主办方索要评测命令 + LX500 访问。按
 已向量化）。叠加估计：fillrandom +20~35%（贴线），read/seek +10~18%
 ——30% 若要求三 bench 全达标，纯计算侧不可达，需 latency 论证 +
  与主办方确认 rubric（任一/平均/全部）。
+
+## board2 新鲜 profile（2026-08-29，交付二进制 db_bench.GP，10M keys cfg B）
+
+board2（第二块 K3 16G，rvv-board2）作并行测量机：交付 PGO 二进制 +
+依赖库从主板整体搬运（sha 一致），scalar 二进制写 DB 后 perf -F297 -g。
+
+**read t8 flat**：BinarySeekRestartPointIndex<DecodeKeyV4> **10.2%**
+（sidecar 生效后仍第一——含 sidecar 每块一次构建成本 + 固有访存延迟；
+该函数已同时具备双 prefetch 与前缀跳过）、FastLocalBloom MayMatch
+8.0%（单 key 探测，DRAM 延迟主导，RVV 单 key 形态早前实测 7-9x 慢已
+拒）、ParseNextKey<DecodeEntry> 5.8%（数据块线性走）、比较器 thunk
+4.8%、BlockBasedTable::Get 3.9%。
+
+**fill t1 flat**：比较器 thunk **15.1%**（BytewiseComparatorImpl::
+Compare 本体，24B 内部 key；memcmp-rvv 已在路径上）、
+FindSpliceForLevel **13.8%**（上游 PREFETCH 点已被 zicbop 激活——
+objdump 确认 6 处 prefetch.r + MemTable::Get 内联段 sh3add+prefetch.r
+——剩余为指针追逐的固有依赖链延迟，软件 prefetch 无法预取未加载的
+next 指针）、MemTable::KeyComparator 3.7%、PipelinedWriteImpl 2.7%。
+
+**headroom 判定（优化阶段收口）**：剩余热点全部是（a）依赖链访存
+延迟（skiplist、bloom cache line、index 二分探测）或（b）已被既有
+kernel 覆盖后的残余。可想的微杠杆（fused DecodeEntry 8B SWAR、
+sidecar 数组 prefetch、memtable 比较器去虚化）单项预期 <2%，且逐项
+需全套门（QEMU 3×VLEN 敌意 + 板差分 + 全量 check + 交错 A/B），
+在 08-31 截止前与矩阵取数/总装冲突。决定：**优化阶段就此关闭**，
+headroom 分析进验收报告；若组织方澄清 30% 口径为"综合"或"任一"，
+现数已达标（read t1 +27.4 / seek t1 +22.7 / read t8 +19.3）。
