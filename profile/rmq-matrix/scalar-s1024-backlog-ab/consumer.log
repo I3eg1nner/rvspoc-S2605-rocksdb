@@ -1,0 +1,20 @@
+topic: BenchmarkTest, threadCount 20, group: benchmark_consumer, suffix: false, filterType: null, expression: null, msgTraceEnable: false, aclEnable: false, reportInterval: 10000
+Consumer Started.
+Current Time: 2026-08-29 01:04:05,684 | Consume TPS: 5759 | AVG(B2C) RT(ms): 146179.493 | AVG(S2C) RT(ms): 146178.409 | MAX(B2C) RT(ms): 157076 | MAX(S2C) RT(ms): 156939 | Consume Fail: 0
+Current Time: 2026-08-29 01:04:15,639 | Consume TPS: 80481 | AVG(B2C) RT(ms): 95160.539 | AVG(S2C) RT(ms): 95159.838 | MAX(B2C) RT(ms): 146188 | MAX(S2C) RT(ms): 146187 | Consume Fail: 0
+Current Time: 2026-08-29 01:04:25,639 | Consume TPS: 32084 | AVG(B2C) RT(ms): 33792.131 | AVG(S2C) RT(ms): 33791.505 | MAX(B2C) RT(ms): 58421 | MAX(S2C) RT(ms): 58421 | Consume Fail: 0
+Current Time: 2026-08-29 01:04:35,639 | Consume TPS: 3707 | AVG(B2C) RT(ms):   3.432 | AVG(S2C) RT(ms):   2.366 | MAX(B2C) RT(ms): 545 | MAX(S2C) RT(ms): 543 | Consume Fail: 0
+Current Time: 2026-08-29 01:04:45,639 | Consume TPS: 4546 | AVG(B2C) RT(ms):   2.744 | AVG(S2C) RT(ms):   1.913 | MAX(B2C) RT(ms): 337 | MAX(S2C) RT(ms): 336 | Consume Fail: 0
+Current Time: 2026-08-29 01:04:55,640 | Consume TPS: 3603 | AVG(B2C) RT(ms):   8.344 | AVG(S2C) RT(ms):   7.327 | MAX(B2C) RT(ms): 466 | MAX(S2C) RT(ms): 465 | Consume Fail: 0
+Current Time: 2026-08-29 01:05:05,641 | Consume TPS: 3765 | AVG(B2C) RT(ms):   5.584 | AVG(S2C) RT(ms):   4.608 | MAX(B2C) RT(ms): 538 | MAX(S2C) RT(ms): 537 | Consume Fail: 0
+Current Time: 2026-08-29 01:05:15,640 | Consume TPS: 4685 | AVG(B2C) RT(ms):   5.828 | AVG(S2C) RT(ms):   5.027 | MAX(B2C) RT(ms): 266 | MAX(S2C) RT(ms): 265 | Consume Fail: 0
+Current Time: 2026-08-29 01:05:25,639 | Consume TPS: 4779 | AVG(B2C) RT(ms):   2.615 | AVG(S2C) RT(ms):   1.816 | MAX(B2C) RT(ms): 37 | MAX(S2C) RT(ms): 36 | Consume Fail: 0
+Current Time: 2026-08-29 01:05:35,639 | Consume TPS: 4844 | AVG(B2C) RT(ms):   2.568 | AVG(S2C) RT(ms):   1.787 | MAX(B2C) RT(ms): 20 | MAX(S2C) RT(ms): 19 | Consume Fail: 0
+Current Time: 2026-08-29 01:05:45,639 | Consume TPS: 4893 | AVG(B2C) RT(ms):   2.522 | AVG(S2C) RT(ms):   1.753 | MAX(B2C) RT(ms): 295 | MAX(S2C) RT(ms): 294 | Consume Fail: 0
+Current Time: 2026-08-29 01:05:55,639 | Consume TPS: 4960 | AVG(B2C) RT(ms):   2.536 | AVG(S2C) RT(ms):   1.772 | MAX(B2C) RT(ms): 339 | MAX(S2C) RT(ms): 338 | Consume Fail: 0
+Current Time: 2026-08-29 01:06:05,639 | Consume TPS: 4807 | AVG(B2C) RT(ms):   2.545 | AVG(S2C) RT(ms):   1.762 | MAX(B2C) RT(ms): 11 | MAX(S2C) RT(ms): 10 | Consume Fail: 0
+Current Time: 2026-08-29 01:06:15,639 | Consume TPS: 4908 | AVG(B2C) RT(ms):   2.536 | AVG(S2C) RT(ms):   1.772 | MAX(B2C) RT(ms): 19 | MAX(S2C) RT(ms): 18 | Consume Fail: 0
+Current Time: 2026-08-29 01:06:25,639 | Consume TPS: 4797 | AVG(B2C) RT(ms):   2.515 | AVG(S2C) RT(ms):   1.743 | MAX(B2C) RT(ms): 20 | MAX(S2C) RT(ms): 19 | Consume Fail: 0
+Current Time: 2026-08-29 01:06:35,639 | Consume TPS: 0 | AVG(B2C) RT(ms):     NaN | AVG(S2C) RT(ms):     NaN | MAX(B2C) RT(ms): 0 | MAX(S2C) RT(ms): 0 | Consume Fail: 0
+Current Time: 2026-08-29 01:06:45,639 | Consume TPS: 0 | AVG(B2C) RT(ms):     NaN | AVG(S2C) RT(ms):     NaN | MAX(B2C) RT(ms): 0 | MAX(S2C) RT(ms): 0 | Consume Fail: 0
+Current Time: 2026-08-29 01:06:55,639 | Consume TPS: 0 | AVG(B2C) RT(ms):     NaN | AVG(S2C) RT(ms):     NaN | MAX(B2C) RT(ms): 0 | MAX(S2C) RT(ms): 0 | Consume Fail: 0

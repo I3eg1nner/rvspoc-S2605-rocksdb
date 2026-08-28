@@ -1,0 +1,19 @@
+00:31:22 CELL_START scalar-s1024-normal-ab
+00:38:31 CELL_DONE scalar-s1024-normal-ab put=1384817 backlog_final=0 drain_s=0
+00:38:31 CELL_START rvv-s1024-normal-ab
+00:45:40 CELL_DONE rvv-s1024-normal-ab put=1366854 backlog_final=0 drain_s=0
+00:45:40 CELL_START rvv-s1024-normal-ba
+00:52:49 CELL_DONE rvv-s1024-normal-ba put=1372553 backlog_final=0 drain_s=0
+00:52:49 CELL_START scalar-s1024-normal-ba
+00:59:57 CELL_DONE scalar-s1024-normal-ba put=1372728 backlog_final=0 drain_s=0
+00:59:57 CELL_START scalar-s1024-backlog-ab
+01:07:06 CELL_DONE scalar-s1024-backlog-ab put=1674789 backlog_final=0 drain_s=0
+01:07:06 CELL_START rvv-s1024-backlog-ab
+01:14:15 CELL_DONE rvv-s1024-backlog-ab put=1763354 backlog_final=0 drain_s=0
+01:14:15 CELL_START rvv-s1024-backlog-ba
+01:21:25 CELL_DONE rvv-s1024-backlog-ba put=1632753 backlog_final=0 drain_s=0
+01:21:25 CELL_START scalar-s1024-backlog-ba
+01:28:36 CELL_DONE scalar-s1024-backlog-ba put=1713280 backlog_final=0 drain_s=0
+01:28:36 CELL_START scalar-s16384-normal-ab
+01:35:46 ABORT send_failed_nonzero scalar-s16384-normal-ab
+01:42:52 CELL_START scalar-s16384-normal-ab

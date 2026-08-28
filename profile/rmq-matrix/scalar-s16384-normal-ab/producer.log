@@ -1,0 +1,15 @@
+topic: BenchmarkTest, threadCount: 8, messageSize: 16384, keyEnable: false, propertySize: 0, tagCount: 0, traceEnable: false, aclEnable: false, messageQuantity: 0, delayEnable: false, delayLevel: 1, asyncEnable: false
+ compressEnable: false, reportInterval: 10000
+Current Time: 2026-08-29 01:45:44,574 | Send TPS: 1902 | Max RT(ms): 605 | Average RT(ms):   4.235 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:45:54,574 | Send TPS: 3675 | Max RT(ms): 605 | Average RT(ms):   2.171 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:46:04,574 | Send TPS: 3742 | Max RT(ms): 605 | Average RT(ms):   2.134 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:46:14,574 | Send TPS: 3183 | Max RT(ms): 605 | Average RT(ms):   2.510 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:46:24,574 | Send TPS: 1543 | Max RT(ms): 605 | Average RT(ms):   5.186 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:46:34,574 | Send TPS: 3794 | Max RT(ms): 605 | Average RT(ms):   2.105 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:46:44,574 | Send TPS: 3860 | Max RT(ms): 605 | Average RT(ms):   2.070 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:46:54,574 | Send TPS: 3811 | Max RT(ms): 605 | Average RT(ms):   2.097 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:47:04,574 | Send TPS: 3675 | Max RT(ms): 605 | Average RT(ms):   2.174 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:47:14,574 | Send TPS: 3812 | Max RT(ms): 605 | Average RT(ms):   2.096 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:47:24,574 | Send TPS: 3931 | Max RT(ms): 605 | Average RT(ms):   2.033 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:47:34,574 | Send TPS: 3916 | Max RT(ms): 605 | Average RT(ms):   2.042 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 01:47:44,574 | Send TPS: 3838 | Max RT(ms): 605 | Average RT(ms):   2.082 | Send Failed: 0 | Response Failed: 0
