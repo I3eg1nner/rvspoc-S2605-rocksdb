@@ -60,3 +60,11 @@
 04:19:01 CELL_SKIP rvv-s131072-normal-ba
 04:19:01 CELL_SKIP scalar-s131072-normal-ba
 04:19:01 CELL_START scalar-s131072-backlog-ab
+04:28:11 CELL_DONE scalar-s131072-backlog-ab put=340078 backlog_final=0 drain_s=15 send_failed_60s=0
+04:28:11 CELL_START rvv-s131072-backlog-ab
+04:36:41 CELL_DONE rvv-s131072-backlog-ab put=326236 backlog_final=0 drain_s=0 send_failed_60s=0
+04:36:41 CELL_START rvv-s131072-backlog-ba
+04:44:56 CELL_DONE rvv-s131072-backlog-ba put=306237 backlog_final=0 drain_s=0 send_failed_60s=0
+04:44:56 CELL_START scalar-s131072-backlog-ba
+04:53:09 CELL_DONE scalar-s131072-backlog-ba put=317741 backlog_final=0 drain_s=0 send_failed_60s=0
+04:53:18 MATRIX_DONE

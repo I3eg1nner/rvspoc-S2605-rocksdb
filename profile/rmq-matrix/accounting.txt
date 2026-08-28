@@ -22,3 +22,7 @@ cell=rvv-s131072-normal-ab put=372144 backlog_final=0 drain_s=0 send_failed_60s=
 cell=rvv-s131072-normal-ba put=370161 backlog_final=0 drain_s=0 send_failed_60s=0
 cell=scalar-s131072-normal-ba put=367874 backlog_final=0 drain_s=0 send_failed_60s=1
 cell=scalar-s131072-backlog-ab put=384966 backlog_final=0 drain_s=30 send_failed_60s=0
+cell=scalar-s131072-backlog-ab put=340078 backlog_final=0 drain_s=15 send_failed_60s=0
+cell=rvv-s131072-backlog-ab put=326236 backlog_final=0 drain_s=0 send_failed_60s=0
+cell=rvv-s131072-backlog-ba put=306237 backlog_final=0 drain_s=0 send_failed_60s=0
+cell=scalar-s131072-backlog-ba put=317741 backlog_final=0 drain_s=0 send_failed_60s=0

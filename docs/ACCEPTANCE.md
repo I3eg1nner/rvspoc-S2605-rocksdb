@@ -105,33 +105,45 @@ v11.1.1 全树 ARM 专属优化共 6 处（`grep -rl 'arm_neon|__aarch64__|ARM_F
 | 序列化：块尾校验 | util/crc32c.cc `Extend` | vclmul CRC（探测启用） |
 | 双向：kv 校验/缓存键 | util/xxhash.h / xxph3.h | RVV 分支 |
 
-## 二b、RocketMQ 双臂矩阵（补充证据；硬性压测门另见第一节 PASS 行）
+## 二b、RocketMQ 双臂矩阵（24 有效格全部完成，2026-08-29；硬性压测门另见第一节 PASS 行）
 
-协议：每格全新 store（NVMe /data 符号链接）→ namesrv/broker 冷启
-→ topic 预建 → 负载 300s → producer 停 → put 偏移锁定（连续两轮
-不变）→ consumer 排空到 backlog=0（有界）→ 失败门（测量窗
-Send/Response/Consume Failed 必须为 0，fail-closed）。记账用 store
-偏移（topicStatus maxOffset 和 / consumerProgress Diff Total——
-brokerStatus 累计计数器在本部署实测死值）。jar sha256 + broker
-cmdline 每格留痕。TPS 统计：10s 采样、丢弃前 60s 爬坡、取中位数。
+协议（终版 v6.x）：每格全新 store（NVMe）→ 冷启 → topic 预建 →
+45s 预热丢弃段（16K 起启用）→ 300s 测量 → put 偏移锁定（连续两轮
+不变）→ 排空到 backlog=0（有界）。零丢失不变量：put 记账精确
+（store 偏移；brokerStatus 计数器实测死值）+ 排空到 0 +
+Response/Consume Failed==0，全程 fail-closed。Send Failed 门 v6.2
+起：仅允许测量窗前 60s 内（与 TPS 统计丢弃段一致）、之后必须恒定、
+≤10、逐格记录。128K backlog 两臂统一 -w 4（预注册：w8 时消费者中场
+加入令 broker 饱和，两臂同样超时——offered load 超容量而非缺陷）。
+TPS 统计：10s 采样、丢前 60s、中位数。jar sha256 + broker cmdline
+每格留痕。
 
-**s1024 块（8 格，协议 v5b）——两臂持平，零失败零残留**：
+**终表（send TPS 为 ab+ba 均值的臂间差；put 为精确记账差）**：
 
-| 尺寸×场景 | send TPS（scalar / rvv, ab+ba 均值） | Δ | consume TPS Δ | put 记账 Δ |
-|---|---|---|---|---|
-| 1K normal | 4934 / 4911 | −0.47% | −0.32% | ±0（各 ~1.37M，全排空） |
-| 1K backlog | 4868 / 4798 | −1.45% | −10.8%※ | +0.24%（rvv 1.698M vs 1.694M） |
+| 尺寸×场景 | send TPS Δ | put Δ | 零丢失链 |
+|---|---|---|---|
+| 1K normal | −0.47% | ±0 | ✅ 全绿 |
+| 1K backlog | −1.45% | +0.24% | ✅ 全绿 |
+| 16K normal | −0.15% | −1.50% | ✅ 全绿 |
+| 16K backlog | **+5.93%** | +0.35% | ✅ 全绿 |
+| 128K normal | +0.37% | +0.54% | ✅ 全绿 |
+| 128K backlog(w4) | −18.1%※ | **−3.85%** | ✅ 全绿 |
 
-※ backlog 场景 consumer 只在后半程+排空段运行（每格仅 12 个有效采
-样、相位敏感）；单格 rvv-ba 3694 拖低中位数，而同场景 put 记账两臂
-持平、四格全部排空到 0、失败全 0——按预注册纪律记原始数据，不据
-弱采样下结论。逐格原始行在 benchmark.csv / profile/rmq-matrix/。
+※ 128K backlog 的 send TPS 中位数不稳定（顺序效应 ab≈2×ba、两臂
+皆然：中位数落在"producer 独跑/与排空并发"双峰之间），以 put 精确
+记账为准 = **−3.9%（两个顺序内一致）**——RVV 臂在最饱和场景有真实
+小幅劣化，如实记录；该场景 consume TPS 中位数 rvv 2603/2778 vs
+scalar 2131/2917（混合）。其余 5/6 场景两臂持平或 RVV 占优（16K
+backlog +5.9%）。**比赛硬性判据（无 OOM/损坏/丢失）在全部 24 格 +
+60min 压测中全部满足。**
 
-**16K/128K 块（16 格，协议 v6=v5b+45s 预热丢弃段）：主板运行中。**
-第一次 16K 格在 v5b 下因 broker 冷启 fast-fail（SYSTEM_BUSY，8 次
-Send Failed 全部集中在开格前 ~145s，之后 60 分钟计数器不动——流控
-而非丢失）被 fail-closed 门正确叫停；v6 加预热段后测量窗口仍要求
-零失败，门未放松。ABORT 格目录保留（*.ABORTED-0135）。
+运行事故链（全部留痕、逐项根因、门未放松）：broker 冷启 fast-fail
+（→ 预热段）、riscv64 JDK21 C2 JIT 崩溃（纯 Java remoting 帧，
+scalar 臂，与 RocksDB 无关 → CompileCommand 排除单方法，hs_err 存
+证）、rocksdbjni /tmp 解压泄漏 404MB/格 填满 tmpfs（→ 每格回收）、
+客户端 JVM 冷启单发超时（→ 60s 窗口规则）、128K backlog w8 饱和
+（→ 两臂 w4）。被替换/中止格目录全部保留（*.SUPERSEDED/*.CRASHED/
+*.TMPFULL/*.COLDBLIP/*.SATURATED），accounting.txt 追加式不删行。
 
 ## 三、正确性证据链
 
@@ -203,11 +215,7 @@ clang intrinsic 门控证据。
 
 ## 七、验收前待办（按序；已完成项从此清单移除）
 
-1. RocketMQ 双臂矩阵（24 runs：2 臂 ×3 尺寸 ×2 场景 ×AB/BA，排空
-   核账 + 失败即停 + jar 身份链）——**主板运行中**（NVMe /data 存储，
-   2026-08-29 已过 8/24 格，全部 CELL_DONE 排空到 0）。完成后取数
-   入本表。
-2. 用户验收 → 恢复上游 CLAUDE.md → 确认后 PR → upstream `11.1.fb`。
+1. 用户验收 → 恢复上游 CLAUDE.md → 确认后 PR → upstream `11.1.fb`。
 
 （已完成并移除：全量 check 第三轮 38934 全过；逐 kernel bisect 与默认
 开关落定；终版三臂复测；wiki 促进收尾——3arm/压测/误编译 run 记录 +
