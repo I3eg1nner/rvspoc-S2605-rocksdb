@@ -105,6 +105,34 @@ v11.1.1 全树 ARM 专属优化共 6 处（`grep -rl 'arm_neon|__aarch64__|ARM_F
 | 序列化：块尾校验 | util/crc32c.cc `Extend` | vclmul CRC（探测启用） |
 | 双向：kv 校验/缓存键 | util/xxhash.h / xxph3.h | RVV 分支 |
 
+## 二b、RocketMQ 双臂矩阵（补充证据；硬性压测门另见第一节 PASS 行）
+
+协议：每格全新 store（NVMe /data 符号链接）→ namesrv/broker 冷启
+→ topic 预建 → 负载 300s → producer 停 → put 偏移锁定（连续两轮
+不变）→ consumer 排空到 backlog=0（有界）→ 失败门（测量窗
+Send/Response/Consume Failed 必须为 0，fail-closed）。记账用 store
+偏移（topicStatus maxOffset 和 / consumerProgress Diff Total——
+brokerStatus 累计计数器在本部署实测死值）。jar sha256 + broker
+cmdline 每格留痕。TPS 统计：10s 采样、丢弃前 60s 爬坡、取中位数。
+
+**s1024 块（8 格，协议 v5b）——两臂持平，零失败零残留**：
+
+| 尺寸×场景 | send TPS（scalar / rvv, ab+ba 均值） | Δ | consume TPS Δ | put 记账 Δ |
+|---|---|---|---|---|
+| 1K normal | 4934 / 4911 | −0.47% | −0.32% | ±0（各 ~1.37M，全排空） |
+| 1K backlog | 4868 / 4798 | −1.45% | −10.8%※ | +0.24%（rvv 1.698M vs 1.694M） |
+
+※ backlog 场景 consumer 只在后半程+排空段运行（每格仅 12 个有效采
+样、相位敏感）；单格 rvv-ba 3694 拖低中位数，而同场景 put 记账两臂
+持平、四格全部排空到 0、失败全 0——按预注册纪律记原始数据，不据
+弱采样下结论。逐格原始行在 benchmark.csv / profile/rmq-matrix/。
+
+**16K/128K 块（16 格，协议 v6=v5b+45s 预热丢弃段）：主板运行中。**
+第一次 16K 格在 v5b 下因 broker 冷启 fast-fail（SYSTEM_BUSY，8 次
+Send Failed 全部集中在开格前 ~145s，之后 60 分钟计数器不动——流控
+而非丢失）被 fail-closed 门正确叫停；v6 加预热段后测量窗口仍要求
+零失败，门未放松。ABORT 格目录保留（*.ABORTED-0135）。
+
 ## 三、正确性证据链
 
 1. 每 kernel 差分（板 + QEMU 3 VLEN × 敌意 ta/ma）：crc 4438/0、
