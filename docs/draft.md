@@ -366,6 +366,11 @@ objdump 确认 6 处 prefetch.r + MemTable::Get 内联段 sh3add+prefetch.r
 ——剩余为指针追逐的固有依赖链延迟，软件 prefetch 无法预取未加载的
 next 指针）、MemTable::KeyComparator 3.7%、PipelinedWriteImpl 2.7%。
 
+**seek t8 flat**（补测，--reads=1M --seek_nexts=10）：index binseek
+7.4%、ParseNextKey<DecodeEntry> 6.3%、比较器 thunk 4.0%、
+AutoHyperClockTable::Lookup 3.7%、libc 3.2%、数据块 binseek 2.1%、
+NewDataIterator 2.0%——剖面平坦，无 >8% 单点。
+
 **headroom 判定（优化阶段收口）**：剩余热点全部是（a）依赖链访存
 延迟（skiplist、bloom cache line、index 二分探测）或（b）已被既有
 kernel 覆盖后的残余。可想的微杠杆（fused DecodeEntry 8B SWAR、
