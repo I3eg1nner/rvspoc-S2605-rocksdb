@@ -48,7 +48,13 @@ backlog_total() {
 run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   CELL="$1-s$3-$4-$5"; D=$OUT/$CELL; mkdir -p $D
   step "CELL_START $CELL"
-  cleanup; rm -rf /root/store; sleep 3
+  cleanup
+  # /root/store may be a symlink onto the NVMe data disk: clean the
+  # TARGET contents and re-point the link (rm -rf on the link would
+  # silently move the store back onto the system disk next boot).
+  rm -rf /root/store /data/rmq-store
+  mkdir -p /data/rmq-store && ln -sfn /data/rmq-store /root/store
+  sleep 3
   rm -f $RMQ/lib/rocksdbjni-*.jar $RMQ/lib/rocketmq-rocksdb-*.jar
   cp "$2" $RMQ/lib/ || die "jar_copy $CELL"
   cd $RMQ
