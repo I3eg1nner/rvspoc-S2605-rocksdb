@@ -79,13 +79,15 @@ restart sidecar（P3）权重上调，bisect 后立即实现
 - [x] make rocksdbjava + RocksJava smoke（尽早，不等阶段 2 全完）
 - [x] RocketMQ 5.5.0 单 broker 部署（JVM 压堆 ~2G）
 - [x] 官方 benchmark 60min 高压（PASS）：零 OOM/损坏/丢失，数据入 csv
-- [ ] 双臂矩阵 v5b（24 格）**主板运行中**（2026-08-29，NVMe 存储，
-      8/24 格完成，全部排空到 0）→ 完成后取数入库
+- [x] 双臂矩阵 **24/24 有效格完成**（2026-08-29 04:53 MATRIX_DONE）：
+      零丢失链全绿；5/6 场景两臂持平或 RVV 优（16K backlog +5.9%）；
+      128K backlog 饱和场景 put −3.9% 如实记录；终表在
+      ACCEPTANCE 二 b，逐格原始数据 benchmark.csv + profile/rmq-matrix
 
 ## 阶段 4 — 交付
 
 - [x] 复现文档 + AI 披露（占比数值已补）（wiki 页引用轨迹）
-- [ ] 生数据齐全：benchmark.csv/candidates.jsonl/profile/results
+- [x] 生数据齐全：benchmark.csv/candidates.jsonl/profile/results
 - [ ] **PR 暂缓（用户 2026-08-23 指示）**：先出验收报告（结果汇总 +
       复现文档 + 全部证据）交用户验收，用户确认后才开 PR → upstream
       11.1.fb（届时再核实 base）
