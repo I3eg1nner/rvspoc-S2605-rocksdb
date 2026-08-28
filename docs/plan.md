@@ -65,16 +65,22 @@ restart sidecar（P3）权重上调，bisect 后立即实现
 
 ## 阶段 2 — 全矩阵验证
 
-- [ ] 板全量 make check + db_test（RVV 构建）
+- [x] 板全量 make check + db_test（RVV 构建）：38934 全过（第三轮）
 - [x] QEMU 矩阵：kernel 差分 + 子集测试 × {128,256,512} × 敌意 flags
 - [x] 标量写 ↔ RVV 读双向位相同端到端；x86 容器构建位级不变
-- [ ] 最终 db_bench vs 基线（同 flags/seed/线程），Δ ≥ +30%
+- [x] 最终 db_bench vs 基线（同 flags/seed/线程）已测（交错 3 臂 +
+      PGO）：fill +10.1% / read t8 +19.3% / seek t8 +16.8% /
+      read t1 +27.4% / seek t1 +22.7% —— 30%/项尚未全达标；剩余
+      候选杠杆见 draft（fused decode；skiplist prefetch 已判定
+      already-active）
 
 ## 阶段 3 — RocketMQ
 
 - [x] make rocksdbjava + RocksJava smoke（尽早，不等阶段 2 全完）
 - [x] RocketMQ 5.5.0 单 broker 部署（JVM 压堆 ~2G）
-- [x] 官方 benchmark 60min 高压（PASS；双臂矩阵 v2 排程中）：零 OOM/损坏/丢失，数据入 csv
+- [x] 官方 benchmark 60min 高压（PASS）：零 OOM/损坏/丢失，数据入 csv
+- [ ] 双臂矩阵 v5b（24 格）**主板运行中**（2026-08-29，NVMe 存储，
+      8/24 格完成，全部排空到 0）→ 完成后取数入库
 
 ## 阶段 4 — 交付
 
@@ -85,7 +91,11 @@ restart sidecar（P3）权重上调，bisect 后立即实现
       11.1.fb（届时再核实 base）
 - [ ] **PR 前必做（审计 M1）**：恢复上游 CLAUDE.md（工作区任务指令
       不进 PR——单独 commit revert 或 PR 分支剔除）
-- [ ] 耐久发现回灌 wiki（运行页 + performance_claims + validate 绿）
+- [x] 耐久发现回灌 wiki（2026-08-29 收尾：3arm/压测/误编译 run 记录、
+      pattern-toolchain-miscompile、方法论 12 条、变体 C board2
+      测量 6.43x/7.00x；validate 0 错误）
+- [ ] board2（i3@192.168.2.3, 16G K3, 别名 rvv-board2）已启用为并行
+      测量机：CRC 阶梯差分 5219/0、三层微基准、交付二进制 profile
 
 ## Blockers
 
