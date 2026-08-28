@@ -1,0 +1,11 @@
+org.apache.rocketmq.tools.command.SubCommandException: UpdateTopicSubCommand command failed
+	at org.apache.rocketmq.tools.command.topic.UpdateTopicSubCommand.execute(UpdateTopicSubCommand.java:198)
+	at org.apache.rocketmq.tools.command.MQAdminStartup.main0(MQAdminStartup.java:183)
+	at org.apache.rocketmq.tools.command.MQAdminStartup.main(MQAdminStartup.java:133)
+Caused by: org.apache.rocketmq.client.exception.MQClientException: CODE: 29  DESC: The topic[BenchmarkTest] is conflict with system topic.
+For more information, please visit the url, https://rocketmq.apache.org/docs/bestPractice/06FAQ
+	at org.apache.rocketmq.client.impl.MQClientAPIImpl.createTopic(MQClientAPIImpl.java:498)
+	at org.apache.rocketmq.tools.admin.DefaultMQAdminExtImpl.createAndUpdateTopicConfig(DefaultMQAdminExtImpl.java:261)
+	at org.apache.rocketmq.tools.admin.DefaultMQAdminExt.createAndUpdateTopicConfig(DefaultMQAdminExt.java:211)
+	at org.apache.rocketmq.tools.command.topic.UpdateTopicSubCommand.execute(UpdateTopicSubCommand.java:152)
+	... 2 more

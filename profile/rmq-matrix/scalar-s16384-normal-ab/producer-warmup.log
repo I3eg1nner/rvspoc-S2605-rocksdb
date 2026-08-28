@@ -1,0 +1,6 @@
+topic: BenchmarkTest, threadCount: 8, messageSize: 16384, keyEnable: false, propertySize: 0, tagCount: 0, traceEnable: false, aclEnable: false, messageQuantity: 0, delayEnable: false, delayLevel: 1, asyncEnable: false
+ compressEnable: false, reportInterval: 10000
+Current Time: 2026-08-29 02:07:32,689 | Send TPS: 507 | Max RT(ms): 681 | Average RT(ms):  15.921 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 02:07:42,690 | Send TPS: 1543 | Max RT(ms): 681 | Average RT(ms):   5.180 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 02:07:52,689 | Send TPS: 3228 | Max RT(ms): 681 | Average RT(ms):   2.474 | Send Failed: 0 | Response Failed: 0
+Current Time: 2026-08-29 02:08:02,690 | Send TPS: 3209 | Max RT(ms): 681 | Average RT(ms):   2.488 | Send Failed: 0 | Response Failed: 0

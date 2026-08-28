@@ -7,3 +7,18 @@ cell=rvv-s1024-backlog-ab put=1763354 backlog_final=0 drain_s=0
 cell=rvv-s1024-backlog-ba put=1632753 backlog_final=0 drain_s=0
 cell=scalar-s1024-backlog-ba put=1713280 backlog_final=0 drain_s=0
 cell=scalar-s16384-normal-ab put=933463 backlog_final=0 drain_s=0
+cell=scalar-s16384-normal-ab put=1068316 backlog_final=0 drain_s=0
+cell=scalar-s16384-normal-ab put=997060 backlog_final=0 drain_s=0
+cell=rvv-s16384-normal-ab put=981774 backlog_final=0 drain_s=0
+cell=rvv-s16384-normal-ba put=979494 backlog_final=0 drain_s=0
+cell=scalar-s16384-normal-ba put=993808 backlog_final=0 drain_s=0
+cell=scalar-s16384-normal-ba put=994122 backlog_final=0 drain_s=0 send_failed_60s=0
+cell=scalar-s16384-backlog-ab put=1090378 backlog_final=0 drain_s=0 send_failed_60s=0
+cell=rvv-s16384-backlog-ab put=1080710 backlog_final=0 drain_s=0 send_failed_60s=0
+cell=rvv-s16384-backlog-ba put=1099573 backlog_final=0 drain_s=0 send_failed_60s=0
+cell=scalar-s16384-backlog-ba put=1082316 backlog_final=0 drain_s=0 send_failed_60s=0
+cell=scalar-s131072-normal-ab put=370465 backlog_final=0 drain_s=0 send_failed_60s=0
+cell=rvv-s131072-normal-ab put=372144 backlog_final=0 drain_s=0 send_failed_60s=0
+cell=rvv-s131072-normal-ba put=370161 backlog_final=0 drain_s=0 send_failed_60s=0
+cell=scalar-s131072-normal-ba put=367874 backlog_final=0 drain_s=0 send_failed_60s=1
+cell=scalar-s131072-backlog-ab put=384966 backlog_final=0 drain_s=30 send_failed_60s=0
