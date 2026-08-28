@@ -379,3 +379,23 @@ sidecar 数组 prefetch、memtable 比较器去虚化）单项预期 <2%，且�
 在 08-31 截止前与矩阵取数/总装冲突。决定：**优化阶段就此关闭**，
 headroom 分析进验收报告；若组织方澄清 30% 口径为"综合"或"任一"，
 现数已达标（read t1 +27.4 / seek t1 +22.7 / read t8 +19.3）。
+
+## 16K 格连环障碍与处置（2026-08-29 凌晨）
+
+1. v5b ABORT `send_failed_nonzero`（scalar-s16384-normal-ab）：8 次
+   Send Failed 全部集中在开格前 ~145s（累计计数器此后 60min 不动），
+   broker 冷启 fast-fail（SYSTEM_BUSY，16K 首触 mmap 比 1K 重）——
+   流控非丢失。处置：v6 加 45s 预热丢弃段（预热后锁 P0；测量窗仍
+   要求零失败，门不放松）；s1024 已完成 8 格保留（协议差异注记）。
+2. v6 ABORT `empty_offsets_put`（同格）：broker JVM 在测量段尾部
+   SIGSEGV 崩溃——hs_err：C2 编译的纯 Java 帧
+   RemotingCommand.decodeCommandCustomHeaderDirectly，SEGV_MAPERR
+   野地址，PullMessageThread。riscv64 OpenJDK 21 C2 JIT 缺陷，与
+   RocksDB/RVV 无关（发生在 scalar 臂、纯 remoting 解码路径）。
+   处置：runbroker.sh 增加
+   -XX:CompileCommand=exclude,...RemotingCommand::decodeCommandCustomHeaderDirectly
+   （外科式、两臂共模、只影响单个 remoting 方法的 JIT）；崩溃格目录
+   + hs_err 保留（*.CRASHED-0150）；若再有他点 C2 崩溃则升级为
+   -XX:TieredStopAtLevel=1（C1-only，共模）。
+   教训候选（若复发促进 wiki）：riscv64 JDK21 C2 在新负载形态下的
+   JIT 崩溃是 RocketMQ-on-riscv 的环境风险面。

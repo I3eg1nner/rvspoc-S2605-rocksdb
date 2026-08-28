@@ -1,22 +1,30 @@
 #!/bin/sh
-# RocketMQ dual-arm evaluation matrix, v2 (review-hardened):
+# RocketMQ dual-arm evaluation matrix, v6 (review-hardened):
 #   full product: {scalar,rvv} x {1K,16K,128K} x {normal,backlog}
 #   x {AB,BA} order rotation  => 24 runs.
-#   Per run: fresh store, DUR seconds of load, then producer stops and
-#   the consumer DRAINS until get_delta >= put_delta (bounded, remaining
-#   queue recorded). Strict accounting via brokerStatus cumulative
-#   counters. ANY failure (service boot, empty counters, nonzero
-#   Send/Response/Consume failures, drain timeout) aborts the matrix.
+#   Per run: fresh store, a WARM-second discarded warm-up producer
+#   (broker cold-start fast-fail [SYSTEM_BUSY on first-touch mmap]
+#   produced a benign Send Failed burst in the first ~145s of the first
+#   16K cell — flow control, not loss; the measured window must still
+#   be failure-free), then DUR seconds of measured load, then producer
+#   stops and the consumer DRAINS to zero backlog (bounded). Strict
+#   accounting via store offsets locked AFTER warm-up. ANY failure
+#   (service boot, empty counters, nonzero Send/Response/Consume
+#   failures in the MEASURED window, drain timeout) aborts the matrix.
 #   Identity chain: jar sha256 + broker JVM cmdline recorded per run.
-# Usage: rocketmq_matrix.sh <scalar_jar> <rvv_jar> [cell_secs=300]
+# Usage: [SIZES="1024 16384 131072"] rocketmq_matrix.sh <scalar_jar> <rvv_jar> [cell_secs=300]
+#   SIZES env allows resuming a partially-completed matrix without
+#   truncating matrix.status / accounting.txt (append-only).
 set -u
 SJAR=$1; RJAR=$2; DUR=${3:-300}
+WARM=${WARM:-45}
+SIZES=${SIZES:-"1024 16384 131072"}
 RMQ=/root/rocketmq-all-5.5.0-bin-release
 OUT=/root/rmq-matrix
 ST=$OUT/matrix.status
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-riscv64
 export NAMESRV_ADDR=127.0.0.1:9876
-mkdir -p $OUT; : > $ST; : > $OUT/accounting.txt
+mkdir -p $OUT; touch $ST $OUT/accounting.txt
 step() { echo "$(date +%H:%M:%S) $1" >> $ST; }
 die() { step "ABORT $1"; cleanup; exit 1; }
 
@@ -69,11 +77,33 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   sh $RMQ/bin/mqadmin updateTopic -n 127.0.0.1:9876 -b 127.0.0.1:10911 \
     -t BenchmarkTest -w 8 -r 8 > $D/topic-create.log 2>&1 || die "topic_create $CELL"
   sleep 3
-  P0=$(put_total); [ -n "$P0" ] || die "empty_offsets_pre $CELL"
   cd $RMQ/benchmark
-  nohup sh producer.sh -n 127.0.0.1:9876 -s "$3" -w 8 > $D/producer.log 2>&1 < /dev/null &
+  # normal scene: consumer up BEFORE warm-up so warm-up messages are
+  # consumed during warm-up and don't skew the measured consume side.
   if [ "$4" = "normal" ]; then
     nohup sh consumer.sh -n 127.0.0.1:9876 > $D/consumer.log 2>&1 < /dev/null &
+    sleep 10
+    pgrep -f "[b]enchmark.Consumer" >/dev/null || die "consumer_start $CELL"
+  fi
+  # WARM-second discarded warm-up: same message size, own log, its Send
+  # Failed counters are EXPECTED (cold-start fast-fail) and not gated.
+  nohup sh producer.sh -n 127.0.0.1:9876 -s "$3" -w 8 > $D/producer-warmup.log 2>&1 < /dev/null &
+  sleep $WARM
+  pgrep -f "[b]enchmark.Producer" >/dev/null || die "warmup_producer_start $CELL"
+  pkill -f "[b]enchmark.Producer"
+  sleep 5; pgrep -f "[b]enchmark.Producer" >/dev/null && { pkill -9 -f "[b]enchmark.Producer"; sleep 3; }
+  # lock the accounting baseline AFTER warm-up (stable across 2 polls)
+  P0=$(put_total); [ -n "$P0" ] || die "empty_offsets_pre $CELL"
+  W=0
+  while [ $W -lt 6 ]; do
+    sleep 5; PW=$(put_total); [ -n "$PW" ] || die "empty_offsets_pre2 $CELL"
+    [ "$PW" = "$P0" ] && break
+    P0=$PW; W=$((W+1))
+  done
+  [ $W -lt 6 ] || die "warmup_offset_never_stabilized $CELL"
+  nohup sh producer.sh -n 127.0.0.1:9876 -s "$3" -w 8 > $D/producer.log 2>&1 < /dev/null &
+  if [ "$4" = "normal" ]; then
+    :
   else
     ( sleep $((DUR / 2)); cd $RMQ/benchmark && nohup sh consumer.sh -n 127.0.0.1:9876 > $D/consumer.log 2>&1 < /dev/null & ) &
   fi
@@ -122,7 +152,7 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   step "CELL_DONE $CELL put=$PUT backlog_final=$REM drain_s=$DRAIN"
 }
 
-for size in 1024 16384 131072; do
+for size in $SIZES; do
   for scene in normal backlog; do
     # AB then BA — order rotation within each (size, scene) group
     run_cell scalar "$SJAR" $size $scene ab
