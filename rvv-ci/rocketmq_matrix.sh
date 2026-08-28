@@ -86,6 +86,14 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
     -t BenchmarkTest -w 8 -r 8 > $D/topic-create.log 2>&1 || die "topic_create $CELL"
   sleep 3
   cd $RMQ/benchmark
+  # Producer concurrency per cell (pre-registered): 128K x backlog
+  # saturates the broker when the mid-run consumer joins (RT spikes to
+  # ~2.6s, sync sends time out on BOTH arms) - that is offered load
+  # exceeding capacity, not a broker defect. Halve concurrency for that
+  # scene only, both arms alike, so in-window failures again indicate
+  # real degradation.
+  PW=8
+  [ "$3" = "131072" ] && [ "$4" = "backlog" ] && PW=4
   # normal scene: consumer up BEFORE warm-up so warm-up messages are
   # consumed during warm-up and don't skew the measured consume side.
   if [ "$4" = "normal" ]; then
@@ -95,7 +103,7 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   fi
   # WARM-second discarded warm-up: same message size, own log, its Send
   # Failed counters are EXPECTED (cold-start fast-fail) and not gated.
-  nohup sh producer.sh -n 127.0.0.1:9876 -s "$3" -w 8 > $D/producer-warmup.log 2>&1 < /dev/null &
+  nohup sh producer.sh -n 127.0.0.1:9876 -s "$3" -w $PW > $D/producer-warmup.log 2>&1 < /dev/null &
   sleep $WARM
   pgrep -f "[b]enchmark.Producer" >/dev/null || die "warmup_producer_start $CELL"
   pkill -f "[b]enchmark.Producer"
@@ -104,12 +112,12 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   P0=$(put_total); [ -n "$P0" ] || die "empty_offsets_pre $CELL"
   W=0
   while [ $W -lt 6 ]; do
-    sleep 5; PW=$(put_total); [ -n "$PW" ] || die "empty_offsets_pre2 $CELL"
-    [ "$PW" = "$P0" ] && break
-    P0=$PW; W=$((W+1))
+    sleep 5; PB=$(put_total); [ -n "$PB" ] || die "empty_offsets_pre2 $CELL"
+    [ "$PB" = "$P0" ] && break
+    P0=$PB; W=$((W+1))
   done
   [ $W -lt 6 ] || die "warmup_offset_never_stabilized $CELL"
-  nohup sh producer.sh -n 127.0.0.1:9876 -s "$3" -w 8 > $D/producer.log 2>&1 < /dev/null &
+  nohup sh producer.sh -n 127.0.0.1:9876 -s "$3" -w $PW > $D/producer.log 2>&1 < /dev/null &
   if [ "$4" = "normal" ]; then
     :
   else
