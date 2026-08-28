@@ -399,3 +399,13 @@ headroom 分析进验收报告；若组织方澄清 30% 口径为"综合"或"任
    -XX:TieredStopAtLevel=1（C1-only，共模）。
    教训候选（若复发促进 wiki）：riscv64 JDK21 C2 在新负载形态下的
    JIT 崩溃是 RocketMQ-on-riscv 的环境风险面。
+3. v6r2 ABORT `broker_boot`（rvv-s16384-normal-ab, 02:03）：真凶是
+   /tmp（3.9G tmpfs）98% 打满——rocksdbjni 每次 broker 启动往 /tmp
+   解压 ~404MB .so（随机后缀），被 kill 的 JVM 不触发 deleteOnExit，
+   9 份泄漏 ≈3.6G 填满 tmpfs（同时挤占 RAM）。rvv 格 broker 在
+   Files.copy 半途 ENOSPC 死于加载 jni。v6.1：每格开头
+   rm -f /tmp/librocksdbjni*.so。02:02 通过的 scalar 16K 格是在
+   tmpfs 近满（内存压力）下跑的——为公平，16 格全部在 v6.1 下重跑，
+   该格结果标记 SUPERSEDED（目录 *.TMPPRESSURE-0202 保留）。
+   注：v6+JIT-exclude 首次让 16K 格全程干净通过（put=1.068M 排空
+   零失败），JIT 崩溃处置有效性已获一格证据。

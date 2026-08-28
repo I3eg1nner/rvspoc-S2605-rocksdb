@@ -57,6 +57,10 @@ run_cell() { # $1 arm $2 jar $3 size $4 scene $5 order-tag
   CELL="$1-s$3-$4-$5"; D=$OUT/$CELL; mkdir -p $D
   step "CELL_START $CELL"
   cleanup
+  # rocksdbjni extracts a ~404MB .so to /tmp per broker start (random
+  # suffix); killed JVMs never deleteOnExit, and 9 leaked copies filled
+  # the 3.9G tmpfs (= RAM!) mid-matrix. Reap them every cell.
+  rm -f /tmp/librocksdbjni*.so 2>/dev/null
   # /root/store may be a symlink onto the NVMe data disk: clean the
   # TARGET contents and re-point the link (rm -rf on the link would
   # silently move the store back onto the system disk next boot).
