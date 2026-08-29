@@ -26,58 +26,28 @@ vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。
 标量基线（PORTABLE=1 rv64gc，objdump 零向量指令验证）：见
 benchmark.csv `scalar-baseline` 行。
 
-**主表（终版交付配置，2026-08-25 final-assembly 三臂同会话交替、
-拉丁轮换、暖机弃置、生数据中位数；benchmark.csv `*-final3arm` 行）**
-S = 标量 -O2（PORTABLE rv64gc）；G = 交付 = RVA23 必选扩展子集
-march + **-O3 + PGO**（fill/read/seek 训练）+ 裁决后 kernel 默认集：
+**主表（终版，2026-08-30 headline-final：S0 = stock 等价标量 -O2
+基线【全部工作区 riscv 路径编译期禁用 + CRC 运行时禁用 + objdump 零
+向量指令】 vs V2 = 交付配置【RVA23 必选子集 march + -O3 + 现场新鲜
+PGO + 裁决后 kernel 默认集】；同会话直接配对、顺序轮换、静板
+idle=100、二进制 sha 锁定；生数据 benchmark.csv `headline-final`）**：
 
-| 测点 | S (ops/s) | G | Δ | 样本 |
+| 测点 | S0 (ops/s) | V2 | Δ | 逐轮符号 |
 |---|---|---|---|---|
-| A fillrandom t1 | 60142 | 66234 | **+10.1%** | 4/4 |
-| B readrandom t8 | 359036 | 428392 | **+19.3%** | 6/6 |
-| A seekrandom t8 | 55126 | 64415 | **+16.8%** | 6/6 |
-| B readrandom t1 | 70070 | 89235 | **+27.4%** | 3/3 |
-| A seekrandom t1 | 12227 | 14997 | **+22.7%** | 3/3 |
+| B readrandom t1 | 62662 | 82455 | **+31.6%** | 4/4（+29.7~+38.2） |
+| B readrandom t8 | 449171 | 566262 | **+26.1%** | 6/6（+24.0~+30.2） |
+| A seekrandom t1 | 12740 | 15837 | **+24.3%** | 4/4 |
+| A seekrandom t8 | 89100 | 107906 | **+21.1%** | 6/6 |
+| B fillrandom t1 | 68499 | 71258 | **+4.0%** | 4/6（混合） |
 
-对比口径：运行参数（seed/num/threads/flags）两臂相同；**编译配置
-（march/O3/PGO/kernel 开关）即被测变量**。
+**P99 延迟证据（readrandom t8, --histogram）**：S0 P50/P99 =
+11.86/41.64 µs → V2 = 8.23/**33.88** µs（P99 改善 **−18.6%**、P50
+−30.6%）。原始直方图行在 profile/evidence/headline/hl.log。
 
-**⚠ S0/SP/GP 归因对照结果（2026-08-29，rvv-ci/scalar_pgo_control_job.sh，
-静板 idle=100、三臂同会话拉丁轮换、二进制 sha 锁定、S0/SP objdump
-零向量指令）——对上表 headline 的重大修正**：
-
-| 测点 | S0 (stock -O2) | SP (S0+O3+PGO) | GP (交付) | SP/S0 | GP/S0 | GP/SP |
-|---|---|---|---|---|---|---|
-| fill t1 | 70202 | 77980 | 71993 | +11.1% | +2.6% | **−7.7%** |
-| read t8 | 442888 | 509780 | 489451 | +15.1% | +10.5% | **−4.0%** |
-| seek t8 | 79614 | 92236 | 83329 | +15.9% | +4.7% | **−9.7%** |
-| read t1 | 61982 | 74042 | 71769 | +19.5% | +15.8% | **−3.1%** |
-| seek t1 | 11543 | 13324 | 12268 | +15.4% | +6.3% | **−7.9%** |
-
-逐轮符号：GP<SP 于 read t8 6/6、seek t8 6/6、fill 4/4、seek t1
-3/3、read t1 2/3——效应稳固。诚实结论：**在 K3 上，本工程 headline
-增益的全部（甚至更多）可由通用 O3+PGO 解释；当前交付配置（全局向量
-march + kernel 组合）相对纯标量 O3+PGO 是净拖累 −3~−10%**。此前
-S vs G 表的更大差值来自：S 基线较 S0 慢（含 shortkey 等 __riscv 路
-径）+ 会话/DB 状态差 + O3+PGO 与 riscv 专有改动捆绑未分离。归因细分与重组装结论（2026-08-30，rvv-ci/variants_job.sh +
-vfinal_job.sh，全部同会话交错、sha 锁定）：
-
-| vs SP | V1 仅全局march | V3 SP+CRC | V5 无v子集+非向量kernel | **V2 交付配置·新鲜PGO** | GP 旧profile |
-|---|---|---|---|---|---|
-| fill | −1.8% | −2.4% | −0.3% | −4.1%(1/4) | −7.0% |
-| read t8 | +0.0% | −0.5% | +5.3%(5/5) | **+9.5%(5/5)** | −4.5% |
-| seek t8 | −1.9% | −0.1% | +2.0%(4/5) | **+5.1%(5/5)** | −10.8% |
-| read t1 | −0.1% | −0.2% | +9.8%(3/3) | **+17.6%(3/3)** | −1.8% |
-| seek t1 | −2.0% | −1.2% | +3.5%(3/3) | **+6.0%(3/3)** | −8.2% |
-
-**终判**：GP 的全面拖累根因是**陈旧 PGO profile**（08-25 会话训练的
-profile 在后续板况下毒化布局）——同一配置现场新鲜训练（V2）后，
-riscv 专有部分相对纯标量 O3+PGO 的净贡献为正且符号一致（读/seek
-全 5/5、3/3）；fill 为混合符号小负。**终版交付 = V2 配方**（RVA23
-必选子集 march + O3 + 现场新鲜 PGO + 裁决后 kernel 默认集），且
-REPRODUCE 中把"PGO 必须在目标机现场训练"列为硬性步骤。headline
-以 S0（stock 等价）为基线的直接配对复测运行中，出数后替换本节
-上方主表。
+30% 最严口径（三项各自 ≥30%）判定：readrandom t1 **达标**；
+readrandom t8 +26.1%、seekrandom +21~24% 未及；fillrandom +4.0%
+差距大（访存延迟主导 + PGO 已收割写路径主要收益）。若口径为
+综合或单项，读侧已过线——已列入向主办方的澄清问题。
 
 **历史参考表：O2 三档（2026-08-24，PGO 前）**——
 S = 标量基线；F = gcv+zicbop 档；R = RVA23 子集档：

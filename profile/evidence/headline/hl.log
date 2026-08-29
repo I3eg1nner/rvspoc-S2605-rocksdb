@@ -1,0 +1,61 @@
+RESULT W readrandom   :      41.539 micros/op 169561 ops/sec 94.361 seconds 16000000 operations;   12.7 MB/s (2000000 of 2000000 found)
+RESULT Wseek seekrandom   :     190.496 micros/op 41574 ops/sec 96.213 seconds 4000000 operations;   46.0 MB/s (408308 of 500000 found)
+RESULT W readrandom   :      10.810 micros/op 552096 ops/sec 28.980 seconds 16000000 operations;   41.4 MB/s (2000000 of 2000000 found)
+RESULT Wseek seekrandom   :      71.818 micros/op 109831 ops/sec 36.419 seconds 4000000 operations;  121.5 MB/s (408308 of 500000 found)
+RESULT S0-Bread readrandom   :      13.195 micros/op 435283 ops/sec 36.758 seconds 16000000 operations;   32.6 MB/s (2000000 of 2000000 found)
+RESULT S0-Aseek seekrandom   :      89.615 micros/op 88741 ops/sec 45.075 seconds 4000000 operations;   98.2 MB/s (408308 of 500000 found)
+RESULT V2-Bread readrandom   :      10.463 micros/op 566754 ops/sec 28.231 seconds 16000000 operations;   42.5 MB/s (2000000 of 2000000 found)
+RESULT V2-Aseek seekrandom   :      72.507 micros/op 108153 ops/sec 36.984 seconds 4000000 operations;  119.6 MB/s (408308 of 500000 found)
+RESULT V2-Bread readrandom   :      10.551 micros/op 557555 ops/sec 28.697 seconds 16000000 operations;   41.8 MB/s (2000000 of 2000000 found)
+RESULT V2-Aseek seekrandom   :      73.014 micros/op 107877 ops/sec 37.079 seconds 4000000 operations;  119.3 MB/s (408308 of 500000 found)
+RESULT S0-Bread readrandom   :      13.271 micros/op 442111 ops/sec 36.190 seconds 16000000 operations;   33.2 MB/s (2000000 of 2000000 found)
+RESULT S0-Aseek seekrandom   :      88.349 micros/op 89741 ops/sec 44.573 seconds 4000000 operations;   99.3 MB/s (408308 of 500000 found)
+RESULT S0-Bread readrandom   :      13.079 micros/op 451703 ops/sec 35.421 seconds 16000000 operations;   33.9 MB/s (2000000 of 2000000 found)
+RESULT S0-Aseek seekrandom   :      88.171 micros/op 89639 ops/sec 44.623 seconds 4000000 operations;   99.2 MB/s (408308 of 500000 found)
+RESULT V2-Bread readrandom   :      10.564 micros/op 559921 ops/sec 28.575 seconds 16000000 operations;   42.0 MB/s (2000000 of 2000000 found)
+RESULT V2-Aseek seekrandom   :      73.586 micros/op 107934 ops/sec 37.059 seconds 4000000 operations;  119.4 MB/s (408308 of 500000 found)
+RESULT V2-Bread readrandom   :      10.497 micros/op 566491 ops/sec 28.244 seconds 16000000 operations;   42.5 MB/s (2000000 of 2000000 found)
+RESULT V2-Aseek seekrandom   :      73.202 micros/op 107500 ops/sec 37.209 seconds 4000000 operations;  118.9 MB/s (408308 of 500000 found)
+RESULT S0-Bread readrandom   :      12.943 micros/op 452687 ops/sec 35.344 seconds 16000000 operations;   34.0 MB/s (2000000 of 2000000 found)
+RESULT S0-Aseek seekrandom   :      91.106 micros/op 87189 ops/sec 45.877 seconds 4000000 operations;   96.5 MB/s (408308 of 500000 found)
+RESULT S0-Bread readrandom   :      13.245 micros/op 448434 ops/sec 35.680 seconds 16000000 operations;   33.6 MB/s (2000000 of 2000000 found)
+RESULT S0-Aseek seekrandom   :      89.234 micros/op 88439 ops/sec 45.229 seconds 4000000 operations;   97.8 MB/s (408308 of 500000 found)
+RESULT V2-Bread readrandom   :      10.514 micros/op 571997 ops/sec 27.972 seconds 16000000 operations;   42.9 MB/s (2000000 of 2000000 found)
+RESULT V2-Aseek seekrandom   :      73.541 micros/op 107590 ops/sec 37.178 seconds 4000000 operations;  119.0 MB/s (408308 of 500000 found)
+RESULT V2-Bread readrandom   :      10.385 micros/op 566033 ops/sec 28.267 seconds 16000000 operations;   42.5 MB/s (2000000 of 2000000 found)
+RESULT V2-Aseek seekrandom   :      73.373 micros/op 108408 ops/sec 36.897 seconds 4000000 operations;  119.9 MB/s (408308 of 500000 found)
+RESULT S0-Bread readrandom   :      13.135 micros/op 449908 ops/sec 35.563 seconds 16000000 operations;   33.7 MB/s (2000000 of 2000000 found)
+RESULT S0-Aseek seekrandom   :      89.125 micros/op 89458 ops/sec 44.713 seconds 4000000 operations;   99.0 MB/s (408308 of 500000 found)
+RESULT S0-fill fillrandom   :      13.549 micros/op 73807 ops/sec 270.976 seconds 20000000 operations;    8.2 MB/s
+RESULT V2-fill fillrandom   :      12.951 micros/op 77214 ops/sec 259.020 seconds 20000000 operations;    8.5 MB/s
+RESULT V2-fill fillrandom   :      14.252 micros/op 70166 ops/sec 285.036 seconds 20000000 operations;    7.8 MB/s
+RESULT S0-fill fillrandom   :      15.231 micros/op 65654 ops/sec 304.625 seconds 20000000 operations;    7.3 MB/s
+RESULT S0-fill fillrandom   :      14.372 micros/op 69578 ops/sec 287.447 seconds 20000000 operations;    7.7 MB/s
+RESULT V2-fill fillrandom   :      14.708 micros/op 67990 ops/sec 294.157 seconds 20000000 operations;    7.5 MB/s
+RESULT V2-fill fillrandom   :      13.822 micros/op 72349 ops/sec 276.437 seconds 20000000 operations;    8.0 MB/s
+RESULT S0-fill fillrandom   :      15.273 micros/op 65476 ops/sec 305.454 seconds 20000000 operations;    7.2 MB/s
+RESULT S0-fill fillrandom   :      14.832 micros/op 67420 ops/sec 296.646 seconds 20000000 operations;    7.5 MB/s
+RESULT V2-fill fillrandom   :      13.396 micros/op 74651 ops/sec 267.912 seconds 20000000 operations;    8.3 MB/s
+RESULT V2-fill fillrandom   :      14.422 micros/op 69339 ops/sec 288.438 seconds 20000000 operations;    7.7 MB/s
+RESULT S0-fill fillrandom   :      14.271 micros/op 70073 ops/sec 285.414 seconds 20000000 operations;    7.8 MB/s
+RESULT S0-Bread-t1 readrandom   :      16.291 micros/op 61383 ops/sec 32.582 seconds 2000000 operations;    6.8 MB/s (2000000 of 2000000 found)
+RESULT S0-Aseek-t1 seekrandom   :      78.370 micros/op 12760 ops/sec 39.185 seconds 500000 operations;   14.1 MB/s (408308 of 500000 found)
+RESULT V2-Bread-t1 readrandom   :      11.791 micros/op 84807 ops/sec 23.583 seconds 2000000 operations;    9.4 MB/s (2000000 of 2000000 found)
+RESULT V2-Aseek-t1 seekrandom   :      64.135 micros/op 15592 ops/sec 32.068 seconds 500000 operations;   17.2 MB/s (408308 of 500000 found)
+RESULT V2-Bread-t1 readrandom   :      12.136 micros/op 82399 ops/sec 24.272 seconds 2000000 operations;    9.1 MB/s (2000000 of 2000000 found)
+RESULT V2-Aseek-t1 seekrandom   :      63.756 micros/op 15684 ops/sec 31.878 seconds 500000 operations;   17.4 MB/s (408308 of 500000 found)
+RESULT S0-Bread-t1 readrandom   :      16.084 micros/op 62173 ops/sec 32.168 seconds 2000000 operations;    6.9 MB/s (2000000 of 2000000 found)
+RESULT S0-Aseek-t1 seekrandom   :      77.305 micros/op 12935 ops/sec 38.653 seconds 500000 operations;   14.3 MB/s (408308 of 500000 found)
+RESULT S0-Bread-t1 readrandom   :      15.766 micros/op 63426 ops/sec 31.533 seconds 2000000 operations;    7.0 MB/s (2000000 of 2000000 found)
+RESULT S0-Aseek-t1 seekrandom   :      79.405 micros/op 12593 ops/sec 39.703 seconds 500000 operations;   13.9 MB/s (408308 of 500000 found)
+RESULT V2-Bread-t1 readrandom   :      12.152 micros/op 82291 ops/sec 24.304 seconds 2000000 operations;    9.1 MB/s (2000000 of 2000000 found)
+RESULT V2-Aseek-t1 seekrandom   :      62.071 micros/op 16110 ops/sec 31.035 seconds 500000 operations;   17.8 MB/s (408308 of 500000 found)
+RESULT V2-Bread-t1 readrandom   :      12.120 micros/op 82511 ops/sec 24.239 seconds 2000000 operations;    9.1 MB/s (2000000 of 2000000 found)
+RESULT V2-Aseek-t1 seekrandom   :      62.536 micros/op 15990 ops/sec 31.268 seconds 500000 operations;   17.7 MB/s (408308 of 500000 found)
+RESULT S0-Bread-t1 readrandom   :      15.835 micros/op 63151 ops/sec 31.670 seconds 2000000 operations;    7.0 MB/s (2000000 of 2000000 found)
+RESULT S0-Aseek-t1 seekrandom   :      78.609 micros/op 12721 ops/sec 39.305 seconds 500000 operations;   14.1 MB/s (408308 of 500000 found)
+RESULT P99read readrandom   :      10.858 micros/op 548486 ops/sec 29.171 seconds 16000000 operations;   41.1 MB/s (2000000 of 2000000 found)
+readrandom   :      13.371 micros/op 441337 ops/sec 36.253 seconds 16000000 operations;   33.1 MB/s (2000000 of 2000000 found)
+Percentiles: P50: 11.86 P75: 18.00 P99: 41.64 P99.9: 69.73 P99.99: 161.38
+readrandom   :      10.818 micros/op 548112 ops/sec 29.191 seconds 16000000 operations;   41.1 MB/s (2000000 of 2000000 found)
+Percentiles: P50: 8.23 P75: 15.46 P99: 33.88 P99.9: 64.03 P99.99: 161.66
