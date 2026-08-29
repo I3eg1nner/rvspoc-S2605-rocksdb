@@ -11,13 +11,13 @@ vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。
 | 条款 | 状态 | 证据 |
 |---|---|---|
 | CRC32C 向量化 | ✅ | vclmul 多流折叠 + GF(2) 运行时常数推导 + hwprobe 分派；差分 4438/0（板）+ QEMU 矩阵绿；微基准 **8.1x**（7319 vs 903 MB/s @4KB，K3 空载） |
-| bloom 位图查找向量化 | ✅（实现+验证；K3 默认收益待干净复测） | AVX2 路径 RVV 镜像；板+QEMU 603990/0；QEMU vlen=128 抓到 vsetvl 授予 bug 并修复 |
+| bloom 位图查找向量化 | ✅（实现+验证+裁决：K3 配对 NEUTRAL-KEEP，Aseek −0.03%/Bread −0.37% 均在 ±1% 内，默认启用） | AVX2 路径 RVV 镜像；板+QEMU 603990/0；QEMU vlen=128 抓到 vsetvl 授予 bug 并修复 |
 | SST 序列化/反序列化加速 | ✅ | CRC（块尾校验）+ Slice::compare/difference_offset 向量化 + XXH3（kv 校验/缓存键）+ 全程序自动向量化层（RISCV_RVV=1，可选） |
 | ≥90% NEON 算子有 RVV 版 | ✅ **100%**（审计表见下） | v11.1.1 全树 ARM 优化面逐条盘点，RVV/RISC-V 对位实现 6/6 |
 | VLEN 128/256/512 自适应 | ✅ | 全部 vsetvl 驱动；QEMU 三 VLEN + 敌意 flags 矩阵全绿；无任何编译期 VLEN 假设 |
 | `#ifdef __riscv_vector` 隔离 / x86 ARM 不变 | ✅ | aarch64 g++ 预处理输出 token 级一致（slice/xxhash/bloom）；新 TU 非 riscv 下零代码 |
 | 禁第三方 RISC-V 适配代码 | ✅ | 全部第一方（rvv-wiki 自有工件移植 + 本会话新写）；常数运行时推导非拷贝 |
-| make check / db_test 全过 | ✅（标量参考树） | 38934 项：18 失败全部归因并修复/排除——16×range_locking = v11.1.1 上游 bug（用户态 rdcycle SIGILL→rdtime 修复，17/17 过）；options_settable = padding 计数脆弱（offsetof 可移植排除，4/4 过）；prefetch_test 过载 flaky（串行 104/104 过）。**RVV 构建全量 check ✅（2026-08-24 第三轮）：38934 项全过**——首轮 161 失败系 gcc 15.2 对 XXH3 RVV 混 SEW 模式的错误代码生成（已修复并三工具链复验），第三轮仅余 2 项报告失败且均系环境残留/负载 flaky（串行复跑全绿） |
+| make check / db_test 全过 | ✅（标量参考树） | 38934 项：18 失败全部归因并修复/排除——16×range_locking = v11.1.1 上游 bug（用户态 rdcycle SIGILL→rdtime 修复，17/17 过）；options_settable = padding 计数脆弱（offsetof 可移植排除，4/4 过）；prefetch_test 过载 flaky（串行 104/104 过）。**RVV 构建全量 check ✅（2026-08-24 第三轮）：38934 项全过**——首轮 161 失败系 gcc 15.2 对 XXH3 RVV 混 SEW 模式的错误代码生成（已修复并三工具链复验），第三轮仅余 2 项报告失败且均系环境残留/负载 flaky（串行复跑全绿）。⚠ 证据链修复中：第三轮原始日志随板上 -check 构建目录在磁盘清理中丢失（此前该结论仅存于文档断言）——**留痕重跑已在第二块 K3 上进行**（HEAD 树 23285a41，check3.status/全量日志/sha256 落盘 profile/evidence/，完成后更新本行） |
 | RocketMQ 5.5.0 60min 压测 | ✅ **PASS**（2026-08-24） | 交付树 rocksdbjni-11.1.1（RVV 档）：全程 60min 持续负载，avg Send TPS **6056** / Consume TPS **6117**（各 361×10s 采样）；**Send/Response/Consume Failed 全 0**（零丢失零损坏）；broker RSS 1.9→3.0G 无 OOM；put/get TPS 收支平衡。生数据 profile/rmq-{samples.csv,stress-run.log} |
 | AI 披露 | ✅ | 本工作区 git 历史 + rvv-wiki 页引用轨迹（draft.md 逐候选记录页 id/置信度）+ wiki 回灌记录 |
 
@@ -26,10 +26,29 @@ vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。
 标量基线（PORTABLE=1 rv64gc，objdump 零向量指令验证）：见
 benchmark.csv `scalar-baseline` 行。
 
-**主表：三臂同会话交替 A/B（2026-08-24，暖机弃置、严格交替、生数据
-中位数；协议动机见 draft.md"跨轮次噪声"节）**
-S = 标量基线（stock 等价）；F = 交付档 gcv+zicbop；
-R = RVA23 必选扩展子集档（非完整 profile：+zba/zbb/zbs/zicbop/zicond，含 zbb-varint 无分支解码）：
+**主表（终版交付配置，2026-08-25 final-assembly 三臂同会话交替、
+拉丁轮换、暖机弃置、生数据中位数；benchmark.csv `*-final3arm` 行）**
+S = 标量 -O2（PORTABLE rv64gc）；G = 交付 = RVA23 必选扩展子集
+march + **-O3 + PGO**（fill/read/seek 训练）+ 裁决后 kernel 默认集：
+
+| 测点 | S (ops/s) | G | Δ | 样本 |
+|---|---|---|---|---|
+| A fillrandom t1 | 60142 | 66234 | **+10.1%** | 4/4 |
+| B readrandom t8 | 359036 | 428392 | **+19.3%** | 6/6 |
+| A seekrandom t8 | 55126 | 64415 | **+16.8%** | 6/6 |
+| B readrandom t1 | 70070 | 89235 | **+27.4%** | 3/3 |
+| A seekrandom t1 | 12227 | 14997 | **+22.7%** | 3/3 |
+
+对比口径：运行参数（seed/num/threads/flags）两臂相同；**编译配置
+（march/O3/PGO/kernel 开关）即被测变量**。两点已知偏差待 S0/SP 对照
+（运行中，rvv-ci/scalar_pgo_control_job.sh）修正后并入：(1) S 臂含
+少量仅按 __riscv 守卫的工程路径（shortkey/sidecar/pause），非纯
+stock——S0 臂全禁用后重测；(2) G 含通用 O3+PGO 收益——SP 臂
+（同源 O3+PGO、无 riscv 专有优化）用于把通用份额与 RISC-V 专有份额
+分离。
+
+**历史参考表：O2 三档（2026-08-24，PGO 前）**——
+S = 标量基线；F = gcv+zicbop 档；R = RVA23 子集档：
 
 | 测点 | S (ops/s) | F | R | F-Δ | R-Δ |
 |---|---|---|---|---|---|
@@ -56,10 +75,12 @@ CRC 微基准：7319–7327 vs 902–903 MB/s（**8.1x**，@4KB，多轮复现�
 **30% 口径（用户 2026-08-24 决定）：按最严解释执行——fillrandom /
 readrandom / seekrandom 三项各自 ≥+30%**（主办方澄清前的工作目标）。
 
-⚠ 诚实记录：+30% 端到端门槛在 K3 上尚未达成（当前最好单点
-+12.7%、读侧典型 +4~8%）；cfg A 剩余大头 memmove（14.7%，候选 #10 已判 REJECT）、snappy（~9%，两臂共模、结构上非差分项）、索引解码 cache
-miss。LX5000（DDR5+CXL、48 异构核）上各占比不可从 K3 外推，唯有
-评审机实测能定。
+⚠ 诚实记录：按最严口径（三项各自 ≥+30%）**在 K3 上未达成**——
+终版 fill +10.1%、read t8 +19.3%、seek t8 +16.8%（t1 点 +22.7~27.4%）。
+剩余热点为访存延迟类（交付二进制新鲜 profile：skiplist 13.8%、index
+二分 10.2%、bloom 探测 8.0%，见 draft"board2 新鲜 profile"节），微杠杆
+单项预期 <2%，优化阶段已收口。LX5000（DDR5、48 异构核）上各占比不可
+从 K3 外推，唯有评审机实测能定。
 
 **工具链兼容矩阵**（评审环境公告"以 LLVM 为核心"→ clang++ 按潜在
 评测工具链全量验证）：
@@ -67,7 +88,7 @@ miss。LX5000（DDR5+CXL、48 异构核）上各占比不可从 K3 外推，唯�
 | 工具链 | 内核差分（QEMU 3×VLEN+敌意） | CRC Zvbc TU |
 |---|---|---|
 | gcc 14.2（交叉）/ 15.2（板原生） | 6/6 全绿 | 启用（探测通过） |
-| clang 18.1 / **19.1** | 5/5 全绿（memcmp/xxh3/bloom/xxph3/varint，位相同） | **自动优雅排除**——clang ≤19 无 `__riscv_vclmul_*` intrinsics（riscv_vector.h 实测零命中；intrinsic-doc 的 clang 19 指 v1.0 基础集，向量密码类另有时间线）→ 分派走 slice-by-8，恰为 RVA23 评审机（无 zvbc 硬件）的预期路径 |
+| clang 18.1 / **19.1** | 5/5 全绿（memcmp/xxh3/bloom/xxph3/varint，位相同） | **自动优雅排除**——clang ≤19 无 `__riscv_vclmul_*` intrinsics（riscv_vector.h 实测零命中；intrinsic-doc 的 clang 19 指 v1.0 基础集，向量密码类另有时间线）→ 分派降级到**中间档 Zbc 标量 clmul 折叠**（util/crc32c_zbc.cc：raw .insn 编码、任意工具链可编译、hwprobe 门控；第二块 K3 实测 6.43x@4KB）；硬件亦无 Zbc 时才落底 slice-by-8 |
 
 关键工程点：Makefile 的 `HAVE_RVV_CRC32C` 探测编译 intrinsic 本身而非
 march 字符串——否则 clang 18/19 会接受 `-march=..._zvbc` 却在编译
@@ -76,8 +97,12 @@ CRC TU 时构建失败。
 **规范性引用**：全部向量代码遵循官方
 [riscv-rvv-intrinsic-doc](https://github.com/riscv-non-isa/riscv-rvv-intrinsic-doc)
 （赛题指定参考）的 `__riscv_` intrinsics API（含 tuple 段式加载
-`vlseg2e64` 等 v0.12+ 形式）；无第三方 RISC-V 适配代码；唯一内联
-汇编为 toku_time 的 `rdtime`（Linux≥6.6 用户态 rdcycle SIGILL 修复）。
+`vlseg2e64` 等 v0.12+ 形式）；无第三方 RISC-V 适配代码。内联汇编共
+三处，均有存在理由：toku_time 的 `rdtime`（Linux≥6.6 用户态 rdcycle
+SIGILL 修复）、port_posix 的 pause hint（`.4byte 0x0100000F` raw
+编码，Zihintpause 在旧汇编器下也可编译；无该扩展硬件上为 nop）、
+crc32c_zbc 的 `clmul/clmulh`（`.insn r 0x33,0x1/0x3,0x5` raw 编码，
+任意 march/工具链可编译，执行由 hwprobe + 常数自验证双重门控）。
 
 ### NEON/ARM 优化面审计表（≥90% 条款的可核查证据）
 
@@ -85,7 +110,7 @@ v11.1.1 全树 ARM 专属优化共 6 处（`grep -rl 'arm_neon|__aarch64__|ARM_F
 
 | # | ARM 原位 | 类型 | RISC-V 对位 | 默认状态 | 正确性 |
 |---|---|---|---|---|---|
-| 1 | util/xxhash.h:4590 `XXH3_accumulate_512_neon` | NEON 向量 | `XXH3_accumulate_512_rvv`（同文件） | RVV 档启用（bisect 复判中） | 差分 30032/0 ×3 VLEN ×3 工具链 |
+| 1 | util/xxhash.h:4590 `XXH3_accumulate_512_neon` | NEON 向量 | `XXH3_accumulate_512_rvv`（同文件） | **默认关闭**（K3 配对 bisect：Bread −3.76% 0/6、Aseek −2.25% 0/6、fill −1.76%——一致回退；RISCV_RVV_XXHASH=1 可重开） | 差分 30032/0 ×3 VLEN ×3 工具链 |
 | 2 | util/xxhash.h:4678 `XXH3_scrambleAcc_neon` | NEON 向量 | `XXH3_scrambleAcc_rvv` | 同上 | 同上 |
 | 3 | util/xxph3.h:1251 `XXPH3_accumulate_512` NEON 分支 | NEON 向量 | XXPH_RVV 分支（同文件） | 同上 | 差分 20028/0 |
 | 4 | util/xxph3.h:1462 `XXPH3_scrambleAcc` NEON 分支 | NEON 向量 | XXPH_RVV 分支 | 同上 | 同上 |
@@ -151,6 +176,12 @@ scalar 臂、与 RocksDB 无关 → CompileCommand 排除单方法，hs_err 存
 producer-warmup.log）。
 
 ## 三、正确性证据链
+
+**落盘证据索引（profile/evidence/）**：qemu-matrix/ = 6 kernel ×
+3 VLEN × 敌意 ta/ma 全 PASS 的逐项日志 + 工具版本/命令/退出码/sha256
+清单（MANIFEST.txt，树 commit 记录在内）；check3（board2 重跑）完成后
+同目录归档。RocketMQ 24 终格完整身份链在 profile/rmq-matrix/（含
+MANIFEST.md）。
 
 1. 每 kernel 差分（板 + QEMU 3 VLEN × 敌意 ta/ma）：crc 4438/0、
    memcmp 49279/0、xxh3 30032/0、bloom 603990/0。
