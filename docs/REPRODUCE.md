@@ -3,22 +3,69 @@
 分支 `s2605-rvv`（基线 tag `v11.1.1` = upstream `11.1.fb`）。
 验证硬件：SpacemiT K3 Pico-ITX（8×X100，VLEN 256，rv64imafdcv +
 zvbb/zvbc，Bianbu Linux，gcc 15.2.0）。评测目标 LX5000 的 VLEN/扩展
-未知——所有向量路径均运行时探测（hwprobe）或 vsetvl 自适应，探测失败
-自动回退标量，单一二进制在无 V/Zvbc 硬件上仍正确。
+未知——V 之外的扩展路径（Zvbc/Zbc CRC）均 riscv_hwprobe(2) 运行时
+探测、探测失败回退标量；向量 kernel 内部 vsetvl 自适应任意 VLEN。
+注意：RVV 构建整体以 `-march=rv64gcv` 编译（赛题目标即 RV64GCV），
+编译器可在任意位置生成 V 指令——**该二进制要求硬件有 V**；"无 V 硬
+件回退"只适用于按 TU 隔离、探测门控的 Zvbc/Zbc 两个 CRC 档。
 
 ## 构建
 
 ```bash
-# 标量基线（A/B 的 A 侧；也是回退路径的质量基准）
-PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 make -j6 db_bench DEBUG_LEVEL=0
+# 标量基线（A/B 的 A 侧）。注意：仓内少数 riscv 路径只按 __riscv 守卫
+# （shortkey 比较层/index sidecar/pause/binseek prefetch），在标量构建
+# 中默认仍会编译进来——做 stock 等价基线（S0）时必须显式禁用：
+S0DIS="-DROCKSDB_DISABLE_SHORTKEY_CMP -DROCKSDB_DISABLE_INDEX_SIDECAR \
+ -DROCKSDB_DISABLE_BINSEEK_PREFETCH -DROCKSDB_DISABLE_RISCV_PAUSE \
+ -DROCKSDB_DISABLE_ZBB_VARINT"
+PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 EXTRA_CXXFLAGS="$S0DIS" EXTRA_CFLAGS="$S0DIS" \
+  make -j6 db_bench DEBUG_LEVEL=0
+# 运行 S0 时再加环境门（防 CRC 阶梯在 Zbc/Zvbc 硬件上启用）：
+#   ROCKSDB_RVV_CRC32C=0 ROCKSDB_ZBC_CRC32C=0 ./db_bench ...
+# objdump -d db_bench | grep -c vsetvli  # 必须 =0
 # 交付 RVV 构建（全程序 -march=rv64gcv_zicbop + 运行时分派的 Zvbc CRC）
 PORTABLE=1 RISCV_RVV=1 DISABLE_WARNING_AS_ERROR=1 make -j6 db_bench DEBUG_LEVEL=0
-# RVA23 档（评审机保证集：+zba/zbb/zbs/zicond，启用 zbb-varint）
+# RVA23 必选扩展子集档（非完整 profile；评审机保证集：+zba/zbb/zbs/zicbop/zicond，启用 zbb-varint）
 PORTABLE=1 RISCV_RVV=1 RISCV_RVV_MARCH=rv64gcv_zba_zbb_zbs_zicbop_zicond \
   DISABLE_WARNING_AS_ERROR=1 make -j6 db_bench DEBUG_LEVEL=0
 # RocksJava（RocketMQ 用）
 JAVA_HOME=<jdk21> PORTABLE=1 RISCV_RVV=1 DISABLE_WARNING_AS_ERROR=1 make -j6 rocksdbjava DEBUG_LEVEL=0
 ```
+
+## 交付（headline）构建 = RVA23 子集 march + **O3 + PGO**
+
+headline 数字不是上面 O2 构建的产物。交付配置完整配方（脚本化于
+`rvv-ci/final_assembly_job.sh` 的 `pgo_build`，在板上原生执行）：
+
+```bash
+MARCH=rv64gcv_zba_zbb_zbs_zicbop_zicond
+# 1) instrument 构建
+find . -name '*.o' -delete; rm -f db_bench librocksdb.a; mkdir -p /root/pgo-G
+RISCV_RVV=1 RISCV_RVV_MARCH=$MARCH PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 \
+  OPT="-O3 -DNDEBUG -fprofile-generate=/root/pgo-G" \
+  EXTRA_LDFLAGS="-fprofile-generate=/root/pgo-G" \
+  make -j6 db_bench DEBUG_LEVEL=0
+# 2) 训练（三工作负载，固定 seed）
+./db_bench --benchmarks=fillrandom --num=4000000 --seed=20260822 --threads=1 \
+  --db=/root/pgo-db --compression_type=none --bloom_bits=10
+./db_bench --benchmarks=readrandom --use_existing_db=1 --num=4000000 --seed=20260822 \
+  --reads=1500000 --threads=8 --db=/root/pgo-db --compression_type=none \
+  --bloom_bits=10 --cache_size=1073741824
+./db_bench --benchmarks=seekrandom --use_existing_db=1 --num=4000000 --seed=20260822 \
+  --reads=400000 --seek_nexts=10 --threads=8 --db=/root/pgo-db
+# 3) profile-use 重建 = 交付二进制
+find . -name '*.o' -delete; rm -f db_bench librocksdb.a
+RISCV_RVV=1 RISCV_RVV_MARCH=$MARCH PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 \
+  OPT="-O3 -DNDEBUG -fprofile-use=/root/pgo-G -fprofile-correction -Wno-missing-profile" \
+  EXTRA_LDFLAGS="-fprofile-use=/root/pgo-G" \
+  make -j6 db_bench DEBUG_LEVEL=0
+```
+
+对比口径声明：A/B 的**运行参数**（seed/num/threads/flags）完全相同；
+**编译配置**（march/O3/PGO/kernel 默认开关）不同——编译配置正是被测
+变量。为把"通用 O3+PGO 收益"与"RISC-V/RVV 专有收益"分离，另有
+S0（stock 等价 O2）/ SP（S0 源 + O3+PGO 同训练集）/ G（交付）三臂
+对照（`rvv-ci/scalar_pgo_control_job.sh`，结果见 ACCEPTANCE 二节）。
 
 **双工具链**（评审环境公告"以 LLVM 为核心"）：以上配方对 gcc 与
 clang 均适用——clang 用 `CC=clang CXX=clang++`（交叉再加

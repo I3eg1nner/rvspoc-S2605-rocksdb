@@ -29,7 +29,7 @@ benchmark.csv `scalar-baseline` 行。
 **主表：三臂同会话交替 A/B（2026-08-24，暖机弃置、严格交替、生数据
 中位数；协议动机见 draft.md"跨轮次噪声"节）**
 S = 标量基线（stock 等价）；F = 交付档 gcv+zicbop；
-R = RVA23 档（+zba/zbb/zbs/zicond，含 zbb-varint 无分支解码）：
+R = RVA23 必选扩展子集档（非完整 profile：+zba/zbb/zbs/zicbop/zicond，含 zbb-varint 无分支解码）：
 
 | 测点 | S (ops/s) | F | R | F-Δ | R-Δ |
 |---|---|---|---|---|---|
@@ -98,7 +98,7 @@ v11.1.1 全树 ARM 专属优化共 6 处（`grep -rl 'arm_neon|__aarch64__|ARM_F
 
 | 路径 | 文件:符号 | 优化 |
 |---|---|---|
-| 反序列化：块内 key 解码 | util/coding.h `GetVarint32Ptr`（DecodeEntry/DecodeKeyV4 的唯一多字节路径） | Zbb 无分支 varint32（RVA23 档） |
+| 反序列化：块内 key 解码 | util/coding.h `GetVarint32Ptr`（DecodeEntry/DecodeKeyV4 的唯一多字节路径） | Zbb 无分支 varint32（RVA23 必选扩展子集档） |
 | 反序列化：restart 二分 | table/block_based/block.cc `BinarySeekRestartPointIndex` | 双路预取（zicbop） |
 | 序列化：块构建共享前缀 | block_builder.cc:287 → `Slice::difference_offset` | vfirst 向量前缀 |
 | 序列化：索引分隔键 | util/comparator.cc `FindShortestSeparator` | 同上 |

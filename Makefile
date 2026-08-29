@@ -536,9 +536,14 @@ CXXFLAGS += $(WARNING_FLAGS) -I. -I./include $(PLATFORM_CXXFLAGS) $(OPT) -Woverl
 # vsetvl). Enables the __riscv_vector inline paths (e.g. Slice::compare,
 # xxHash, bloom probe) and compiler auto-vectorization. Extensions
 # beyond the guaranteed set stay per-TU with runtime hwprobe dispatch.
-# RISCV_RVV_MARCH overrides the arch string — e.g. the RVA23 mandatory
-# profile set rv64gcv_zba_zbb_zbs_zicond (scalar bitmanip + cond ops are
-# guaranteed on RVA23 targets like the LX5000; zbc/zvbb/zvbc are NOT).
+# RISCV_RVV_MARCH overrides the arch string — e.g. the hand-picked
+# RVA23U64-mandatory-extension SUBSET rv64gcv_zba_zbb_zbs_zicbop_zicond
+# (this is NOT the full profile: RVA23U64 also mandates Zvbb, Zvfhmin,
+# Zicboz etc., which this build does not require or use). Everything in
+# the subset is guaranteed on RVA23 targets like the LX5000. Zbc and
+# Zvbc are NOT part of RVA23 (optional extensions) — those two stay
+# per-TU with runtime hwprobe dispatch and are never in the global
+# march.
 # Must be appended AFTER $(PLATFORM_CXXFLAGS) so it overrides the
 # PORTABLE -march=rv64gc (with gcc, the last -march wins).
 ifneq (,$(findstring riscv64,$(MACHINE)))
