@@ -24,7 +24,7 @@ step "TREE $(git rev-parse HEAD 2>/dev/null || echo unknown) GCC $(gcc -dumpfull
 
 step BUILD_S0
 find . -name '*.o' -delete; rm -f db_bench librocksdb.a
-env PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 CC="ccache gcc" CXX="ccache g++" \
+env PORTABLE=1 RISCV_NO_RVV_CRC32C=1 DISABLE_WARNING_AS_ERROR=1 CC="ccache gcc" CXX="ccache g++" \
   EXTRA_CXXFLAGS="$DIS" EXTRA_CFLAGS="$DIS" \
   make -j6 db_bench DEBUG_LEVEL=0 > build-sp-s0.log 2>&1 || { step S0_FAIL; exit 1; }
 cp db_bench db_bench.S0
@@ -32,7 +32,7 @@ cp db_bench db_bench.S0
 
 step BUILD_SP_GEN
 find . -name '*.o' -delete; rm -f db_bench librocksdb.a; rm -rf /root/pgo-SP; mkdir -p /root/pgo-SP
-env PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 CC="gcc" CXX="g++" \
+env PORTABLE=1 RISCV_NO_RVV_CRC32C=1 DISABLE_WARNING_AS_ERROR=1 CC="gcc" CXX="g++" \
   OPT="-O3 -DNDEBUG -fprofile-generate=/root/pgo-SP" \
   EXTRA_CXXFLAGS="$DIS" EXTRA_CFLAGS="$DIS" EXTRA_LDFLAGS="-fprofile-generate=/root/pgo-SP" \
   make -j6 db_bench DEBUG_LEVEL=0 > build-sp-gen.log 2>&1 || { step SP_GEN_FAIL; exit 1; }
@@ -43,7 +43,7 @@ export ROCKSDB_RVV_CRC32C=0 ROCKSDB_ZBC_CRC32C=0
 ./db_bench --benchmarks=seekrandom --use_existing_db=1 --num=4000000 --seed=20260822 --reads=400000 --seek_nexts=10 --threads=8 --db=/root/pgo-db >/dev/null 2>&1
 step BUILD_SP_USE
 find . -name '*.o' -delete; rm -f db_bench librocksdb.a
-env PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 CC="gcc" CXX="g++" \
+env PORTABLE=1 RISCV_NO_RVV_CRC32C=1 DISABLE_WARNING_AS_ERROR=1 CC="gcc" CXX="g++" \
   OPT="-O3 -DNDEBUG -fprofile-use=/root/pgo-SP -fprofile-correction -Wno-missing-profile" \
   EXTRA_CXXFLAGS="$DIS" EXTRA_CFLAGS="$DIS" EXTRA_LDFLAGS="-fprofile-use=/root/pgo-SP" \
   make -j6 db_bench DEBUG_LEVEL=0 > build-sp-use.log 2>&1 || { step SP_USE_FAIL; exit 1; }
