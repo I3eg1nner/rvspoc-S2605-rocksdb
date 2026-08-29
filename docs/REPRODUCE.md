@@ -33,7 +33,13 @@ PORTABLE=1 RISCV_RVV=1 RISCV_RVV_MARCH=rv64gcv_zba_zbb_zbs_zicbop_zicond \
 JAVA_HOME=<jdk21> PORTABLE=1 RISCV_RVV=1 DISABLE_WARNING_AS_ERROR=1 make -j6 rocksdbjava DEBUG_LEVEL=0
 ```
 
-## 交付（headline）构建 = RVA23 子集 march + **O3 + PGO**
+## 交付（headline）构建 = RVA23 子集 march + **O3 + 现场新鲜 PGO**
+
+**硬性要求：PGO 训练必须在评测目标机上、紧邻评测现场执行。**
+我们实测（ACCEPTANCE 二节归因表）：同一配置用数天前旧会话训练的
+profile 构建，会比纯标量 O3+PGO 反而慢 3~10%；现场重训后同配置
+变为全面领先（读/seek +5~+18%）。profile 陈旧化是本工程测到的
+最大单一陷阱。
 
 headline 数字不是上面 O2 构建的产物。交付配置完整配方（脚本化于
 `rvv-ci/final_assembly_job.sh` 的 `pgo_build`，在板上原生执行）：
