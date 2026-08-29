@@ -88,11 +88,15 @@ restart sidecar（P3）权重上调，bisect 后立即实现
 
 - [x] 复现文档 + AI 披露（占比数值已补）（wiki 页引用轨迹）
 - [x] 生数据齐全：benchmark.csv/candidates.jsonl/profile/results
-- [ ] **PR 暂缓（用户 2026-08-23 指示）**：先出验收报告（结果汇总 +
-      复现文档 + 全部证据）交用户验收，用户确认后才开 PR → upstream
-      11.1.fb（届时再核实 base）
-- [ ] **PR 前必做（审计 M1）**：恢复上游 CLAUDE.md（工作区任务指令
-      不进 PR——单独 commit revert 或 PR 分支剔除）
+- [ ] **PR 维持 HOLD（用户 2026-08-30 再次确认）**：全部前置已就绪
+      ——base 11.1.fb 已验证（= v11.1.1，fast-forward 干净落底）、
+      上游 CLAUDE.md 已恢复（M1 完成，任务指令转 CLAUDE.local.md
+      gitignored）、PR 正文 docs/PR-BODY.md、澄清函
+      docs/ORGANIZER-QUESTIONS.md。开 PR 命令（用户确认后执行）：
+      gh pr create --repo rv2036/rvspoc-S2605-rocksdb --base 11.1.fb \
+        --head I3eg1nner:s2605-rvv --title "S2605: RocksDB v11.1.1 \
+        RV64GCV port + RVV optimizations" --body-file docs/PR-BODY.md
+- [x] **PR 前必做（审计 M1）**：恢复上游 CLAUDE.md ✅（2026-08-30）
 - [x] 耐久发现回灌 wiki（2026-08-29 收尾：3arm/压测/误编译 run 记录、
       pattern-toolchain-miscompile、方法论 12 条、变体 C board2
       测量 6.43x/7.00x；validate 0 错误）
