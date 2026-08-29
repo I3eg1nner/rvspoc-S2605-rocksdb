@@ -495,3 +495,14 @@ read t1 −0.1/seek t1 −2.0(3/3)；V3（SP+CRC 阶梯）除 fill −2.4（混�
 （rv64gc_zba_zbb_zbs_zicbop_zicond）+ 非向量 kernel 全开
 （zbb-varint/sidecar/binseek-prefetch/pause/CRC 运行时阶梯，
 shortkey 维持裁决关）。
+
+## board2 组件筛查终报（subagent，2026-08-30，logs/b2screen/）
+
+三臂 O3+PGO（BSP 标量锚 / BV5=无 v 子集+非向量 kernel / BV5NS=BV5
+拔 sidecar+prefetch）：**BV5NS vs BV5 是干净单变量对比——拔掉
+sidecar+binseek-prefetch 后 read t8 −7.9%（0/5）、read t1 −10.1%
+（0/3）、seek 全轮变差**。此前主板 V1 上的"seek 一致小负"嫌疑被
+证伪：sidecar+prefetch 在 PGO 世界是强正贡献。BV5 vs BSP 全测点
+非负（read t8 +8.8% 5/0、read t1 +13.4% 3/0）。与主板 vfinal
+（V2 新鲜 PGO 全胜）合并：GP 异常唯一根因 = 陈旧 profile；
+kernel 组合无罪。终版交付 = V2 配方维持。
