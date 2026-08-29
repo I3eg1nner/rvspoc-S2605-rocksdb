@@ -68,11 +68,12 @@ restart sidecar（P3）权重上调，bisect 后立即实现
 - [x] 板全量 make check + db_test（RVV 构建）：38934 全过（第三轮）
 - [x] QEMU 矩阵：kernel 差分 + 子集测试 × {128,256,512} × 敌意 flags
 - [x] 标量写 ↔ RVV 读双向位相同端到端；x86 容器构建位级不变
-- [x] 最终 db_bench vs 基线（同 flags/seed/线程）已测（交错 3 臂 +
-      PGO）：fill +10.1% / read t8 +19.3% / seek t8 +16.8% /
-      read t1 +27.4% / seek t1 +22.7% —— 30%/项尚未全达标；剩余
-      候选杠杆见 draft（fused decode；skiplist prefetch 已判定
-      already-active）
+- [x] 最终 db_bench vs 基线（终版 2026-08-30，S0 stock 等价直接
+      配对）：read t1 **+31.6%**（达标）/ read t8 +26.1% / seek t1
+      +24.3% / seek t8 +21.1% / fill +4.0%；P99 read t8 −18.6%。
+      最严口径（三项各自≥30%）read t1 过线、其余未及——口径澄清
+      在 docs/ORGANIZER-QUESTIONS.md。交付配置 = V2（RVA23 必选
+      子集 march + O3 + 现场新鲜 PGO + 裁决 kernel 集）
 
 ## 阶段 3 — RocketMQ
 
