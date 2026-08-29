@@ -1,0 +1,82 @@
+ROUND warmup t8 order=BSP BV5 BV5NS
+WARMUP BSP-Bread8 readrandom   :      10.283 micros/op 674082 ops/sec 17.802 seconds 12000000 operations;   50.6 MB/s (1500000 of 1500000 found)
+WARMUP BSP-Aseek8 seekrandom   :      71.076 micros/op 110543 ops/sec 28.948 seconds 3200000 operations;  122.3 MB/s (326287 of 400000 found)
+WARMUP BV5-Bread8 readrandom   :       5.902 micros/op 1066965 ops/sec 11.247 seconds 12000000 operations;   80.0 MB/s (1500000 of 1500000 found)
+WARMUP BV5-Aseek8 seekrandom   :      44.293 micros/op 179490 ops/sec 17.828 seconds 3200000 operations;  198.6 MB/s (326287 of 400000 found)
+WARMUP BV5NS-Bread8 readrandom   :       6.446 micros/op 967418 ops/sec 12.404 seconds 12000000 operations;   72.6 MB/s (1500000 of 1500000 found)
+WARMUP BV5NS-Aseek8 seekrandom   :      45.164 micros/op 175739 ops/sec 18.209 seconds 3200000 operations;  194.4 MB/s (326287 of 400000 found)
+ROUND t8 r1 order=BSP BV5 BV5NS
+RESULT BSP-Bread8 readrandom   :       6.298 micros/op 988936 ops/sec 12.134 seconds 12000000 operations;   74.2 MB/s (1500000 of 1500000 found)
+RESULT BSP-Aseek8 seekrandom   :      46.172 micros/op 170513 ops/sec 18.767 seconds 3200000 operations;  188.6 MB/s (326287 of 400000 found)
+RESULT BV5-Bread8 readrandom   :       5.969 micros/op 1066339 ops/sec 11.253 seconds 12000000 operations;   80.0 MB/s (1500000 of 1500000 found)
+RESULT BV5-Aseek8 seekrandom   :      44.533 micros/op 177861 ops/sec 17.992 seconds 3200000 operations;  196.8 MB/s (326287 of 400000 found)
+RESULT BV5NS-Bread8 readrandom   :       6.411 micros/op 982306 ops/sec 12.216 seconds 12000000 operations;   73.7 MB/s (1500000 of 1500000 found)
+RESULT BV5NS-Aseek8 seekrandom   :      45.243 micros/op 175251 ops/sec 18.259 seconds 3200000 operations;  193.9 MB/s (326287 of 400000 found)
+ROUND t8 r2 order=BV5 BV5NS BSP
+RESULT BV5-Bread8 readrandom   :       5.940 micros/op 1066016 ops/sec 11.257 seconds 12000000 operations;   80.0 MB/s (1500000 of 1500000 found)
+RESULT BV5-Aseek8 seekrandom   :      44.994 micros/op 176638 ops/sec 18.116 seconds 3200000 operations;  195.4 MB/s (326287 of 400000 found)
+RESULT BV5NS-Bread8 readrandom   :       6.349 micros/op 986350 ops/sec 12.166 seconds 12000000 operations;   74.0 MB/s (1500000 of 1500000 found)
+RESULT BV5NS-Aseek8 seekrandom   :      45.385 micros/op 174570 ops/sec 18.331 seconds 3200000 operations;  193.1 MB/s (326287 of 400000 found)
+RESULT BSP-Bread8 readrandom   :       6.361 micros/op 991340 ops/sec 12.105 seconds 12000000 operations;   74.4 MB/s (1500000 of 1500000 found)
+RESULT BSP-Aseek8 seekrandom   :      47.506 micros/op 167188 ops/sec 19.140 seconds 3200000 operations;  185.0 MB/s (326287 of 400000 found)
+ROUND t8 r3 order=BV5NS BSP BV5
+RESULT BV5NS-Bread8 readrandom   :       6.275 micros/op 1005248 ops/sec 11.937 seconds 12000000 operations;   75.4 MB/s (1500000 of 1500000 found)
+RESULT BV5NS-Aseek8 seekrandom   :      44.984 micros/op 175888 ops/sec 18.193 seconds 3200000 operations;  194.6 MB/s (326287 of 400000 found)
+RESULT BSP-Bread8 readrandom   :       6.330 micros/op 984698 ops/sec 12.186 seconds 12000000 operations;   73.9 MB/s (1500000 of 1500000 found)
+RESULT BSP-Aseek8 seekrandom   :      46.468 micros/op 170595 ops/sec 18.758 seconds 3200000 operations;  188.7 MB/s (326287 of 400000 found)
+RESULT BV5-Bread8 readrandom   :       5.910 micros/op 1071564 ops/sec 11.199 seconds 12000000 operations;   80.4 MB/s (1500000 of 1500000 found)
+RESULT BV5-Aseek8 seekrandom   :      44.488 micros/op 178990 ops/sec 17.878 seconds 3200000 operations;  198.0 MB/s (326287 of 400000 found)
+ROUND t8 r4 order=BSP BV5 BV5NS
+RESULT BSP-Bread8 readrandom   :       6.403 micros/op 978715 ops/sec 12.261 seconds 12000000 operations;   73.4 MB/s (1500000 of 1500000 found)
+RESULT BSP-Aseek8 seekrandom   :      47.077 micros/op 166720 ops/sec 19.194 seconds 3200000 operations;  184.4 MB/s (326287 of 400000 found)
+RESULT BV5-Bread8 readrandom   :       5.954 micros/op 1073091 ops/sec 11.183 seconds 12000000 operations;   80.5 MB/s (1500000 of 1500000 found)
+RESULT BV5-Aseek8 seekrandom   :      44.627 micros/op 177553 ops/sec 18.023 seconds 3200000 operations;  196.4 MB/s (326287 of 400000 found)
+RESULT BV5NS-Bread8 readrandom   :       6.435 micros/op 978216 ops/sec 12.267 seconds 12000000 operations;   73.4 MB/s (1500000 of 1500000 found)
+RESULT BV5NS-Aseek8 seekrandom   :      45.706 micros/op 172954 ops/sec 18.502 seconds 3200000 operations;  191.3 MB/s (326287 of 400000 found)
+ROUND t8 r5 order=BV5 BV5NS BSP
+RESULT BV5-Bread8 readrandom   :       5.835 micros/op 1082869 ops/sec 11.082 seconds 12000000 operations;   81.2 MB/s (1500000 of 1500000 found)
+RESULT BV5-Aseek8 seekrandom   :      44.792 micros/op 176559 ops/sec 18.124 seconds 3200000 operations;  195.3 MB/s (326287 of 400000 found)
+RESULT BV5NS-Bread8 readrandom   :       6.453 micros/op 968741 ops/sec 12.387 seconds 12000000 operations;   72.7 MB/s (1500000 of 1500000 found)
+RESULT BV5NS-Aseek8 seekrandom   :      45.687 micros/op 173682 ops/sec 18.424 seconds 3200000 operations;  192.1 MB/s (326287 of 400000 found)
+RESULT BSP-Bread8 readrandom   :       6.467 micros/op 971847 ops/sec 12.348 seconds 12000000 operations;   72.9 MB/s (1500000 of 1500000 found)
+RESULT BSP-Aseek8 seekrandom   :      46.128 micros/op 171634 ops/sec 18.644 seconds 3200000 operations;  189.9 MB/s (326287 of 400000 found)
+ROUND fill1 r1 order=BSP BV5 BV5NS
+RESULT BSP-fill1 fillrandom   :       9.758 micros/op 102478 ops/sec 97.581 seconds 10000000 operations;   11.3 MB/s
+RESULT BV5-fill1 fillrandom   :       9.942 micros/op 100578 ops/sec 99.425 seconds 10000000 operations;   11.1 MB/s
+RESULT BV5NS-fill1 fillrandom   :      10.038 micros/op 99616 ops/sec 100.385 seconds 10000000 operations;   11.0 MB/s
+ROUND fill1 r2 order=BV5 BV5NS BSP
+RESULT BV5-fill1 fillrandom   :       9.647 micros/op 103658 ops/sec 96.470 seconds 10000000 operations;   11.5 MB/s
+RESULT BV5NS-fill1 fillrandom   :       9.596 micros/op 104205 ops/sec 95.964 seconds 10000000 operations;   11.5 MB/s
+RESULT BSP-fill1 fillrandom   :      10.071 micros/op 99290 ops/sec 100.715 seconds 10000000 operations;   11.0 MB/s
+ROUND fill1 r3 order=BV5NS BSP BV5
+RESULT BV5NS-fill1 fillrandom   :       9.578 micros/op 104406 ops/sec 95.779 seconds 10000000 operations;   11.6 MB/s
+RESULT BSP-fill1 fillrandom   :       9.705 micros/op 103039 ops/sec 97.050 seconds 10000000 operations;   11.4 MB/s
+RESULT BV5-fill1 fillrandom   :       9.460 micros/op 105702 ops/sec 94.605 seconds 10000000 operations;   11.7 MB/s
+ROUND fill1 r4 order=BSP BV5 BV5NS
+RESULT BSP-fill1 fillrandom   :       9.852 micros/op 101502 ops/sec 98.520 seconds 10000000 operations;   11.2 MB/s
+RESULT BV5-fill1 fillrandom   :       9.978 micros/op 100221 ops/sec 99.779 seconds 10000000 operations;   11.1 MB/s
+RESULT BV5NS-fill1 fillrandom   :       9.839 micros/op 101635 ops/sec 98.391 seconds 10000000 operations;   11.2 MB/s
+ROUND warmup t1 order=BSP
+WARMUP BSP-Bread1 readrandom   :       9.779 micros/op 102264 ops/sec 14.668 seconds 1500000 operations;   11.3 MB/s (1500000 of 1500000 found)
+WARMUP BSP-Aseek1 seekrandom   :      37.785 micros/op 26465 ops/sec 15.114 seconds 400000 operations;   29.3 MB/s (326287 of 400000 found)
+ROUND t1 r1 order=BSP BV5 BV5NS
+RESULT BSP-Bread1 readrandom   :       9.729 micros/op 102783 ops/sec 14.594 seconds 1500000 operations;   11.4 MB/s (1500000 of 1500000 found)
+RESULT BSP-Aseek1 seekrandom   :      37.928 micros/op 26365 ops/sec 15.171 seconds 400000 operations;   29.2 MB/s (326287 of 400000 found)
+RESULT BV5-Bread1 readrandom   :       8.444 micros/op 118433 ops/sec 12.665 seconds 1500000 operations;   13.1 MB/s (1500000 of 1500000 found)
+RESULT BV5-Aseek1 seekrandom   :      35.397 micros/op 28251 ops/sec 14.159 seconds 400000 operations;   31.3 MB/s (326287 of 400000 found)
+RESULT BV5NS-Bread1 readrandom   :       9.148 micros/op 109310 ops/sec 13.722 seconds 1500000 operations;   12.1 MB/s (1500000 of 1500000 found)
+RESULT BV5NS-Aseek1 seekrandom   :      38.165 micros/op 26201 ops/sec 15.266 seconds 400000 operations;   29.0 MB/s (326287 of 400000 found)
+ROUND t1 r2 order=BV5 BV5NS BSP
+RESULT BV5-Bread1 readrandom   :       8.526 micros/op 117286 ops/sec 12.789 seconds 1500000 operations;   13.0 MB/s (1500000 of 1500000 found)
+RESULT BV5-Aseek1 seekrandom   :      34.624 micros/op 28881 ops/sec 13.850 seconds 400000 operations;   32.0 MB/s (326287 of 400000 found)
+RESULT BV5NS-Bread1 readrandom   :       9.488 micros/op 105400 ops/sec 14.231 seconds 1500000 operations;   11.7 MB/s (1500000 of 1500000 found)
+RESULT BV5NS-Aseek1 seekrandom   :      37.535 micros/op 26641 ops/sec 15.014 seconds 400000 operations;   29.5 MB/s (326287 of 400000 found)
+RESULT BSP-Bread1 readrandom   :       9.518 micros/op 105069 ops/sec 14.276 seconds 1500000 operations;   11.6 MB/s (1500000 of 1500000 found)
+RESULT BSP-Aseek1 seekrandom   :      37.454 micros/op 26699 ops/sec 14.982 seconds 400000 operations;   29.5 MB/s (326287 of 400000 found)
+ROUND t1 r3 order=BV5NS BSP BV5
+RESULT BV5NS-Bread1 readrandom   :       9.294 micros/op 107591 ops/sec 13.942 seconds 1500000 operations;   11.9 MB/s (1500000 of 1500000 found)
+RESULT BV5NS-Aseek1 seekrandom   :      35.952 micros/op 27814 ops/sec 14.381 seconds 400000 operations;   30.8 MB/s (326287 of 400000 found)
+RESULT BSP-Bread1 readrandom   :       9.430 micros/op 106047 ops/sec 14.145 seconds 1500000 operations;   11.7 MB/s (1500000 of 1500000 found)
+RESULT BSP-Aseek1 seekrandom   :      38.359 micros/op 26069 ops/sec 15.344 seconds 400000 operations;   28.8 MB/s (326287 of 400000 found)
+RESULT BV5-Bread1 readrandom   :       8.315 micros/op 120259 ops/sec 12.473 seconds 1500000 operations;   13.3 MB/s (1500000 of 1500000 found)
+RESULT BV5-Aseek1 seekrandom   :      34.913 micros/op 28642 ops/sec 13.965 seconds 400000 operations;   31.7 MB/s (326287 of 400000 found)

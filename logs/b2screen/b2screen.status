@@ -1,0 +1,62 @@
+2026-08-30 01:18:48 === build session start ===
+2026-08-30 01:18:48 ENV uname: Linux 6.18.3-generic riscv64
+2026-08-30 01:18:48 ENV gcc: gcc (Bianbu 15.2.0-16ubuntu1bb3) 15.2.0
+2026-08-30 01:18:48 ENV governor: userspace (no root, common-mode across arms)
+2026-08-30 01:18:48 BUILD BSP stage1 (profile-generate) start; make vars: RISCV_NO_RVV_CRC32C=1
+2026-08-30 01:37:58 TRAIN BSP fillrandom start
+2026-08-30 01:39:39 TRAIN BSP readrandom start
+2026-08-30 01:41:20 TRAIN BSP seekrandom start
+2026-08-30 01:41:20 TRAIN BSP FAIL
+2026-08-30 01:41:20 ABORT at BSP
+2026-08-30 01:45:46 TRAIN BSP seekrandom retry (compression none) start
+2026-08-30 01:47:31 === build session start ===
+2026-08-30 01:47:31 ENV uname: Linux 6.18.3-generic riscv64
+2026-08-30 01:47:31 ENV gcc: gcc (Bianbu 15.2.0-16ubuntu1bb3) 15.2.0
+2026-08-30 01:47:31 ENV governor: userspace (no root, common-mode across arms)
+2026-08-30 01:47:31 BUILD BSP resume: STAGE2_ONLY (stage1 binary + profile dir assumed present)
+2026-08-30 01:47:31 TRAIN BSP done; gcda files: 301
+2026-08-30 01:47:31 BUILD BSP stage2 (profile-use) start
+2026-08-30 02:01:20 BUILD BSP done vsetvli=0 sha256=20e52d98dc36224d1964f4d68e31d9ba775910e645d91a11c172308fcf55d4d9
+2026-08-30 02:01:20 BUILDS DONE: BSP
+2026-08-30 02:01:20 === build session start ===
+2026-08-30 02:01:20 ENV uname: Linux 6.18.3-generic riscv64
+2026-08-30 02:01:20 ENV gcc: gcc (Bianbu 15.2.0-16ubuntu1bb3) 15.2.0
+2026-08-30 02:01:20 ENV governor: userspace (no root, common-mode across arms)
+2026-08-30 02:01:20 BUILD BV5 stage1 (profile-generate) start; make vars: RISCV_RVV=1 RISCV_RVV_MARCH=rv64gc_zba_zbb_zbs_zicbop_zicond
+2026-08-30 02:20:34 TRAIN BV5 fillrandom start
+2026-08-30 02:22:16 TRAIN BV5 readrandom start
+2026-08-30 02:23:42 TRAIN BV5 seekrandom start
+2026-08-30 02:25:23 TRAIN BV5 done; gcda files: 302
+2026-08-30 02:25:23 BUILD BV5 stage2 (profile-use) start
+2026-08-30 02:39:16 BUILD BV5 done vsetvli=4 sha256=437236b34deb9a4e60cc76c5d4f01bd6337b4c846c607124278b0a25158d2e9f
+2026-08-30 02:39:16 BUILD BV5NS stage1 (profile-generate) start; make vars: RISCV_RVV=1 RISCV_RVV_MARCH=rv64gc_zba_zbb_zbs_zicbop_zicond
+2026-08-30 02:58:34 TRAIN BV5NS fillrandom start
+2026-08-30 03:00:16 TRAIN BV5NS readrandom start
+2026-08-30 03:01:53 TRAIN BV5NS seekrandom start
+2026-08-30 03:03:37 TRAIN BV5NS done; gcda files: 302
+2026-08-30 03:03:37 BUILD BV5NS stage2 (profile-use) start
+2026-08-30 03:17:29 BUILD BV5NS done vsetvli=4 sha256=0f279786f26be2a29cb4950267fb072cf7b9c958cc441de1c6cd5475bdb8156d
+2026-08-30 03:17:29 BUILDS DONE: BV5 BV5NS
+2026-08-30 03:18:31 === bench session start ===
+2026-08-30 03:18:31 ENV governor: userspace
+2026-08-30 03:18:42 SHA256 db_bench.BSP 20e52d98dc36224d1964f4d68e31d9ba775910e645d91a11c172308fcf55d4d9 vsetvli=0
+2026-08-30 03:18:53 SHA256 db_bench.BV5 437236b34deb9a4e60cc76c5d4f01bd6337b4c846c607124278b0a25158d2e9f vsetvli=4
+2026-08-30 03:19:04 SHA256 db_bench.BV5NS 0f279786f26be2a29cb4950267fb072cf7b9c958cc441de1c6cd5475bdb8156d vsetvli=4
+2026-08-30 03:19:05 PHASE0 write DB A (default params except compression=none, see DEVIATION) with BSP
+2026-08-30 03:20:43 PHASE0 write DB B (none/bloom10/cache1G) with BSP
+2026-08-30 03:22:22 PHASE0 done: 995M A, 1004M B
+2026-08-30 03:22:23 PHASE1 warmup (discarded)
+2026-08-30 03:24:46 PHASE1 round 1 order: BSP BV5 BV5NS
+2026-08-30 03:26:49 PHASE1 round 2 order: BV5 BV5NS BSP
+2026-08-30 03:28:52 PHASE1 round 3 order: BV5NS BSP BV5
+2026-08-30 03:30:54 PHASE1 round 4 order: BSP BV5 BV5NS
+2026-08-30 03:32:58 PHASE1 round 5 order: BV5 BV5NS BSP
+2026-08-30 03:35:01 PHASE2 fill round 1 order: BSP BV5 BV5NS
+2026-08-30 03:40:16 PHASE2 fill round 2 order: BV5 BV5NS BSP
+2026-08-30 03:45:27 PHASE2 fill round 3 order: BV5NS BSP BV5
+2026-08-30 03:50:31 PHASE2 fill round 4 order: BSP BV5 BV5NS
+2026-08-30 03:55:46 PHASE3 warmup (discarded)
+2026-08-30 03:56:27 PHASE3 round 1 order: BSP BV5 BV5NS
+2026-08-30 03:58:25 PHASE3 round 2 order: BV5 BV5NS BSP
+2026-08-30 04:00:22 PHASE3 round 3 order: BV5NS BSP BV5
+2026-08-30 04:02:17 ALL BENCH DONE
