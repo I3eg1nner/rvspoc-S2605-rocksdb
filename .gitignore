@@ -106,3 +106,4 @@ third-party/folly/
 # S2605 workspace-internal (never ship)
 .claude/
 profile/c10.log
+CLAUDE.local.md
