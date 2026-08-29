@@ -105,45 +105,50 @@ v11.1.1 全树 ARM 专属优化共 6 处（`grep -rl 'arm_neon|__aarch64__|ARM_F
 | 序列化：块尾校验 | util/crc32c.cc `Extend` | vclmul CRC（探测启用） |
 | 双向：kv 校验/缓存键 | util/xxhash.h / xxph3.h | RVV 分支 |
 
-## 二b、RocketMQ 双臂矩阵（24 有效格全部完成，2026-08-29；硬性压测门另见第一节 PASS 行）
+## 二b、RocketMQ 双臂矩阵（24 有效格完成，2026-08-29）
 
-协议（终版 v6.x）：每格全新 store（NVMe）→ 冷启 → topic 预建 →
-45s 预热丢弃段（16K 起启用）→ 300s 测量 → put 偏移锁定（连续两轮
-不变）→ 排空到 backlog=0（有界）。零丢失不变量：put 记账精确
-（store 偏移；brokerStatus 计数器实测死值）+ 排空到 0 +
-Response/Consume Failed==0，全程 fail-closed。Send Failed 门 v6.2
-起：仅允许测量窗前 60s 内（与 TPS 统计丢弃段一致）、之后必须恒定、
-≤10、逐格记录。128K backlog 两臂统一 -w 4（预注册：w8 时消费者中场
-加入令 broker 饱和，两臂同样超时——offered load 超容量而非缺陷）。
-TPS 统计：10s 采样、丢前 60s、中位数。jar sha256 + broker cmdline
-每格留痕。
+**结论定位：本矩阵支撑的是稳定性门（零 OOM/损坏/丢失），不构成
+性能验收**——两臂总体在 ±1.5% 噪声带内互有小幅出入；且官方最终指标
+含 P99，而 RocketMQ 自带 benchmark 工具只输出 Max/Avg RT，**本工程
+无 P99 本地证据：稳定性通过，最终竞争力未知**。
 
-**终表（send TPS 为 ab+ba 均值的臂间差；put 为精确记账差）**：
+协议分块（详见 profile/rmq-matrix/MANIFEST.md，24 终格逐格列明）：
+1K 块 = v5b（无预热）；16K 块 = v6.1/v6.2（+45s 预热丢弃段、JDK21
+C2 JIT 单方法排除、/tmp 泄漏回收、Send-Failed 60s 窗口规则）；128K
+backlog = v6.3（再 + producer -w 8→4，两臂同规，防饱和）。所有协议
+变更均在计算相应块的臂间对比**之前**预注册并落盘；零丢失不变量
+（put 偏移精确记账 + 排空到 0 + Response/Consume Failed==0）全程
+fail-closed 未动。accounting.txt 追加式保留全部 28 条完成行（含被
+替代行），终格以每格最后一行为准——MANIFEST.md 给出显式对照与
+被替代/中止行的逐条原因。
 
-| 尺寸×场景 | send TPS Δ | put Δ | 零丢失链 |
-|---|---|---|---|
-| 1K normal | −0.47% | ±0 | ✅ 全绿 |
-| 1K backlog | −1.45% | +0.24% | ✅ 全绿 |
-| 16K normal | −0.15% | −1.50% | ✅ 全绿 |
-| 16K backlog | **+5.93%** | +0.35% | ✅ 全绿 |
-| 128K normal | +0.37% | +0.54% | ✅ 全绿 |
-| 128K backlog(w4) | −18.1%※ | **−3.85%** | ✅ 全绿 |
+**终表（send TPS = 丢前 60s 的 10s 采样中位数、ab+ba 均值差；
+put = 300s 测量窗精确记账差）**：
 
-※ 128K backlog 的 send TPS 中位数不稳定（顺序效应 ab≈2×ba、两臂
-皆然：中位数落在"producer 独跑/与排空并发"双峰之间），以 put 精确
-记账为准 = **−3.9%（两个顺序内一致）**——RVV 臂在最饱和场景有真实
-小幅劣化，如实记录；该场景 consume TPS 中位数 rvv 2603/2778 vs
-scalar 2131/2917（混合）。其余 5/6 场景两臂持平或 RVV 占优（16K
-backlog +5.9%）。**比赛硬性判据（无 OOM/损坏/丢失）在全部 24 格 +
-60min 压测中全部满足。**
+| 尺寸×场景 | 协议 | send TPS Δ | put Δ | 排空/失败门 |
+|---|---|---|---|---|
+| 1K normal | v5b | −0.47% | **−0.66%** | ✅ |
+| 1K backlog | v5b | −1.45% | +0.24% | ✅ |
+| 16K normal | v6.1/6.2 | −0.15% | **−1.50%** | ✅ |
+| 16K backlog | v6.1/6.2 | **+5.93%** | +0.35% | ✅ |
+| 128K normal | v6.2 | +0.37% | +0.54% | ✅ |
+| 128K backlog | v6.3(w4) | 不稳定※ | **−3.85%** | ✅ |
+
+按 put 口径如实概括：**六场景中三个小幅回退**（1K normal −0.66%、
+16K normal −1.50%、128K backlog −3.85%）、两个持平微升、16K backlog
++0.35%（其 send TPS +5.93% 为 RVV 唯一显著优项）。※128K backlog 的
+send TPS 中位数受强顺序效应支配（ab≈2×ba、两臂皆然：中位数落在
+"producer 独跑/与排空并发"双峰之间），以 put 记账为准。
 
 运行事故链（全部留痕、逐项根因、门未放松）：broker 冷启 fast-fail
-（→ 预热段）、riscv64 JDK21 C2 JIT 崩溃（纯 Java remoting 帧，
-scalar 臂，与 RocksDB 无关 → CompileCommand 排除单方法，hs_err 存
+（→ 预热段）、riscv64 JDK21 C2 JIT 崩溃（纯 Java remoting 帧、
+scalar 臂、与 RocksDB 无关 → CompileCommand 排除单方法，hs_err 存
 证）、rocksdbjni /tmp 解压泄漏 404MB/格 填满 tmpfs（→ 每格回收）、
 客户端 JVM 冷启单发超时（→ 60s 窗口规则）、128K backlog w8 饱和
 （→ 两臂 w4）。被替换/中止格目录全部保留（*.SUPERSEDED/*.CRASHED/
-*.TMPFULL/*.COLDBLIP/*.SATURATED），accounting.txt 追加式不删行。
+*.TMPFULL/*.COLDBLIP/*.SATURATED/*.ABORTED），每格身份链完整
+（broker.log、broker-cmdline.txt、topic-create.log、16K 起含
+producer-warmup.log）。
 
 ## 三、正确性证据链
 
