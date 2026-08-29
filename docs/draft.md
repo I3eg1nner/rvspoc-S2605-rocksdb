@@ -473,3 +473,13 @@ headroom 分析进验收报告；若组织方澄清 30% 口径为"综合"或"任
 PGO 内联世界的相对劣势 > sidecar 构建成本。若 V1≈SP：拖累在
 kernel 组合；若 V1<SP：拖累在全局 march 本身 → 交付底座回退
 rv64gc 全局 + 仅 per-TU 向量（V3 形态）。
+
+## zvbb 编译层实验（用户指示 2026-08-29）
+
+Zvbb 为 RVA23U64 必选、K3 isa 亦有 → "免费"march 实验：
+V1z = V1 + zvbb（march=rv64gcv_zvbb_zba_zbb_zbs_zicbop_zicond，
+其余与 V1 完全一致：O3+PGO、kernel 全禁、无 CRC TU）。board2 构建
+（同款 K3 训练，注记：此前各臂均在主板训练），完成后传主板与
+SP/V1 同会话交错对测。判读前置指标：objdump 统计 zvbb 指令
+（vrev8/vror/vandn/vclz/vcpop.v/vwsll）出现数——若为 0，编译器
+自动向量化未利用 zvbb，预期无差异。
