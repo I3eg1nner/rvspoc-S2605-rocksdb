@@ -1,0 +1,26 @@
+Note: Google Test filter = PrefetchTest/PrefetchTest.Basic/0
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from PrefetchTest/PrefetchTest
+[ RUN      ] PrefetchTest/PrefetchTest.Basic/0
+file/prefetch_test.cc:352: Failure
+Expected: (post_compaction_prefetch_bytes.max) >= (expected_compaction_readahead_size * 0.9), actual: 1.05677e+06 vs 1.88744e+06
+Received signal 11 (Segmentation fault)
+Invoking GDB for stack trace...
+GDB failed; falling back on backtrace+addr2line...
+#0   /home/i3/s2605-scalar/librocksdb.so.11.1(_ZN7rocksdb6DBImpl11CloseHelperEv+0x11c) [0x3fade92606] ??	??:0	
+#1   /home/i3/s2605-scalar/librocksdb.so.11.1(_ZN7rocksdb6DBImpl9CloseImplEv+0x26) [0x3fade9301a] ??	??:0	
+#2   /home/i3/s2605-scalar/librocksdb.so.11.1(_ZN7rocksdb6DBImplD1Ev+0x940) [0x3fade9c232] ??	??:0	
+#3   /home/i3/s2605-scalar/librocksdb.so.11.1(_ZN7rocksdb6DBImplD0Ev+0x14) [0x3fade9c284] ??	??:0	
+#4   /home/i3/s2605-scalar/librocksdb_test_debug.so(_ZN7rocksdb10DBTestBaseD1Ev+0xc0) [0x3fae72c3ac] ??	??:0	
+#5   ./prefetch_test(+0x51d4e) [0x2ab3446d4e] ??	??:0	
+#6   /home/i3/s2605-scalar/librocksdb_test_debug.so(_ZN7testing8internal35HandleExceptionsInMethodIfSupportedINS_4TestEvEET0_PT_MS4_FS3_vEPKc+0x72) [0x3fae79821c] ??	??:0	
+#7   /home/i3/s2605-scalar/librocksdb_test_debug.so(_ZN7testing8TestInfo3RunEv+0xae) [0x3fae79086a] ??	??:0	
+#8   /home/i3/s2605-scalar/librocksdb_test_debug.so(_ZN7testing8TestCase3RunEv+0x86) [0x3fae79092e] ??	??:0	
+#9   /home/i3/s2605-scalar/librocksdb_test_debug.so(_ZN7testing8internal12UnitTestImpl11RunAllTestsEv+0x394) [0x3fae790d3c] ??	??:0	
+#10  /home/i3/s2605-scalar/librocksdb_test_debug.so(_ZN7testing8internal35HandleExceptionsInMethodIfSupportedINS0_12UnitTestImplEbEET0_PT_MS4_FS3_vEPKc+0x72) [0x3fae798706] ??	??:0	
+#11  /home/i3/s2605-scalar/librocksdb_test_debug.so(_ZN7testing8UnitTest3RunEv+0x74) [0x3fae790e7e] ??	??:0	
+#12  ./prefetch_test(+0x16c78) [0x2ab340bc78] ??	??:0	
+#13  /usr/lib/riscv64-linux-gnu/libc.so.6(+0x27f82) [0x3fad880f82] ??	??:0	
+#14  /usr/lib/riscv64-linux-gnu/libc.so.6(__libc_start_main+0x6c) [0x3fad88106e] ??	??:0	
+#15  ./prefetch_test(+0x1956c) [0x2ab340e56c] ??	??:0	
