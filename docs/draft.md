@@ -439,3 +439,18 @@ headroom 分析进验收报告；若组织方澄清 30% 口径为"综合"或"任
   idle=100，bench-only 续跑（构建不重做，sha 校验后进测量段）。
   三臂同会话交错，环境残差共模。**跑完须恢复：
   systemctl start sddm bianbu-ddr-bwd fwupd**。
+
+## check3 留痕重跑（board2, 2026-08-29，树 23285a41）
+
+- 并行段（check_0 全部 gtest 用例）：**29589 个用例 100% 跑完，唯一
+  失败 prefetch_test**（gnu_parallel joblog 全存，check3-full.log.gz
+  归档 profile/evidence/check3/）。
+- prefetch_test 分诊中：board2 上**串行也失败**（与主板"串行过"不
+  同）——PrefetchTest/PrefetchTest.Basic/0 先断言失败
+  （post_compaction_prefetch_bytes.max 1.06MB < 期望 ≥0.9×2MB，
+  环境敏感型统计断言），随后 DBTestBase 析构 SIGSEGV。正在同板
+  同树标量（PORTABLE+RISCV_NO_RVV_CRC32C）构建同用例对照：标量同败
+  ⇒ 环境/上游问题；标量过 ⇒ 我方移植问题需修。
+- 旧口径"38934 项"无法复推（第三轮原始日志已失），以本次留痕数字
+  取代。check_0 之后的 check 步骤（check_all_python / ldb_test /
+  dump_test）待分诊后补跑。

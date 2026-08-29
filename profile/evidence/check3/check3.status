@@ -1,0 +1,6 @@
+11:42:34 TREE 23285a41ba976b05146a00a211ccae86fa7d8cc9 GCC 15.2.0 HOST i3-spacemitk3picoitx ISA rv64imafdcvh_zicbom_zicbop_zicboz_zicntr
+11:42:34 CHECK_START
+13:31:52 CHECK_RC=2
+ceea5660046c75d47f1ef79537dd01e907f426dc05a43719190fc5af063992a2  check3-full.log
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  check3-summary.txt
+13:31:52 CHECK3_DONE
