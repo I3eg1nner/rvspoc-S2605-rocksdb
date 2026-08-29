@@ -483,3 +483,15 @@ V1z = V1 + zvbb（march=rv64gcv_zvbb_zba_zbb_zbs_zicbop_zicond，
 SP/V1 同会话交错对测。判读前置指标：objdump 统计 zvbb 指令
 （vrev8/vror/vandn/vclz/vcpop.v/vwsll）出现数——若为 0，编译器
 自动向量化未利用 zvbb，预期无差异。
+
+## V1/V3 归因细分结果（2026-08-29 夜）
+
+vs SP：V1（仅全局 march）fill −1.8/read t8 +0.0/seek t8 −1.9(5/5)/
+read t1 −0.1/seek t1 −2.0(3/3)；V3（SP+CRC 阶梯）除 fill −2.4（混合
+符号）外全部 ±1% 内；GP −2.4~−11.4。结论：全局向量 march 只贡献
+0~2 点拖累（seek 一致负），CRC 阶梯 db_bench 端到端零成本；GP 的
+大头拖累在 kernel 组合与/或旧会话 PGO profile。下一轮：V2=交付配置
+新鲜重建（控 profile 陈旧），V5=无 v 标量子集 march
+（rv64gc_zba_zbb_zbs_zicbop_zicond）+ 非向量 kernel 全开
+（zbb-varint/sidecar/binseek-prefetch/pause/CRC 运行时阶梯，
+shortkey 维持裁决关）。
