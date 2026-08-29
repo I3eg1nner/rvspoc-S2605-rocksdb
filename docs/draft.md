@@ -427,3 +427,15 @@ headroom 分析进验收报告；若组织方澄清 30% 口径为"综合"或"任
    监视器输出文件缺失。判定为监视链路异常（非板上事件），未入任何
    台账。处置：换新监视器；铁律固化——**任何监视事件必须回板核对
    文件后才允许入账**（本次核对流程本身即按此执行，无数据污染）。
+
+## S0/SP/G 对照运行环境注记（2026-08-29 下午）
+
+- S0 绊线第一击：PORTABLE 构建里 CRC Zvbc TU（HAVE_RVV_CRC32C 探测
+  按设计不看 RISCV_RVV）带来 5 处 vsetvli → 新增构建开关
+  RISCV_NO_RVV_CRC32C=1，S0/SP 二进制 objdump 零 vsetvli，三臂 sha
+  锁定于 sp.status。
+- 静板门第二击：idle 恒 94（Bianbu 更新检查器在 sddm 用户会话反复
+  重生 + ddr-bwd/fwupd 采样）→ 停 sddm/fwupd/bianbu-ddr-bwd 后
+  idle=100，bench-only 续跑（构建不重做，sha 校验后进测量段）。
+  三臂同会话交错，环境残差共模。**跑完须恢复：
+  systemctl start sddm bianbu-ddr-bwd fwupd**。
