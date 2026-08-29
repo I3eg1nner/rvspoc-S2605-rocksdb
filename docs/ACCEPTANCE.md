@@ -40,12 +40,29 @@ march + **-O3 + PGO**（fill/read/seek 训练）+ 裁决后 kernel 默认集：
 | A seekrandom t1 | 12227 | 14997 | **+22.7%** | 3/3 |
 
 对比口径：运行参数（seed/num/threads/flags）两臂相同；**编译配置
-（march/O3/PGO/kernel 开关）即被测变量**。两点已知偏差待 S0/SP 对照
-（运行中，rvv-ci/scalar_pgo_control_job.sh）修正后并入：(1) S 臂含
-少量仅按 __riscv 守卫的工程路径（shortkey/sidecar/pause），非纯
-stock——S0 臂全禁用后重测；(2) G 含通用 O3+PGO 收益——SP 臂
-（同源 O3+PGO、无 riscv 专有优化）用于把通用份额与 RISC-V 专有份额
-分离。
+（march/O3/PGO/kernel 开关）即被测变量**。
+
+**⚠ S0/SP/GP 归因对照结果（2026-08-29，rvv-ci/scalar_pgo_control_job.sh，
+静板 idle=100、三臂同会话拉丁轮换、二进制 sha 锁定、S0/SP objdump
+零向量指令）——对上表 headline 的重大修正**：
+
+| 测点 | S0 (stock -O2) | SP (S0+O3+PGO) | GP (交付) | SP/S0 | GP/S0 | GP/SP |
+|---|---|---|---|---|---|---|
+| fill t1 | 70202 | 77980 | 71993 | +11.1% | +2.6% | **−7.7%** |
+| read t8 | 442888 | 509780 | 489451 | +15.1% | +10.5% | **−4.0%** |
+| seek t8 | 79614 | 92236 | 83329 | +15.9% | +4.7% | **−9.7%** |
+| read t1 | 61982 | 74042 | 71769 | +19.5% | +15.8% | **−3.1%** |
+| seek t1 | 11543 | 13324 | 12268 | +15.4% | +6.3% | **−7.9%** |
+
+逐轮符号：GP<SP 于 read t8 6/6、seek t8 6/6、fill 4/4、seek t1
+3/3、read t1 2/3——效应稳固。诚实结论：**在 K3 上，本工程 headline
+增益的全部（甚至更多）可由通用 O3+PGO 解释；当前交付配置（全局向量
+march + kernel 组合）相对纯标量 O3+PGO 是净拖累 −3~−10%**。此前
+S vs G 表的更大差值来自：S 基线较 S0 慢（含 shortkey 等 __riscv 路
+径）+ 会话/DB 状态差 + O3+PGO 与 riscv 专有改动捆绑未分离。归因
+细分（V1=仅全局 march、V3=SP+CRC 阶梯）与交付配置重组装运行中
+（rvv-ci/variants_job.sh）；重组装原则：以 SP 为底座，仅保留在
+O3+PGO 世界里逐项复裁为正的 riscv 组件。
 
 **历史参考表：O2 三档（2026-08-24，PGO 前）**——
 S = 标量基线；F = gcv+zicbop 档；R = RVA23 子集档：
