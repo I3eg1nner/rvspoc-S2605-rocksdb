@@ -1,0 +1,23 @@
+tree: a671682d39b2f4d5005f4180c6217cf53023542d
+date: 2026-08-29T03:47:20Z
+image: s2605-rvv-ci (8c9ed99e42aa)
+riscv64-linux-gnu-g++-14 (Ubuntu 14.2.0-4ubuntu2~24.04.1) 14.2.0
+qemu-riscv64 version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.18)
+== crc32c: sh rvv-ci/run_matrix.sh rvv-ci/crc32c_diff.cc util/crc32c_riscv64.cc util/crc32c_zbc.cc
+   exit=0
+== memcmp: sh rvv-ci/run_matrix.sh rvv-ci/memcmp_diff.cc
+   exit=0
+== xxh3: sh rvv-ci/run_matrix.sh rvv-ci/xxh3_diff.cc rvv-ci/xxh3_ref.cc
+   exit=0
+== xxph3: sh rvv-ci/run_matrix.sh rvv-ci/xxph3_diff.cc rvv-ci/xxph3_ref.cc
+   exit=0
+== bloom: sh rvv-ci/run_matrix.sh rvv-ci/bloom_diff.cc
+   exit=0
+== varint: MARCH=rv64gcv_zvbc_zba_zbb_zbs_zicond sh rvv-ci/run_matrix.sh rvv-ci/varint_diff.cc util/coding.cc
+   exit=0  (first attempt exit=1 was a harness build config: default march lacks _zbb so the diff's #error guard fired; kernel itself unchanged)
+7bc23014379c8c6a012a0fe6f845c57e3b1898d94fbf58f25d867dee30065e91  profile/evidence/qemu-matrix/bloom.log
+bcb402309a711bbbaca40e2a37c2c7d849904c1ed4968bc5637bb18ef8ccb515  profile/evidence/qemu-matrix/crc32c.log
+ee6f821d49c24220c8a77a65b45b2b1f47fc062ca645adf24fbdbe33604bc657  profile/evidence/qemu-matrix/memcmp.log
+775df9d84e249231529e3f6b18f76c76297a603ebad746b0bdf36fc63b2f502f  profile/evidence/qemu-matrix/varint.log
+16dd84250da9ed1b5f9a7269f36bca297678ad89bc8de17bca07c428cb52c98f  profile/evidence/qemu-matrix/xxh3.log
+9468195a47469b26239dc994104eebe0d08c04440c0f7cc8aec91ae1854452fd  profile/evidence/qemu-matrix/xxph3.log

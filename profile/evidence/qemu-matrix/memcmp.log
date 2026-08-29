@@ -1,0 +1,11 @@
+rvv-ci/memcmp_diff.cc: In function 'int main()':
+rvv-ci/memcmp_diff.cc:89:24: warning: 'int memcmp(const void*, const void*, size_t)' specified bound 18446744073709551584 exceeds maximum object size 9223372036854775807 [-Wstringop-overread]
+   89 |         int want = Sign(memcmp(bufa + oa, bufb + ob, n));
+      |                    ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+build ok: riscv64-linux-gnu-g++-14 rvv-ci/memcmp_diff.cc
+== vlen=128 hostile ta/ma == memcmp_diff: 49279 checks, 0 failures
+PASS vlen=128
+== vlen=256 hostile ta/ma == memcmp_diff: 49279 checks, 0 failures
+PASS vlen=256
+== vlen=512 hostile ta/ma == memcmp_diff: 49279 checks, 0 failures
+PASS vlen=512

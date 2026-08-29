@@ -1,0 +1,7 @@
+build ok: riscv64-linux-gnu-g++-14 rvv-ci/varint_diff.cc util/coding.cc
+== vlen=128 hostile ta/ma == varint_diff: 2696542 checks, 0 failures
+PASS vlen=128
+== vlen=256 hostile ta/ma == varint_diff: 2696542 checks, 0 failures
+PASS vlen=256
+== vlen=512 hostile ta/ma == varint_diff: 2696542 checks, 0 failures
+PASS vlen=512

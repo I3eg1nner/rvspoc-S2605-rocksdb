@@ -8,15 +8,16 @@
 set -eu
 cd "$(dirname "$0")/.."
 CXX="${CXX:-riscv64-linux-gnu-g++}"
+MARCH="${MARCH:-rv64gcv_zvbc}"
 OUT=/tmp/rvv_matrix_bin
-$CXX -O2 -static -march=rv64gcv_zvbc -DHAVE_RVV_CRC32C \
+$CXX -O2 -static -march=$MARCH -DHAVE_RVV_CRC32C \
   -DROCKSDB_PLATFORM_POSIX -DOS_LINUX -I. -Iinclude \
   "$@" -o $OUT
 echo "build ok: $CXX $*"
 rc=0
 for V in 128 256 512; do
   printf "== vlen=%s hostile ta/ma == " "$V"
-  if ROCKSDB_RVV_CRC32C=1 qemu-riscv64 \
+  if ROCKSDB_RVV_CRC32C=1 ROCKSDB_ZBC_CRC32C=1 qemu-riscv64 \
       -cpu "max,vlen=$V,rvv_ta_all_1s=true,rvv_ma_all_1s=true" $OUT; then
     echo "PASS vlen=$V"
   else

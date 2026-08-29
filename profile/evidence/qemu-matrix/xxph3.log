@@ -1,0 +1,7 @@
+build ok: riscv64-linux-gnu-g++-14 rvv-ci/xxph3_diff.cc rvv-ci/xxph3_ref.cc
+== vlen=128 hostile ta/ma == xxph3_diff: 20028 checks, 0 failures (XXPH_VECTOR=5)
+PASS vlen=128
+== vlen=256 hostile ta/ma == xxph3_diff: 20028 checks, 0 failures (XXPH_VECTOR=5)
+PASS vlen=256
+== vlen=512 hostile ta/ma == xxph3_diff: 20028 checks, 0 failures (XXPH_VECTOR=5)
+PASS vlen=512
