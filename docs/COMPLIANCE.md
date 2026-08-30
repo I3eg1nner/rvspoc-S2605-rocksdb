@@ -18,7 +18,7 @@
 | 9 | "评测指标：高并发消息读写吞吐量（TPS）及 P99 延迟" | db_bench 侧 P99 直方图证据齐全（41.64→33.88 µs，−18.6%）；RocketMQ TPS 双臂矩阵齐全（噪声带内互有出入）；RocketMQ P99 无本地证据（自带 benchmark 仅输出 Avg/Max RT），文档如实声明 | `profile/evidence/headline/hl.log` Percentiles 行；`profile/rmq-matrix/MANIFEST.md`；`docs/ACCEPTANCE.md` 二b | ⚠ 部分满足（RocketMQ 侧无 P99，系工具限制、已标注） |
 | 10 | "能够在验证平台正确运行 RocksDB 自带的 make check 单元测试" | check3 留痕重跑（board2 K3，HEAD 树）：29589/29589 跑完、唯一失败 prefetch_test 经同板同树纯标量对照（相同断言值+相同段错误）归因环境、与 RVV 无关；check 尾部 ldb/dump/python 全过 | `profile/evidence/check3/check3-full.log.gz`（审计员解压核实）；`prefetch-scalar-control.log`；`check3.status` | ⚠ 部分满足（内容通过；LX5000 非团队可及、实测在 K3；早期"38934"口径因日志丢失已自行作废重建） |
 | 11 | "能在验证平台正确运行 RocksDB 核心测试集（db_test）" | db_test 含于 check3 并行段，通过（joblog 无 db_test 失败行） | `profile/evidence/check3/check3-full.log.gz` | ✅ 满足（K3 实测；平台缺口同 #10） |
-| 12 | "执行 60 分钟高压群集测试，要求无 OOM、无数据损坏、不丢失消息" | 60min 持续负载 PASS：Send/Response/Consume Failed 全 0、RSS 1.9→3.0G 无 OOM、排空归零；另补 24 格双臂矩阵零丢失链全绿（事故全留痕、fail-closed） | `profile/rmq-stress-run.log`；`profile/rmq-samples.csv`；`profile/rmq-matrix/`（MANIFEST + 逐格身份链） | ✅ 满足（TPS 均值可核性限制见 ACCEPTANCE 注记） |
+| 12 | "执行 60 分钟高压群集测试，要求无 OOM、无数据损坏、不丢失消息" | 60min 持续负载 PASS：Send/Response/Consume Failed 全 0、RSS 1.9→3.0G 无 OOM、排空归零；另补 24 格双臂矩阵零丢失链全绿（事故全留痕、fail-closed） | `profile/rmq-stress-run.log`；`profile/rmq-samples.csv`；`profile/rmq-matrix/`（MANIFEST + 逐格身份链） | ✅ 满足（全量日志已归档、均值独立复算一致） |
 | 13 | "db_bench 测试数据：fillrandom、readrandom、seekrandom 的 OPS 指标" | 819 行原始测量入档（含 INVALID 污染行不删除），headline-final 覆盖三 workload | `benchmark.csv` | ✅ 满足 |
 | 14 | "目标仓库 rv2036/rvspoc-S2605-rocksdb，提交方式：Pull Request" | fork 分支已全量推送、upstream remote 已配、PR 正文与命令就绪——PR 本身待用户放行（HOLD） | `docs/plan.md` 阶段 4；`docs/PR-BODY.md` | ❌ 未满足（PR 未开；全部前置就绪，截止 2026-08-31 AoE） |
 | 15 | "包含完整源代码或二进制文件、配置文件、依赖库、补丁文件" | 全部改动以源码 commit 形式在分支上（无二进制先行） | 分支 diff vs `11.1.fb`；`Makefile`；`docs/REPRODUCE.md` | ✅ 满足 |
@@ -33,10 +33,11 @@
 1. **【最重要】PR 未开**（#14）：全部交付物就绪、分支已推 fork，但
    PR 处 HOLD 且截止仅余 ~1 天——当前唯一硬缺口，属流程决策而非
    工程缺失。
-2. **60min 压测证据薄**：ACCEPTANCE 声称的 avg TPS"各 361×10s 采样"
-   无法从归档证据复推（日志仅存 tail；rmq-samples.csv 为健康采样）。
-   失败计数器全 0 与 RSS 无 OOM 可核实，均值数字属"文档声称"。
-   【已修复：ACCEPTANCE 措辞降级 + 注明可核性边界】
+2. **60min 压测证据薄**：审计时仓内仅存日志 tail，均值不可复推。
+   【已闭合：完整原始日志（producer 361 采样 / consumer 361 采样）
+   在板上 /root/rmq-stress/ 找回并归档至 profile/rmq-stress/，独立
+   复算 send mean=6056 / consume mean=6117 / 失败计数全 0，与文档
+   声称逐位一致】
 3. **小数字出入**：ACCEPTANCE 记 bloom 差分"603990/0"（板，早期
    harness 版本），QEMU 现版日志为 606990/0（后续补充了未对齐用
    例）。【已修复：ACCEPTANCE 加注】
