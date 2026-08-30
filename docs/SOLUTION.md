@@ -39,6 +39,23 @@ clmul 折叠（6.4~7.0 倍）→ slice-by-8 原实现。中间层的存在改变
 保险，但更重要的后果在第三节——性能归因需要把配置空间逐维拆开，
 没有独立开关就没有归因实验。
 
+**异构多核（赛题点名的第二个优化方向）**：思路是把吞吐型后台
+工作（compaction/flush）与延迟敏感的前台读写分离到不同核簇——
+LX5000 是 32 性能核 + 16 能效核，compaction 抢占前台核与内存带宽
+正是 P99 的直接威胁。实现为 RocksDB 后台线程池的亲和性钩子
+（util/threadpool_imp.cc）：按池设环境变量
+`ROCKSDB_BG_{LOW,HIGH,BOTTOM}_CPUS` 即可把对应线程 pin 到指定核簇，
+不设则行为与原版逐字节一致（riscv-only、默认关闭、非 riscv 构建
+预处理不变）。配套交付了评测机上的 P/E 簇发现方法（读
+cpufreq policy 的 max_freq 分簇）与前台 taskset 配方，见
+REPRODUCE.md"异构多核"节。诚实声明：该机制在我们的 K3 上**无法
+产生有效 A/B 数字**——K3 的 8 个 A100 协处理核被内核保留（用户态
+affinity 直接 EINVAL），可调度核只有同构的 8 个 X100，没有异构
+簇可分离；机制的正确性已验证（变量解析/绑核路径），收益幅度只能
+在评测机的真实 P/E 拓扑上兑现。这也是所有单线程测点必须 taskset
+绑核的原因：不绑核时 t1 基准可能落到能效核，基线与优化档双向失真
+（REPRODUCE 中列为测量告诫）。
+
 默认启用的改动：CRC 三层阶梯、Slice 比较的 RVV 首异定位、
 FastLocalBloom 探测向量化、Zbb 无分支 varint32 解码、索引块
 restart-key 前缀旁路、二分探测双路 prefetch（zicbop）、自旋
