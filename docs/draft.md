@@ -506,3 +506,15 @@ sidecar+binseek-prefetch 后 read t8 −7.9%（0/5）、read t1 −10.1%
 非负（read t8 +8.8% 5/0、read t1 +13.4% 3/0）。与主板 vfinal
 （V2 新鲜 PGO 全胜）合并：GP 异常唯一根因 = 陈旧 profile；
 kernel 组合无罪。终版交付 = V2 配方维持。
+
+## 推荐测试环境兼容性（2026-08-30，用户质询触发）
+
+赛题推荐 QEMU virt `-cpu rv64,v=true,vlen=256`。逐扩展实测
+（qemu 8.2.2，证据 profile/evidence/qemu-compat/）：zba/zbb/zbs 过、
+prefetch（ORI hint 编码）过、**zicond 的 czero.eqz SIGILL**（-cpu
+rv64 默认关，max 才开）。交付 V2 二进制含 418 条 czero → 在推荐
+环境会直接非法指令。VLEN=256 本身零风险（K3 即 256，全部硅上数据
+在 256 下产生）。处置：交付 march 摘除 zicond
+（rv64gcv_zba_zbb_zbs_zicbop），现场新鲜 PGO 重建 V2Z + S0 配对
+headline 重测（运行中）；zicond 作为 RVA23 硬件的可选覆盖项写入
+REPRODUCE（LX5000 真硬件必有 Zicond，但推荐测试环境优先）。

@@ -1,0 +1,12 @@
+# Contest-recommended QEMU env compatibility test (2026-08-30)
+# qemu-riscv64 8.2.2, cmdline per contest page: -cpu rv64,v=true,vlen=256
+# binary: exttest.c built with -march=rv64gcv_zba_zbb_zbs_zicbop_zicond (gcc-14 cross)
+zba (sh3add):      OK
+zbb (ctz):         OK
+zbs (bexti):       OK
+zicond (czero.eqz): SIGILL (rc=132)   <-- zicond defaults OFF on -cpu rv64
+zicbop (prefetch.r): OK (ORI-hint encoding, no-op without the extension)
+# -cpu max: zicond OK
+# Consequence: old delivery binary carried 418 czero insns -> would SIGILL
+# under the recommended env. Delivery march changed to
+# rv64gcv_zba_zbb_zbs_zicbop (zicond dropped), V2Z rebuild + headline rerun.

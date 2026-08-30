@@ -10,7 +10,7 @@ cd "$(dirname "$0")"
 ST=fin.status
 step() { echo "$(date +%H:%M:%S) $1" >> $ST; }
 : > $ST
-MARCH=rv64gcv_zba_zbb_zbs_zicbop_zicond
+MARCH=rv64gcv_zba_zbb_zbs_zicbop
 CHK=/root/rocksdb-s2605-check
 
 step SUBSET_SYNC
