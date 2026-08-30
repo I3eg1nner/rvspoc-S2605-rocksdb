@@ -26,34 +26,34 @@ vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。
 标量基线（PORTABLE=1 rv64gc，objdump 零向量指令验证）：见
 benchmark.csv `scalar-baseline` 行。
 
-**主表（终版 V2Z，2026-08-30 headline-v2z：S0 = stock 等价标量 -O2
-基线【零向量指令，objdump 验证】 vs V2Z = 交付配置
-【march rv64gcv_zba_zbb_zbs_zicbop（无 zicond）+ -O3 + 现场新鲜
-PGO + 裁决 kernel 集，czero=0 验证】；同会话直接配对、顺序轮换、
-静板、sha 锁定；生数据 benchmark.csv `headline-v2z`）**：
+**主表（终版 V2，2026-08-30 headline-final：S0 = stock 等价标量 -O2
+基线【零向量指令，objdump 验证】 vs V2 = 交付配置
+【march rv64gcv_zba_zbb_zbs_zicbop_zicond + -O3 + 现场新鲜 PGO +
+裁决 kernel 集】；同会话直接配对、顺序轮换、静板、sha 锁定；生数据
+benchmark.csv `headline-final`）**：
 
-| 测点 | S0 (ops/s) | V2Z | Δ | 逐轮符号 |
+| 测点 | S0 (ops/s) | V2 | Δ | 逐轮符号 |
 |---|---|---|---|---|
-| B readrandom t1 | 62676 | 81160 | **+29.5%** | 4/4（+28.5~+32.1，两轮 ≥30） |
-| B readrandom t8 | 445190 | 553838 | **+24.4%** | 6/6 |
-| A seekrandom t1 | 12697 | 15699 | **+23.6%** | 4/4 |
-| A seekrandom t8 | 88540 | 105179 | **+18.8%** | 6/6 |
-| B fillrandom t1 | 70717 | 75265 | **+6.4%** | **6/6** |
+| B readrandom t1 | 62662 | 82455 | **+31.6%** | 4/4（+29.7~+38.2） |
+| B readrandom t8 | 449171 | 566262 | **+26.1%** | 6/6 |
+| A seekrandom t1 | 12740 | 15837 | **+24.3%** | 4/4 |
+| A seekrandom t8 | 89100 | 107906 | **+21.1%** | 6/6 |
+| B fillrandom t1 | 68499 | 71258 | **+4.0%** | 4/6（混合） |
 
-**P99（readrandom t8, --histogram）**：S0 P50/P99 = 11.85/42.99 µs
-→ V2Z = 8.31/**33.88** µs（P99 改善 **−21.2%**、P50 −29.9%）。
+**P99（readrandom t8, --histogram）**：S0 41.64 µs → V2 **33.88** µs
+（**−18.6%**，P50 −30.6%）。
 
-**zicond 变体（仅限确认有 Zicond 的硬件，如 RVA23 的 LX5000）**：
-march 加回 `_zicond` 的 V2 同协议实测 read t1 +31.6%（4/4）/
-read t8 +26.1% / seek +21~24% / fill +4.0%（benchmark.csv
-`headline-final` 行）——含 418 条 czero 指令，在赛题推荐测试环境
-QEMU `-cpu rv64,v=true,vlen=256` 下会 SIGILL（QEMU 8.2 与最新
-11.1.1 实测 zicond 默认均关，证据 profile/evidence/qemu-compat/），
-故**默认交付不含 zicond**，该变体作为 REPRODUCE 中的可选覆盖项。
+**QEMU 安全变体 V2Z（march 去 _zicond，czero=0）**：赛题推荐测试
+环境 `-cpu rv64,v=true,vlen=256` 下 zicond 默认关（QEMU 8.2 与
+11.1.1 实测），含 czero 的 V2 会 SIGILL——QEMU 验证请按 REPRODUCE
+加 zicond=true 或改用 V2Z。V2Z 同协议实测：read t1 +29.5%（4/4）/
+read t8 +24.4%（6/6）/ seek +18.8~23.6% / fill +6.4%（6/6）/ P99
+−21.2%（benchmark.csv `headline-v2z`；V2Z 已在 QEMU 11.1.1 按赛题
+原样命令行端到端跑通，证据 profile/evidence/qemu-compat/）。
 
-30% 最严口径判定（三项各自 ≥30%）：V2Z 的 read t1 +29.5%（4 轮中
-2 轮 ≥30）贴线未达，其余未及，fill 差距大；zicond 变体 read t1
-+31.6% 达标但推荐测试环境不可运行。两个口径的数据均如实入档。
+30% 最严口径判定（三项各自 ≥30%）：**readrandom t1 +31.6% 达标**；
+readrandom t8 +26.1%、seekrandom +21~24% 未及；fillrandom +4.0%
+差距大。
 
 **归因表（收益来源分解；全部同会话交错、sha 锁定，原始行在
 benchmark.csv 的 sp-control / variants-attrib / vfinal-decision /

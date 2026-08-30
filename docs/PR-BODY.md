@@ -31,16 +31,33 @@
 
 ## 性能（SpacemiT K3 实测；诚实归因）
 
-同会话直接配对（stock 等价标量 -O2 基线 S0 vs 交付 V2Z）：
-**read t1 +29.5% / read t8 +24.4% / seek t1 +23.6% / seek t8 +18.8%
-/ fill +6.4%，逐轮符号全一致；P99（read t8）−21.2%**。收益来源已
-分解：通用 O3+PGO 份额与 riscv 专有份额分别记账，PGO 必须在目标机
-现场训练（陈旧 profile 实测反噬 3~10 点，已根因化）。交付 march
-不含 zicond：赛题推荐测试环境 QEMU `-cpu rv64,v=true,vlen=256` 下
-zicond 默认关（8.2 与最新 11.1.1 均实测），交付二进制已在该环境
-端到端跑通；zicond 变体（read t1 +31.6%）保留为 RVA23 硬件可选项。
-主表、归因表与全部原始数据：docs/ACCEPTANCE.md 二节 +
-benchmark.csv。
+同会话直接配对（stock 等价标量 -O2 基线 S0 vs 交付 V2）：
+**read t1 +31.6% / read t8 +26.1% / seek t1 +24.3% / seek t8 +21.1%
+/ fill +4.0%，读/seek 逐轮符号全一致；P99（read t8）−18.6%**。收益
+来源已分解：通用 O3+PGO 份额与 riscv 专有份额分别记账，PGO 必须在
+目标机现场训练（陈旧 profile 实测反噬 3~10 点，已根因化）。主表、
+归因表与全部原始数据：docs/ACCEPTANCE.md 二节 + benchmark.csv。
+
+## ⚠ 关于推荐测试环境（QEMU）的已知问题
+
+交付 march 含 **Zicond**（RVA23U64 必选扩展，验证平台 LX5000 必有，
+读侧贡献约 2 个点）。但赛题推荐测试环境
+`qemu -cpu rv64,v=true,vlen=256` 中 **zicond 默认关闭**（QEMU 8.2
+与最新 11.1.1 均实测确认，证据 profile/evidence/qemu-compat/），
+交付二进制含 418 条 czero 指令，在该命令行下会 SIGILL。在 QEMU 中
+验证本 PR 时请二选一：
+1. 命令行加 `zicond=true`（`-cpu rv64,v=true,vlen=256,zicond=true`）
+   或改用 `-cpu max,vlen=256`；
+2. 构建 QEMU 安全档：`RISCV_RVV_MARCH=rv64gcv_zba_zbb_zbs_zicbop`
+   （czero=0，已在 QEMU 11.1.1 按推荐命令行端到端跑通三 workload；
+   同协议实测 read t1 +29.5%、fill +6.4%，数据在档）。
+另外 Makefile 支持**自适应交付**：未显式指定 RISCV_RVV_MARCH 时，
+原生构建逐项探测本机扩展自动组装 march（在 LX5000/K3 上一条
+`RISCV_RVV=1 make` 即得含 zicond 的完整配置），交叉构建自动落
+QEMU 安全集。
+另注意：K3 目标发行版（Bianbu）的系统库本身含 czero（libgflags 等），
+在 zicond-off 的 QEMU 中任何程序都会崩——QEMU 验证需搭配与该 CPU
+扩展集匹配的依赖库（如 Ubuntu ports 的 rv64gc 基线库）。
 
 ## 正确性证据链（全部留痕于 profile/evidence/）
 
