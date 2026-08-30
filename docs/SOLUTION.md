@@ -108,14 +108,14 @@ PORTABLE 构建中按设计常驻的 CRC 向量 TU 使二进制含向量指令�
 
 ### 3.2 一个矛盾及其分解
 
-初版交付配置（RVA23 必选子集 march + O3 + PGO + 全部 kernel）对
+初版交付配置（RVA23 子集 march + O3 + PGO + 全部 kernel）对
 标量 -O2 基线的增益为 +10%~+27%。这组数字混合了两类来源：O3 与
 PGO 属于任何架构都可获得的通用编译收益，march 与 kernel 属于
 RISC-V 专有工作。二者必须分开，否则"RVV 优化的收益"无从谈起。
 
 分离的手段是三臂对照：S0（stock 等价标量 -O2）、SP（同源 +
 O3+PGO，无任何 riscv 专有改动）、GP（当时的交付二进制）。测量
-结果构成一个矛盾：SP 在全部五个测点超过 GP（逐轮符号 6/6、6/6、
+结果构成一个矛盾：SP 按中位数在全部五个测点超过 GP（逐轮符号 6/6、6/6、
 4/4、3/3、2/3）——若 riscv 专有工作的净贡献为正，这不应发生。
 
 矛盾有三种候选解释：全局向量 march 的自动向量化在该负载上为负；
@@ -125,7 +125,8 @@ profile 训练于数天前的另一会话，已经失效。三种解释可以逐
 
 - 只加全局 march（V1）：相对 SP 损失 0~2 个点——march 不是主因；
 - 只加 CRC 阶梯（V3）：与 SP 持平——CRC 无代价；
-- 在第二块 K3 上做单变量拔除：从 V5 形态中移除 sidecar 与二分
+- 在第二块 K3 上做单变量拔除：从 V5（当时的候选交付形态，≈SP
+  加非向量 kernel 全集）中移除 sidecar 与二分
   prefetch，read 反而下降 8~10%（逐轮 0/5、0/3）——kernel 组合
   不是负资产，方向相反；
 - 同一交付配置以当前板况重新训练 PGO（V2）：反超 SP，读 +9.5%
@@ -157,13 +158,13 @@ march（含 zicond）+ O3 + 现场新鲜 PGO + 裁决后 kernel 集。
 关闭它（8.2 与源码自建的 11.1.1 均实测），含 czero 的 V2 在该命令
 行下会非法指令。构建因此做成**自适应**：原生构建逐项探测本机扩展
 自动组装 march（评测机上一条命令即得正确配置），交叉/QEMU 目标
-构建落无 zicond 安全集——安全集变体（V2Z）同协议实测 read t1
+构建落无 zicond 安全集——QEMU 安全变体 V2Z同协议实测 read t1
 +29.5%、fill +6.4%（6/6）、P99 −21.2%，并已在 QEMU 11.1.1 按赛题
 原样命令行端到端跑通（证据 profile/evidence/qemu-compat/）。
 
-按"三项各自 ≥30%"的最严口径：readrandom t1 贴线（29.5%；zicond
-变体 31.6%），readrandom t8 与 seekrandom 未及，fillrandom 差距
-显著。
+按"三项各自 ≥30%"的最严口径：readrandom t1 **+31.6% 达标**（QEMU
+安全变体 V2Z 为 +29.5%，贴线），readrandom t8 与 seekrandom 未及，
+fillrandom 差距显著。
 
 fillrandom 的差距可以从火焰图直接解释：写路径的最大热点是
 skiplist 指针追逐（13.8%）与比较器（15.1%），二者的开销是依赖链
@@ -181,7 +182,7 @@ kernel 单点加速 8 倍，在此类负载中折算到端到端仅 1~2%。写�
 正确性与"落在哪一级"，不保证收益幅度。
 
 **PGO 的现场性**：headline 依赖评测机上现场训练；若评测流程不允许
-现场训练，退化幅度可由归因表的 GP 行估计（−3~−10 个点）。
+现场训练，退化幅度可由 ACCEPTANCE 二节归因表的 GP 行估计（−3~−10 个点）。
 
 **RocketMQ 5.5.0 的 JNI 部署**（赛题硬性要求）：这一步不是打包
 动作而是移植工作——RocketMQ 5.5.0 的 DefaultMessageStore 无条件
@@ -203,16 +204,16 @@ RocksDB 存储启动并扛过压测，本身就是该要求的验收证据。
 RVV 档 send TPS **+5.9%** 为唯一显著优项，128K 饱和场景精确 put
 记账 **−3.9%** 为唯一显著劣项。因此矩阵支撑的硬结论是稳定性（零
 丢失链全绿），TPS 上不主张系统性优势；逐场景数表与 24 格 MANIFEST
-在 ACCEPTANCE 二 b。P99 的本地证据来自 db_bench 直方图（上表
-−21.2%）；RocketMQ 自带 benchmark 不输出分位数，RocketMQ 侧无 P99
+在 ACCEPTANCE 二 b。P99 的本地证据来自 db_bench 直方图（3.3 节
+主表 −18.6%，V2Z 为 −21.2%）；RocketMQ 自带 benchmark 不输出分位数，RocketMQ 侧无 P99
 数据，如实声明。
 
 **样本量**：每测点 3~6 轮配对，稳健性以逐轮符号一致性表述而非
-置信区间；原始行全部在 benchmark.csv，独立审计 agent 已复算一遍，
-与文档逐位一致。
+置信区间；原始行全部在 benchmark.csv；headline 五个百分比已由独立审计 agent
+从原始行复算，与文档逐位一致。
 
 **否决记录**：candidates.jsonl 保留每个被拒候选及其数据（xxhash
-负收益、短 key 内联层被 RVV vfirst 路径反超、LTO 使读下降 23%、
+负收益、短 key 内联层被 RVV vfirst 路径反超、LTO 单独启用高方差无结论未采用、
 zvbb 加入 march 后编译器未发射任何向量位操作指令）。RocketMQ 矩阵
 过程中排除的五个环境级障碍（broker 冷启流控、riscv64 JDK21 C2 JIT
 崩溃、rocksdbjni 向 tmpfs 泄漏 404MB/次、客户端冷启单发超时、128K

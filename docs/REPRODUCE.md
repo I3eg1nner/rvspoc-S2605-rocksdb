@@ -24,7 +24,9 @@ PORTABLE=1 RISCV_NO_RVV_CRC32C=1 DISABLE_WARNING_AS_ERROR=1 \
 # 运行 S0 时再加环境门（防 Zbc 标量 CRC 档在有 Zbc 硬件上启用）：
 #   ROCKSDB_ZBC_CRC32C=0 ./db_bench ...
 # objdump -d db_bench | grep -c vsetvli  # 必须 =0
-# 交付 RVV 构建（全程序 -march=rv64gcv_zicbop + 运行时分派的 Zvbc CRC）
+# RVV 构建（未显式给 march 时自适应：原生构建探测本机扩展组装完整
+# 交付 march；交叉构建回落最小基线 rv64gcv_zicbop。均含运行时分派
+# 的 Zvbc/Zbc CRC 阶梯）
 PORTABLE=1 RISCV_RVV=1 DISABLE_WARNING_AS_ERROR=1 make -j6 db_bench DEBUG_LEVEL=0
 # RVA23 必选扩展子集档 = 交付 march（非完整 profile；
 # +zba/zbb/zbs/zicbop/zicond，启用 zbb-varint）。Zicond 为 RVA23U64
@@ -36,7 +38,8 @@ PORTABLE=1 RISCV_RVV=1 DISABLE_WARNING_AS_ERROR=1 make -j6 db_bench DEBUG_LEVEL=
 # 另：**自适应交付**——原生构建（如在 LX5000/K3 上）未显式给
 # RISCV_RVV_MARCH 时，Makefile 逐项探测本机 /proc/cpuinfo 与编译器
 # （zba/zbb/zbs/zicond），自动组装出与本机匹配的交付 march（K3 实测
-# 得 rv64gcv_zba_zbb_zbs_zicond_zicbop）；交叉构建自动落安全集
+# 得 rv64gcv_zba_zbb_zbs_zicond_zicbop——与显式交付串仅扩展顺序
+# 不同，语义等价）；交叉构建自动落安全集
 # rv64gcv_zicbop。即：在评测机上 `RISCV_RVV=1 make` 一条命令即得
 # 正确交付配置，无需手工判断 zicond。
 PORTABLE=1 RISCV_RVV=1 RISCV_RVV_MARCH=rv64gcv_zba_zbb_zbs_zicbop_zicond \
@@ -83,7 +86,7 @@ RISCV_RVV=1 RISCV_RVV_MARCH=$MARCH PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 \
 对比口径声明：A/B 的**运行参数**（seed/num/threads/flags）完全相同；
 **编译配置**（march/O3/PGO/kernel 默认开关）不同——编译配置正是被测
 变量。为把"通用 O3+PGO 收益"与"RISC-V/RVV 专有收益"分离，另有
-S0（stock 等价 O2）/ SP（S0 源 + O3+PGO 同训练集）/ G（交付）三臂
+S0（stock 等价 O2）/ SP（S0 源 + O3+PGO 同训练集）/ GP（初版交付、陈旧 PGO，后作废）三臂
 对照（`rvv-ci/scalar_pgo_control_job.sh`，结果见 ACCEPTANCE 二节）。
 
 **双工具链**（评审环境公告"以 LLVM 为核心"）：以上配方对 gcc 与
@@ -136,6 +139,8 @@ docker run --rm -v "$PWD:/w" -w /w s2605-rvv-ci sh rvv-ci/run_matrix.sh rvv-ci/c
 docker run --rm -v "$PWD:/w" -w /w s2605-rvv-ci sh rvv-ci/run_matrix.sh rvv-ci/memcmp_diff.cc
 docker run --rm -v "$PWD:/w" -w /w s2605-rvv-ci sh rvv-ci/run_matrix.sh rvv-ci/xxh3_diff.cc rvv-ci/xxh3_ref.cc
 docker run --rm -v "$PWD:/w" -w /w s2605-rvv-ci sh rvv-ci/run_matrix.sh rvv-ci/bloom_diff.cc
+docker run --rm -v "$PWD:/w" -w /w s2605-rvv-ci sh rvv-ci/run_matrix.sh rvv-ci/xxph3_diff.cc rvv-ci/xxph3_ref.cc
+docker run --rm -e MARCH=rv64gcv_zvbc_zba_zbb_zbs_zicond -v "$PWD:/w" -w /w s2605-rvv-ci sh rvv-ci/run_matrix.sh rvv-ci/varint_diff.cc util/coding.cc
 # 矩阵 = QEMU vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s
 # 全量测试（板上，TEST_TMPDIR 必须落盘）
 TEST_TMPDIR=$HOME/rocksdb-test-tmp PORTABLE=1 [RISCV_RVV=1] make -j6 J=6 check
@@ -145,7 +150,8 @@ TEST_TMPDIR=$HOME/rocksdb-test-tmp PORTABLE=1 [RISCV_RVV=1] make -j6 J=6 check
 ## 基准（rvv-measure 纪律：固定 seed、中位数、环境快照、空载+performance governor）
 
 见 benchmark.csv（生数据逐行）与 profile/env-board-*.txt。命令模板见
-rocksdb-s2605-rvv 树内 run_baseline.sh / run_ab_rvv.sh。
+rvv-ci/ 下的作业脚本（board_final_job.sh、scalar_pgo_control_job.sh、
+vfinal_job.sh——同会话交错/静板门/顺序轮换协议已脚本化）。
 
 ## 异构多核（32P+16E，LX5000）调度优化
 
@@ -171,6 +177,24 @@ done   # max_freq 高的一簇 = P 核；亦可对照 /proc/cpuinfo 的 uarch/ma
 **测量告诫**：t=1 基准若不绑核可能落到 E 核，基线与优化档双向失真
 ——所有单线程点必须 `taskset` 绑 P 核（K3 上 A100 簇被内核保留、
 进程天然只落 X100，故 K3 历史数据无此风险；实测记录见 draft.md）。
+
+## 开关一览（kill switches）
+
+构建期（make 变量 / 宏）：
+- `RISCV_RVV=1`：启用 RVV 层；`RISCV_RVV_MARCH=<串>` 显式钉 march
+  （不给则原生自适应，见上）
+- `RISCV_RVV_XXHASH=1` / `RISCV_RVV_SHORTKEY=1`：重开被 K3 配对
+  裁决默认关闭的 XXH3-RVV / 16B 内联短 key 比较
+- `RISCV_NO_RVV_CRC32C=1`：连 Zvbc CRC TU 一起摘除（构建零向量
+  指令的 stock 等价基线用）
+- S0 基线宏集：`-DROCKSDB_DISABLE_{SHORTKEY_CMP,INDEX_SIDECAR,
+  BINSEEK_PREFETCH,RISCV_PAUSE,ZBB_VARINT,RVV_MEMCMP,RVV_XXHASH,
+  RVV_BLOOM}`（见上文 S0DIS）
+运行期（环境变量）：
+- `ROCKSDB_RVV_CRC32C=0/1`、`ROCKSDB_ZBC_CRC32C=0/1`：CRC 阶梯
+  两级的强制关/开（=1 仍需硬件位）
+- `ROCKSDB_BG_{LOW,HIGH,BOTTOM}_CPUS=<核列表>`：后台线程池亲和
+  （异构调度，见下节；不设 = 原版行为）
 
 ## RocketMQ 5.5.0（riscv64）
 

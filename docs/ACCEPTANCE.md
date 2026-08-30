@@ -1,4 +1,6 @@
-# S2605 验收报告（草案 — 交用户验收，PR 暂缓）
+# S2605 验收报告
+
+（状态：待用户验收，PR 暂缓；放行 PR 时删除本括注）
 
 分支 `s2605-rvv`（基于 v11.1.1 = upstream `11.1.fb`）。
 验证硬件：SpacemiT K3（8×X100，VLEN 256，+zvbb/zvbc）；QEMU 8.2
@@ -17,7 +19,7 @@ vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。
 | VLEN 128/256/512 自适应 | ✅ | 全部 vsetvl 驱动；QEMU 三 VLEN + 敌意 flags 矩阵全绿；无任何编译期 VLEN 假设 |
 | `#ifdef __riscv_vector` 隔离 / x86 ARM 不变 | ✅ | aarch64 g++ 预处理输出 token 级一致（slice/xxhash/bloom）；新 TU 非 riscv 下零代码 |
 | 禁第三方 RISC-V 适配代码 | ✅ | 全部第一方（rvv-wiki 自有工件移植 + 本会话新写）；常数运行时推导非拷贝 |
-| make check / db_test 全过 | ✅（标量参考树） | 38934 项：18 失败全部归因并修复/排除——16×range_locking = v11.1.1 上游 bug（用户态 rdcycle SIGILL→rdtime 修复，17/17 过）；options_settable = padding 计数脆弱（offsetof 可移植排除，4/4 过）；prefetch_test 过载 flaky（串行 104/104 过）。**RVV 构建全量 check ✅（2026-08-24 第三轮）：38934 项全过**——首轮 161 失败系 gcc 15.2 对 XXH3 RVV 混 SEW 模式的错误代码生成（已修复并三工具链复验），第三轮仅余 2 项报告失败且均系环境残留/负载 flaky（串行复跑全绿）。⚠ 证据链已重建（原第三轮日志随构建目录在磁盘清理中丢失，"38934"口径无法复推、就此作废）：**check3 留痕重跑（board2，HEAD 树 23285a41，2026-08-29）——并行段 29589/29589 用例跑完，唯一失败 prefetch_test**；分诊：同板同树**纯标量构建以逐位相同的断言值 + 相同析构段错误同样失败**（profile/evidence/check3/prefetch-scalar-control.log）⇒ 环境/上游敏感断言（compaction readahead 统计对内核/存储行为敏感；该用例在主板曾串行通过），**与 RVV 移植无关**。check 尾部：check_all_python ✅、ldb_test ✅、dump_test ✅（board2 初次失败系缺 gflags 致工具 stub，装库重建后 RC=0）。gnu_parallel joblog 全量归档 profile/evidence/check3/ |
+| make check / db_test 全过 | ✅（check3 留痕运行为准） | **check3（board2，HEAD 树 23285a41，2026-08-29）：并行段 29589/29589 用例跑完，唯一失败 prefetch_test 经同板同树纯标量对照（逐位相同断言值+相同段错误，profile/evidence/check3/prefetch-scalar-control.log）归因环境敏感断言，与 RVV 移植无关**；check 尾部 check_all_python/ldb_test/dump_test 全 ✅（dump 初次失败系缺 gflags 工具 stub，装库重建后 RC=0）；joblog 全量归档 profile/evidence/check3/。历史口径注：早期两轮（标量参考树 38934 项 18 失败全归因修复；RVV 树第三轮"全过"，首轮 161 失败系 gcc 15.2 混 SEW 误编译已修）之原始日志在磁盘清理中丢失，其计数口径已作废，效力以本行 check3 证据为准 |
 | RocketMQ 5.5.0 60min 压测 | ✅ **PASS**（2026-08-24） | 交付树 rocksdbjni-11.1.1（RVV 档）：全程 60min 持续负载，avg Send TPS **6056** / Consume TPS **6117**（各 361×10s 采样；完整 producer/consumer 原始日志已从板上回收归档至 profile/rmq-stress/，审计后独立复算均值与本行逐位一致：send mean 6056/median 6104、consume mean 6117，Send Failed/Consume Fail 全程 0）；**Send/Response/Consume Failed 全 0**（零丢失零损坏）；broker RSS 1.9→3.0G 无 OOM |
 | AI 披露 | ✅ | 本工作区 git 历史 + rvv-wiki 页引用轨迹（draft.md 逐候选记录页 id/置信度）+ wiki 回灌记录 |
 
@@ -63,7 +65,7 @@ headline-v2z 标签下）**：
 |---|---|---|
 | S0 | stock 等价标量 -O2（零向量指令） | 基线 |
 | SP | S0 + O3 + 现场 PGO（无 riscv 改动） | +15~16% / +16~17% / +7~11%（通用编译份额） |
-| V2Z/V2 | SP + march + 裁决 kernel 集（riscv 专有份额） | +5~9% / +2~5% / 约 −4~0%（符号一致 5/5、6/6） |
+| V2Z/V2 | SP + march + 裁决 kernel 集（riscv 专有份额） | +5.3~9.5% / +2.0~5.1% / 约 −4~0%（符号一致 5/5、6/6） |
 | GP（作废） | V2 同配置 + **陈旧 PGO profile** | 相对 SP 反而 −3~−10% → 根因化后作废，"现场训练"成为 REPRODUCE 硬性步骤 |
 
 单变量对照另证 sidecar+binseek-prefetch 为强正贡献（拔除代价
@@ -130,7 +132,8 @@ v11.1.1 全树 ARM 专属优化共 6 处（`grep -rl 'arm_neon|__aarch64__|ARM_F
 协议分块（详见 profile/rmq-matrix/MANIFEST.md，24 终格逐格列明）：
 1K 块 = v5b（无预热）；16K 块 = v6.1/v6.2（+45s 预热丢弃段、JDK21
 C2 JIT 单方法排除、/tmp 泄漏回收、Send-Failed 60s 窗口规则）；128K
-backlog = v6.3（再 + producer -w 8→4，两臂同规，防饱和）。所有协议
+backlog = v6.3（再 + producer -w 8→4，两臂同规，防饱和）；128K
+normal = v6.2。所有协议
 变更均在计算相应块的臂间对比**之前**预注册并落盘；零丢失不变量
 （put 偏移精确记账 + 排空到 0 + Response/Consume Failed==0）全程
 fail-closed 未动。accounting.txt 追加式保留全部 28 条完成行（含被
@@ -151,7 +154,13 @@ put = 300s 测量窗精确记账差）**：
 
 按 put 口径如实概括：**六场景中三个小幅回退**（1K normal −0.66%、
 16K normal −1.50%、128K backlog −3.85%）、两个持平微升、16K backlog
-+0.35%（其 send TPS +5.93% 为 RVV 唯一显著优项）。※128K backlog 的
++0.35%（其 send TPS +5.93% 为 RVV 唯一显著优项）。
+
+※2 scalar-s131072-normal-ba 记录 send_failed_60s=1：标量臂、预注册
+60s 冷启窗口内的单发客户端超时，规则允许并逐格记账，不影响零丢失
+结论。
+
+※128K backlog 的
 send TPS 中位数受强顺序效应支配（ab≈2×ba、两臂皆然：中位数落在
 "producer 独跑/与排空并发"双峰之间），以 put 记账为准。
 
@@ -169,12 +178,15 @@ producer-warmup.log）。
 
 **落盘证据索引（profile/evidence/）**：qemu-matrix/ = 6 kernel ×
 3 VLEN × 敌意 ta/ma 全 PASS 的逐项日志 + 工具版本/命令/退出码/sha256
-清单（MANIFEST.txt，树 commit 记录在内）；check3（board2 重跑）完成后
-同目录归档。RocketMQ 24 终格完整身份链在 profile/rmq-matrix/（含
+清单（MANIFEST.txt，树 commit 记录在内）；check3 归档于同目录（含 joblog、
+分诊日志与 sha256）。RocketMQ 24 终格完整身份链在 profile/rmq-matrix/（含
 MANIFEST.md）。
 
-1. 每 kernel 差分（板 + QEMU 3 VLEN × 敌意 ta/ma）：crc 4438/0、
-   memcmp 49279/0、xxh3 30032/0、bloom 603990/0。
+1. 每 kernel 差分（板 + QEMU 3 VLEN × 敌意 ta/ma；括号外为当时
+   板上计数，QEMU 现版 harness 用例更多）：crc 4438/0（QEMU 现版
+   5219/0，含 Zbc 层）、memcmp 49279/0、xxh3 30032/0、bloom
+   603990/0（QEMU 现版 606990/0）。全套现版日志见
+   profile/evidence/qemu-matrix/。
 2. 持久化位相同**双向闭环**：标量写 12.6M 条 → RVV 读全扫零
    Corruption；RVV 写 12.64M 条 → 标量读全扫零 Corruption
    （2026-08-24，块 CRC 双向全验）。

@@ -7,7 +7,7 @@
 ## 交付内容
 
 **RVV/RISC-V kernel（默认启用者）**
-- CRC32C 三层分派阶梯：Zvbc 向量 clmul 折叠（K3 微基准 4KB 8.1x）
+- CRC32C 三层分派阶梯：Zvbc 向量 clmul 折叠（SpacemiT K3 开发板微基准 4KB 8.1x）
   → Zbc 标量 clmul 折叠（raw .insn 编码、任意工具链可编译；6.4~7.0x）
   → slice-by-8。折叠常数运行时 GF(2) 推导并自验证，无魔数；持久化
   格式与标量位相同（双向交叉验证）。clang ≤19 无 vclmul intrinsics
@@ -31,11 +31,13 @@
 
 ## 性能（SpacemiT K3 实测；诚实归因）
 
-同会话直接配对（stock 等价标量 -O2 基线 S0 vs 交付 V2）：
+同会话直接配对（stock 等价标量 -O2 基线 S0 vs 交付 V2 =
+`RISCV_RVV_MARCH=rv64gcv_zba_zbb_zbs_zicbop_zicond` + -O3 + 目标机
+现场训练 PGO + 裁决 kernel 默认集）：
 **read t1 +31.6% / read t8 +26.1% / seek t1 +24.3% / seek t8 +21.1%
 / fill +4.0%，读/seek 逐轮符号全一致；P99（read t8）−18.6%**。收益
 来源已分解：通用 O3+PGO 份额与 riscv 专有份额分别记账，PGO 必须在
-目标机现场训练（陈旧 profile 实测反噬 3~10 点，已根因化）。主表、
+目标机现场训练（陈旧 profile 实测倒退 3~10 个点，已根因化）。主表、
 归因表与全部原始数据：docs/ACCEPTANCE.md 二节 + benchmark.csv。
 
 ## ⚠ 关于推荐测试环境（QEMU）的已知问题
@@ -53,15 +55,16 @@
    同协议实测 read t1 +29.5%、fill +6.4%，数据在档）。
 另外 Makefile 支持**自适应交付**：未显式指定 RISCV_RVV_MARCH 时，
 原生构建逐项探测本机扩展自动组装 march（在 LX5000/K3 上一条
-`RISCV_RVV=1 make` 即得含 zicond 的完整配置），交叉构建自动落
-QEMU 安全集。
+`RISCV_RVV=1 make` 即得含 zicond 的完整配置），交叉构建自动回落
+最小安全基线 rv64gcv_zicbop（注意这不等于上面第 2 项的 V2Z march
+——复现 V2Z 数据请显式传其 march）。
 另注意：K3 目标发行版（Bianbu）的系统库本身含 czero（libgflags 等），
 在 zicond-off 的 QEMU 中任何程序都会崩——QEMU 验证需搭配与该 CPU
 扩展集匹配的依赖库（如 Ubuntu ports 的 rv64gc 基线库）。
 
 ## 正确性证据链（全部留痕于 profile/evidence/）
 
-- 全量 make check：29589/29589 并行用例通过（唯一失败 prefetch_test
+- 全量 make check：29589/29589 并行用例跑完、唯一失败 prefetch_test
   经同板同树标量对照证明为环境敏感断言，与本移植无关，日志在档）；
   check_all_python / ldb_test / dump_test 通过。
 - QEMU vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s：6 kernel
