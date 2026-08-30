@@ -28,3 +28,10 @@ zicond (czero.eqz): SIGILL rc=132   <-- STILL off by default in 11.1.1
 # liblz4 24, libbz2 15, ...) and SIGILL under this env regardless of
 # application code - dependency libs must match the test CPU's
 # extension set; this is an environment property, not a source defect.
+
+# POST-DECISION NOTE (2026-08-30, supersedes the "march changed" line
+# above): the user ruled the DELIVERY keeps zicond (V2, headline
+# +31.6% read t1); V2Z is retained as the QEMU-safe VARIANT for the
+# recommended test env, and the Makefile gained an adaptive probe
+# (native builds auto-include zicond when the host has it). See
+# docs/PR-BODY.md "known issue" section and docs/plan.md.

@@ -1,31 +1,55 @@
-# S2605 合规对照清单（独立审计）
+# S2605 合规对照清单（独立审计·两轮）
 
-本表由独立审计 agent 产出：要求条款取自官网 https://rvspoc.org/S2605原文（2026-08-30 抓取成功；#19/#20 两条来自镜像契约），逐条打开本仓证据文件抽查关键行，headline 中位数从 benchmark.csv 原始行独立复算后与文档比对。审计发现的可核性问题（文末备注 2/3/4）已在审计后修复。表中行数等快照数字为审计时点（2026-08-30）取值，此后 benchmark.csv 仍在追加（如 headline-v2z 行），以文件现状为准。
+第一轮（2026-08-30 上午）：独立审计 agent 抓取官网任务主体提取 20 条，逐条打开证据文件核实，headline 五个百分比从原始数据独立复算（逐位一致）。第二轮（2026-08-30 下午）：第二个独立 agent 穷尽赛题页全部小节（背景/基础任务/加分项/性能与正确性/注意事项/提交要求/成绩认定/知识产权）+ 站内主页与 FAQ，新挖出 11 条实质条款，与第一轮对齐后重排为下表 36 条（第一轮条目在"我们做了什么"列注明原编号）。两轮发现的可核性问题均已修复（见文末两轮备注）。快照数字为各轮审计时点取值。
 
-| # | 赛题要求（原文摘录） | 我们做了什么（一句话） | 证据文件（路径） | 状态 |
-|---|---|---|---|---|
-| 1 | "利用 RVV 1.0 对布隆过滤器的位图查找……进行优化" | FastLocalBloom 探测路径 RVV 化（AVX2 镜像、vsetvl 授予数感知），板+QEMU 差分零失败，K3 配对中性保留默认启用 | `util/bloom_impl.h`；`profile/evidence/qemu-matrix/bloom.log`（3×VLEN 各 606990/0）；`candidates.jsonl` bloom-rvv 行 | ✅ 满足 |
-| 2 | "对 SST 文件的序列化/反序列化……进行优化" | 覆盖块内 key 解码（Zbb 无分支 varint32）、restart 二分（sidecar+双 prefetch）、共享前缀/分隔键（RVV vfirst）、块尾 CRC、kv 校验哈希 | `util/coding.h`；`table/block_based/block.cc`；`include/rocksdb/slice.h`；`util/comparator.cc`；`docs/ACCEPTANCE.md` SST 直接证据表 | ✅ 满足 |
-| 3 | "对 CRC32C 数据校验算法进行优化" | 三层运行时分派阶梯：Zvbc vclmul 折叠（8.1x@4KB）→ Zbc 标量 clmul（raw .insn，6.43x）→ slice-by-8；常数运行时 GF(2) 推导；持久化双向位相同闭环 | `util/crc32c_riscv64.cc`；`util/crc32c_zbc.cc`；`profile/evidence/qemu-matrix/crc32c.log`；`candidates.jsonl` | ✅ 满足 |
-| 4 | "现有 ARM/Neon 优化的算子中，至少 90% 需提供 RVV 或内联汇编加速版本实现" | 全树盘点 6 处 ARM 优化面，6/6 提供 RISC-V 对位实现（100%）；xxhash/xxph3 四处实现+差分全绿但 K3 实测负收益**默认关**（开关可启用，实现存在，已如实披露） | `docs/ACCEPTANCE.md` NEON 6/6 审计表；`util/xxhash.h`；`util/xxph3.h`；`util/crc32c_riscv64.cc`；`port/port_posix.h` | ✅ 满足 |
-| 5 | "支持不同 VLEN（128/256/512 bit）的自适应实现" | 全部内核 vsetvl 驱动、零编译期 VLEN 假设；QEMU 3 VLEN × 敌意 ta/ma 全绿（曾借此抓获 vlen=128 授予数 bug） | `profile/evidence/qemu-matrix/*.log` + `MANIFEST.txt` | ✅ 满足 |
-| 6 | "完整移植 RocksDB v11.1.1 至 RISC-V 64 平台" | 基于 `11.1.fb`（=v11.1.1）全量构建/测试通过；含 rdcycle→rdtime、options_settable 等移植修复 | `Makefile` riscv 块；`profile/evidence/check3/`；`docs/ACCEPTANCE.md` 四节 | ✅ 满足 |
-| 7 | "部署为 JNI 动态库至 RocketMQ 5.5.0 运行环境" | rocksdbjni-11.1.1（RVV 档）替换捆绑 jar，broker 实跑压测与 24 格矩阵 | `profile/rmq-matrix/jar-identity.txt`；`docs/REPRODUCE.md` RocketMQ 节 | ✅ 满足 |
-| 8 | "相比于 db_bench 标量版本在验证平台的基线测试结果，性能需提升至少 30%" | S0（stock 等价标量 O2）vs V2（交付配置）同会话直接配对：**read t1 +31.6%、read t8 +26.1%、seek +21~24%、fill +4.0%**——按"三项各自≥30%"最严口径未全达标；实测平台为 K3 而非 LX5000 | `benchmark.csv` headline-final（审计员独立复算与文档逐位一致）；`profile/evidence/headline/hl.log`；`docs/ACCEPTANCE.md` 二节 | ⚠ 部分满足（read t1 单项 ≥30%；其余未及；LX5000 未实测，口径待主办方裁定） |
-| 9 | "评测指标：高并发消息读写吞吐量（TPS）及 P99 延迟" | db_bench 侧 P99 直方图证据齐全（41.64→33.88 µs，−18.6%）；RocketMQ TPS 双臂矩阵齐全（噪声带内互有出入）；RocketMQ P99 无本地证据（自带 benchmark 仅输出 Avg/Max RT），文档如实声明 | `profile/evidence/headline/hl.log` Percentiles 行；`profile/rmq-matrix/MANIFEST.md`；`docs/ACCEPTANCE.md` 二b | ⚠ 部分满足（RocketMQ 侧无 P99，系工具限制、已标注） |
-| 10 | "能够在验证平台正确运行 RocksDB 自带的 make check 单元测试" | check3 留痕重跑（board2 K3，HEAD 树）：29589/29589 跑完、唯一失败 prefetch_test 经同板同树纯标量对照（相同断言值+相同段错误）归因环境、与 RVV 无关；check 尾部 ldb/dump/python 全过 | `profile/evidence/check3/check3-full.log.gz`（审计员解压核实）；`prefetch-scalar-control.log`；`check3.status` | ⚠ 部分满足（内容通过；LX5000 非团队可及、实测在 K3；早期"38934"口径因日志丢失已自行作废重建） |
-| 11 | "能在验证平台正确运行 RocksDB 核心测试集（db_test）" | db_test 含于 check3 并行段，通过（joblog 无 db_test 失败行） | `profile/evidence/check3/check3-full.log.gz` | ✅ 满足（K3 实测；平台缺口同 #10） |
-| 12 | "执行 60 分钟高压群集测试，要求无 OOM、无数据损坏、不丢失消息" | 60min 持续负载 PASS：Send/Response/Consume Failed 全 0、RSS 1.9→3.0G 无 OOM、排空归零；另补 24 格双臂矩阵零丢失链全绿（事故全留痕、fail-closed） | `profile/rmq-stress-run.log`；`profile/rmq-samples.csv`；`profile/rmq-matrix/`（MANIFEST + 逐格身份链） | ✅ 满足（全量日志已归档、均值独立复算一致） |
-| 13 | "db_bench 测试数据：fillrandom、readrandom、seekrandom 的 OPS 指标" | 819 行原始测量入档（含 INVALID 污染行不删除），headline-final 覆盖三 workload | `benchmark.csv` | ✅ 满足 |
-| 14 | "目标仓库 rv2036/rvspoc-S2605-rocksdb，提交方式：Pull Request" | fork 分支已全量推送、upstream remote 已配、PR 正文与命令就绪——PR 本身待用户放行（HOLD） | `docs/plan.md` 阶段 4；`docs/PR-BODY.md` | ❌ 未满足（PR 未开；全部前置就绪，截止 2026-08-31 AoE） |
-| 15 | "包含完整源代码或二进制文件、配置文件、依赖库、补丁文件" | 全部改动以源码 commit 形式在分支上（无二进制先行） | 分支 diff vs `11.1.fb`；`Makefile`；`docs/REPRODUCE.md` | ✅ 满足 |
-| 16 | "必须附带详细说明文档（平台说明、依赖库、编译步骤、运行步骤、结果）" | REPRODUCE（含"PGO 现场新鲜训练"硬性步骤）+ PR-BODY + ACCEPTANCE + SOLUTION 四件套 | `docs/{REPRODUCE,PR-BODY,ACCEPTANCE,SOLUTION}.md` | ✅ 满足 |
-| 17 | "截止：2026-08-31 (AoE)；成绩认定后新增修改不计入" | 工程收尾完成、待用户放行 PR | 同 #14 | ⚠ 部分满足（时间窗尚在但仅余 ~1 天） |
-| 18 | 验证平台：蓝芯 LX5000 | 团队无 LX5000 访问权；向量路径全部运行时探测/vsetvl 自适应，回退不降级；LX5000 情报（RVA23、48 异构核）已纳入设计与线程池亲和钩子 | `docs/ACCEPTANCE.md` 头部；`candidates.jsonl` bg-pool-affinity 行；`docs/draft.md` | ➖ 不适用（平台非团队可及；适配已尽，最终数字唯评审机可定） |
-| 19 | （镜像契约）"No third-party RISC-V adaptation code copied" | 全部第一方；CRC 折叠常数运行时推导非拷贝；内联汇编仅 3 处且逐一说明 | `docs/ACCEPTANCE.md` 规范性引用节；`util/crc32c_riscv64.cc` | ✅ 满足 |
-| 20 | （镜像契约）"AI assistance disclosed in report (method + share)" | 量化披露 ~99% AI 生成 + 15+ 人类决策点；披露载体 = git 历史 + candidates.jsonl（含被拒理由）+ benchmark.csv（含 INVALID 行）+ draft.md | `docs/ACCEPTANCE.md` 五节；`docs/PR-BODY.md`；`candidates.jsonl` | ✅ 满足 |
+| # | 条款出处 | 要求原文摘录 | 层级 | 我们做了什么 | 证据文件路径 | 状态 |
+|---|---|---|---|---|---|---|
+| 1 | S2605·背景与描述 | "将 RocksDB v11.1.1……完整移植至 RISC-V 64 平台" | 基础 | 基于 `11.1.fb`（=v11.1.1）全量移植构建通过，含 rdcycle→rdtime 等移植修复（一轮#6） | `Makefile` riscv 块；`docs/ACCEPTANCE.md` | ✅ |
+| 2 | S2605·背景·目标平台 | "目标架构：RISC-V（RV64GCV，支持 RVV 1.0）" | 基础 | RVV 构建 `-march=rv64gcv` 起步、RVV 1.0 intrinsics 实现；REPRODUCE 声明该二进制要求硬件有 V | `docs/REPRODUCE.md`；`Makefile` | ✅ |
+| 3 | S2605·背景·目标平台 | "推荐测试环境：QEMU `virt`（`-cpu rv64,v=true,vlen=256`）或真实 RISC-V 开发板" | 评测环境（新） | 按原样命令行实测抓出 zicond SIGILL（QEMU 8.2/11.1.1 双证）与 Bianbu 系统库 czero 陷阱；QEMU 安全变体 V2Z 在该命令行端到端跑通；PR 正文设已知问题专节 | `profile/evidence/qemu-compat/RESULT.txt`；`profile/evidence/headline-v2z/`；`docs/PR-BODY.md` | ✅ |
+| 4 | S2605·背景 + FAQ Q3 | "验证平台：蓝芯 LX5000"；FAQ"必须使用主办方指定型号开发板" | 评测环境/通用 | LX5000 非团队可及（FAQ Q2：远程仅提供 SG2042/Pioneer）；实测在 K3，向量路径全部运行时自适应，LX5000 情报纳入设计（一轮#18） | `docs/ACCEPTANCE.md` 头部；`candidates.jsonl` bg-pool-affinity | ➖/⚠（"必须指定板"与 LX5000 不提供访问相互矛盾，待主办方裁定） |
+| 5 | S2605·基础任务 1 | 布隆过滤器位图查找 RVV 优化 | 基础必做 | FastLocalBloom 探测 RVV 化，板+QEMU 差分零失败（一轮#1） | `util/bloom_impl.h`；`profile/evidence/qemu-matrix/bloom.log` | ✅ |
+| 6 | S2605·基础任务 1 | SST 序列化/反序列化优化 | 基础必做 | key 解码/restart 二分/共享前缀/块尾 CRC 五处覆盖（一轮#2） | `util/coding.h`；`table/block_based/block.cc`；`docs/ACCEPTANCE.md` | ✅ |
+| 7 | S2605·基础任务 1 | CRC32C 校验优化 | 基础必做 | Zvbc→Zbc→slice-by-8 三层运行时分派，持久化位相同闭环（一轮#3） | `util/crc32c_riscv64.cc`；`util/crc32c_zbc.cc`；`profile/evidence/qemu-matrix/crc32c.log` | ✅ |
+| 8 | S2605·基础任务 2 | ≥90% ARM/Neon 算子提供 RVV/内联汇编版本 | 基础必做 | 6/6 = 100%，xxhash 系默认关但实现在树并披露（一轮#4） | `docs/ACCEPTANCE.md` NEON 审计表；`util/xxhash.h` | ✅ |
+| 9 | S2605·基础任务 2 | VLEN 128/256/512 自适应 | 基础必做 | 全 vsetvl 驱动零编译期假设；QEMU 3 VLEN × 敌意 ta/ma 全绿（一轮#5） | `profile/evidence/qemu-matrix/` | ✅ |
+| 10 | S2605·基础任务 2 | "可实现自动向量长度调优（VLEN 探测 + 运行时分发）" | 基础·弹性（新） | hwprobe(2) 运行时分发 + 按 TU march 注入 + 失败回退；Makefile 原生自适应组装 march | `util/crc32c_riscv64.cc`；`docs/REPRODUCE.md` | ✅ |
+| 11 | S2605·基础任务 3 | 部署 RocketMQ 5.5.0，JNI 动态库集成 | 基础必做 | rocksdbjni RVV 档替换捆绑 jar（其无 riscv64 原生库），broker 实跑（一轮#7） | `profile/rmq-matrix/jar-identity.txt`；`docs/REPRODUCE.md` | ✅ |
+| 12 | S2605·基础任务 4 | RocketMQ Benchmark 压测数据：**混合读写、大消息体、高堆积** | 基础必做（三要素为新细化） | 24 格矩阵逐要素覆盖：并发生产消费（混合读写）× 1K/16K/128K（大消息体）× normal/backlog（高堆积）× ab/ba | `profile/rmq-matrix/MANIFEST.md`；`docs/ACCEPTANCE.md` 二b | ✅ |
+| 13 | S2605·基础任务 4 | db_bench fillrandom/readrandom/seekrandom OPS 数据 | 基础必做 | 870+ 行原始测量，headline-final/headline-v2z 覆盖三 workload（一轮#13） | `benchmark.csv`；`profile/evidence/headline*/` | ✅ |
+| 14 | S2605·基础任务 4 | "提供详细的验证文档记录测试方案" | 基础必做（新独立条款） | ACCEPTANCE（证据链）+ SOLUTION（测量方法论：三臂对照/交错配对/预注册裁决）成文 | `docs/ACCEPTANCE.md`；`docs/SOLUTION.md` | ✅ |
+| 15 | S2605·加分项 | AMO/内存模型：写路径并发锁、WAL 分配、MemTable 跳表并发插入优化 | **加分项**（新） | 部分触达：Zihintpause 自旋退避 + 后台池亲和钩子 + 跳表 prefetch（查明 upstream 已含、随 zicbop 激活）；AMO 级锁/WAL/跳表并发插入专项**未做** | `candidates.jsonl`；`port/port_posix.h`；`docs/SOLUTION.md` | ⚠ 部分触达（非必做；已做部分如实标注） |
+| 16 | S2605·性能与正确性 1 | 正确运行 make check | 基础必做 | check3 留痕 29589/29589，唯一失败经纯标量对照归因环境（一轮#10） | `profile/evidence/check3/` | ⚠（K3 实测，非 LX5000） |
+| 17 | S2605·性能与正确性 1 | 正确运行 db_test | 基础必做 | 含于 check3 并行段，通过（一轮#11） | `profile/evidence/check3/` | ✅（平台缺口同 #16） |
+| 18 | S2605·性能与正确性 2 | 60min 高压群集：无 OOM/损坏/丢失 | 基础必做 | 60min PASS（361 采样全归档、独立复算一致）+ 24 格零丢失链（一轮#12） | `profile/rmq-stress/`；`profile/rmq-matrix/` | ✅ |
+| 19 | S2605·性能与正确性 3 | "需采用条件编译（如 #ifdef __riscv_vector）" | 基础·代码规范（新） | 全部改动隔离于 `__riscv`/`__riscv_vector`/hwprobe 之后（8 文件守卫核实） | `include/rocksdb/slice.h` 等；`docs/REPRODUCE.md` | ✅ |
+| 20 | S2605·性能与正确性 3 | "不破坏原生代码对其他架构的兼容性" | 基础·代码规范（新） | aarch64 预处理 token 级一致 + x86 构建位级不变 + 新 TU 非 riscv 零代码 | `docs/ACCEPTANCE.md`；`docs/draft.md` | ✅ |
+| 21 | S2605·性能与正确性 4 | db_bench 相比标量基线 ≥30% | 基础·性能基准 | S0 vs V2 直接配对：read t1 +31.6%/read t8 +26.1%/seek +21~24%/fill +4.0%；V2Z 变体 read t1 +29.5%（一轮#8，独立复算逐位一致） | `benchmark.csv`；`docs/ACCEPTANCE.md` 二节 | ⚠（read t1 达标；"各项均≥30%"未达；平台 K3） |
+| 22 | S2605·评测指标叙述 | 高并发 TPS 及 P99 延迟 | 评分维度 | db_bench P99 −18.6%（V2Z −21.2%）；RocketMQ TPS 双臂在档、P99 无工具输出已声明（一轮#9） | `profile/evidence/headline/hl.log`；`docs/ACCEPTANCE.md` 二b | ⚠ |
+| 23 | S2605·注意事项 1 | 遵循开源协议与版权规范 | 通用规则（新） | 双许可文件保留，新增 TU 带 Meta 双许可头，工件来源声明 | `COPYING`；`LICENSE.Apache`；`util/crc32c_riscv64.cc` 头部 | ✅ |
+| 24 | S2605·注意事项 2 | 参赛者自备开发环境 | 通用规则（新） | 自备 K3 板 ×2 + 交叉容器 + QEMU 矩阵，环境快照入档 | `profile/evidence/qemu-matrix/MANIFEST.txt`；`docs/REPRODUCE.md` | ✅ |
+| 25 | S2605·注意事项 3 | 禁止搬运第三方 RISC-V 适配代码，自主实现或标注来源 | 通用规则 | 全第一方；CRC 常数运行时推导非拷贝；内联汇编 3 处逐一说明（一轮#19，出处扶正为页面正文） | `docs/ACCEPTANCE.md` 规范性引用节 | ✅ |
+| 26 | S2605·注意事项 4 | AI 辅助需在报告说明使用方式及占比 | 通用规则 | PR 正文专节：~99% 占比 + 三支柱方法论 + 人类框架贡献 + 可验证载体（一轮#20，出处扶正） | `docs/PR-BODY.md` AI 披露节；`docs/SOLUTION.md` 五节 | ✅ |
+| 27 | S2605·提交要求 | 提交至 rv2036/rvspoc-S2605-rocksdb，Pull Request 方式 | 提交规范 | fork 全量推送、正文就绪；PR 本身 HOLD 待用户放行（一轮#14） | `docs/plan.md` 阶段 4；`docs/PR-BODY.md` | ❌（唯一硬缺口；截止 2026-08-31 AoE） |
+| 28 | S2605·提交要求 | PR 必含：源码/配置/依赖/补丁等 | 提交规范 | 全部以源码 commit 在分支（一轮#15） | 分支 diff vs `11.1.fb` | ✅ |
+| 29 | S2605·提交要求·说明文件 | 五要素：平台说明/依赖库/编译安装/运行步骤/运行结果 | 提交规范 | 五要素逐项在档（含依赖库 czero 陷阱说明、PGO 现场训练硬步骤）（一轮#16，本轮按五要素逐项抽查） | `docs/REPRODUCE.md`；`docs/PR-BODY.md`；`docs/ACCEPTANCE.md` | ✅ |
+| 30 | S2605·提交要求·源码特别说明 | 仅二进制须后补 100% 源码；截止后源码不计成绩 | 提交规范（新） | 不适用：纯源码交付 | 分支即源码 | ➖ |
+| 31 | S2605·成绩认定 | 截止 2026-08-31 AoE，此后修改不计入 | 提交规范 | 工程收尾完成待放行（一轮#17） | 同 #27 | ⚠（时间窗极紧） |
+| 32 | S2605·成绩认定 + FAQ Q4 | "精度符合产出要求，性能评分最高者"胜；S 类为优化竞速赛 | 评分维度（新——竞争性排名） | 精度侧闸门全绿；性能侧数字在档、相对排名不可知；30% 口径待裁定 | `benchmark.csv`；`docs/ACCEPTANCE.md` | ⚠（己方证据齐备；排名非己方可控） |
+| 33 | S2605·成绩认定 | 联合评判组受理争议；09-20 后公布；最终解释权归评委会 | 通用规则（新，告知性） | 待裁定事项（30% 口径、LX5000 平台）已在文档明示，为争议陈述留据 | `docs/ACCEPTANCE.md`；本文件 | ➖ |
+| 34 | S2605·知识产权与开源 | 参赛结果须开源并提交指定仓库；持有权归参赛者；鼓励回馈 upstream | 通用规则（新） | fork 分支公开已推（开源成立）；指定仓库提交随 PR HOLD；upstream 回馈为鼓励项未做 | fork 分支；`docs/plan.md` | ⚠（随 #27 悬置） |
+| 35 | 主页/FAQ Q1 | 报名入口 wenjuan.com，报名后可参与所有题目 | 通用规则（新） | 用户侧动作，仓内不可核实——**开 PR 前请用户自查报名状态** | （仓外） | ➖ 仓外事项 |
+| 36 | FAQ Q5 | 队员变更需队长邮件申请 | 通用规则 | 不适用 | — | ➖ |
 
-## 审计员备注（原文保留）
+## 第二轮新发现摘要
+
+本轮比第一轮多挖出 11 条实质条款。**需行动/知情的两条**：#35 报名状态（仓内不可核实，开 PR 前用户自查——未报名则 PR 白开）；#15 加分项（AMO 锁/WAL/跳表并发插入主体未做，外围三项已触达并如实标注；非必做，但在 #32 竞速规则下是与对手的潜在差距面，时间窗已不允许补做）。**结构性认知**：页面分"基础任务（必做）/加分项"两层——第一轮 20 条全部落在必做层，即**必做面无遗漏**；FAQ Q4 确认 S 类为竞速赛："30%"是入场券（#21），"指标最优"才是夺冠条件（#32）。出处扶正 2 条：#25/#26 由"镜像契约"升级为页面正文条款，效力更强、结论不变。
+
+## 第二轮审计员备注
+
+发现 1 处时间线不一致：`profile/evidence/qemu-compat/RESULT.txt` 曾记录"交付 march 摘除 zicond"的中间决定，未注明其后被用户裁定推翻（终版 V2 含 zicond、V2Z 降为变体）——【已修复：文件尾部补裁定后注】。其余抽查点（headline 两组数字、QEMU 矩阵敌意行与 sha、RocketMQ 24 格记账与 send_failed_60s 脚注、双许可头、hwprobe 分派、Zihintpause 编码、AI 披露三支柱）均与文档一致。
+
+## 第一轮审计员备注（原文保留；其表格已并入上表）
 
 1. **【最重要】PR 未开**（#14）：全部交付物就绪、分支已推 fork，但
    PR 处 HOLD 且截止仅余 ~1 天——当前唯一硬缺口，属流程决策而非工程缺失。
