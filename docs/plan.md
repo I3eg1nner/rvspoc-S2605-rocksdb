@@ -65,14 +65,14 @@ restart sidecar（P3）权重上调，bisect 后立即实现
 
 ## 阶段 2 — 全矩阵验证
 
-- [x] 板全量 make check + db_test（RVV 构建）：38934 全过（第三轮）
+- [x] 板全量 make check + db_test（RVV 构建）：留痕重跑 29589/29589（唯一失败已标量对照归因环境；旧 38934 口径作废）
 - [x] QEMU 矩阵：kernel 差分 + 子集测试 × {128,256,512} × 敌意 flags
 - [x] 标量写 ↔ RVV 读双向位相同端到端；x86 容器构建位级不变
-- [x] 最终 db_bench vs 基线（终版 2026-08-30，S0 stock 等价直接
-      配对）：read t1 **+31.6%**（达标）/ read t8 +26.1% / seek t1
-      +24.3% / seek t8 +21.1% / fill +4.0%；P99 read t8 −18.6%。
-      最严口径（三项各自≥30%）read t1 过线、其余未及。交付配置 = V2（RVA23 必选
-      子集 march + O3 + 现场新鲜 PGO + 裁决 kernel 集）
+- [x] 最终 db_bench vs 基线（终版 V2Z 2026-08-30）：read t1 +29.5%
+      / read t8 +24.4% / seek +18.8~23.6% / fill +6.4%（符号全一致）；
+      P99 −21.2%。march 无 zicond（推荐 QEMU 环境实测所迫；zicond
+      变体 read t1 +31.6% 留档可选）。数字唯一源 = ACCEPTANCE 二节
+      + benchmark.csv
 
 ## 阶段 3 — RocketMQ
 
