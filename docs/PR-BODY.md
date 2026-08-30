@@ -32,9 +32,13 @@
 ## 性能（SpacemiT K3 实测；诚实归因）
 
 同会话直接配对（stock 等价标量 -O2 基线 S0，协议与身份链见
-docs/ACCEPTANCE.md 二节）：**read t1 +31.6%（逐轮 4/4）、read t8
-+26.1%（6/6）、seek t1 +24.3%、seek t8 +21.1%、fill +4.0%；P99
-（read t8, --histogram）41.6→33.9 µs（−18.6%）**。
+docs/ACCEPTANCE.md 二节）：**read t1 +29.5%（逐轮 4/4）、read t8
++24.4%（6/6）、seek t1 +23.6%、seek t8 +18.8%、fill +6.4%（6/6）；
+P99（read t8, --histogram）43.0→33.9 µs（−21.2%）**。交付 march
+不含 zicond——赛题推荐测试环境 QEMU `-cpu rv64,v=true,vlen=256` 下
+zicond 默认关闭（8.2 与最新 11.1.1 均实测），含 czero 的构建会
+SIGILL；zicond 变体（read t1 +31.6%）的数据与开关保留，供确认有
+Zicond 的硬件（RVA23 必含）选用。
 
 **归因披露（主动补测的多臂对照，全部数据在 ACCEPTANCE）**：
 通用 O3+PGO 贡献 +11~20 个点；riscv/RVV 专有部分在其上净增
