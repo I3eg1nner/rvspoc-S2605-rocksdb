@@ -1,6 +1,6 @@
 # S2605 验收报告
 
-（状态：待用户验收，PR 暂缓；放行 PR 时删除本括注）
+
 
 分支 `s2605-rvv`（基于 v11.1.1 = upstream `11.1.fb`）。验证硬件：SpacemiT K3（8×X100，VLEN 256，+zvbb/zvbc）；QEMU 8.2 vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。评测目标 LX5000 VLEN/扩展未知 → 一切向量路径运行时探测或 vsetvl自适应，探测失败回退标量（回退质量 = 原 slice-by-8 等，不降级）。
 
