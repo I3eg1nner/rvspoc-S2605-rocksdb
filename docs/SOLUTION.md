@@ -156,11 +156,34 @@ kernel 单点加速 8 倍，在此类负载中折算到端到端仅 1~2%。写�
 **PGO 的现场性**：headline 依赖评测机上现场训练；若评测流程不允许
 现场训练，退化幅度可由归因表的 GP 行估计（−3~−10 个点）。
 
-**RocketMQ 证据的定位**：60 分钟压测（361 个采样全量归档，均值经
-独立复算与文档一致）与 24 格双臂矩阵支撑的是稳定性结论——零 OOM、
-零损坏、零丢失、每格排空到零。两臂 TPS 在噪声带内互有出入，不
-构成性能优势证据；P99 的本地证据仅有 db_bench 直方图，RocketMQ
-自带 benchmark 不输出分位数，此空缺已在文档中声明。
+**RocketMQ 的 TPS 与 P99**（赛题指定的最终评测指标）：
+
+60 分钟高压测试（RVV 档 rocksdbjni，单 broker，K3）：avg Send TPS
+**6056** / avg Consume TPS **6117**（各 361 个 10 秒采样，原始日志
+全量归档于 profile/rmq-stress/，均值经独立复算一致），Send/Response/
+Consume Failed 全程为 0，broker RSS 1.9→3.0 GB 无 OOM。
+
+24 格双臂矩阵（scalar 档 vs RVV 档 rocksdbjni，3 消息尺寸 × 2 场景
+× AB/BA 顺序轮换，每格 300 秒 + 排空到零）的 send TPS 中位数：
+
+| 消息尺寸 × 场景 | RVV 档 TPS | 对 scalar 档 Δ（send / 精确 put 记账） |
+|---|---|---|
+| 1K normal / backlog | ~4911 / ~4798 | −0.5% / −1.5%；put −0.7% / +0.2% |
+| 16K normal / backlog | ~3656 / ~3296 | −0.2% / **+5.9%**；put −1.5% / +0.3% |
+| 128K normal / backlog(w4) | ~1372 / — | +0.4% / 中位数不稳※；put +0.5% / −3.9% |
+
+※128K backlog 的 send TPS 中位数受强顺序效应支配（消费者中场加入
+造成双峰分布），以精确 put 记账为准。读法：两臂 TPS 总体在 ±1.5%
+噪声带内（RocksDB 不是 1K/128K 消息路径的瓶颈），16K backlog——
+写入与排空并发、存储压力最大的场景——RVV 档 +5.9% 为唯一显著优项，
+128K 饱和场景 put −3.9% 为唯一显著劣项，均如实入表。因此矩阵支撑
+的硬结论是稳定性（零 OOM/损坏/丢失、每格排空到零），TPS 上不主张
+系统性优势。
+
+P99：本仓的分位数证据来自 db_bench 直方图（上表 read t8 P99
+41.6→33.9 µs，−18.6%）；RocketMQ 自带 benchmark 工具只输出
+Avg/Max RT、不输出分位数，故 RocketMQ 侧无 P99 本地数据，此空缺
+如实声明。
 
 **样本量**：每测点 3~6 轮配对，稳健性以逐轮符号一致性表述而非
 置信区间；原始行全部在 benchmark.csv，独立审计 agent 已复算一遍，
