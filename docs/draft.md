@@ -518,3 +518,7 @@ rv64 默认关，max 才开）。交付 V2 二进制含 418 条 czero → 在推
 （rv64gcv_zba_zbb_zbs_zicbop），现场新鲜 PGO 重建 V2Z + S0 配对
 headline 重测（运行中）；zicond 作为 RVA23 硬件的可选覆盖项写入
 REPRODUCE（LX5000 真硬件必有 Zicond，但推荐测试环境优先）。
+补充（同日）：自行源码构建 QEMU 11.1.1（最新稳定版）复测，赛题
+推荐命令行下 zicond 仍默认关（czero SIGILL rc=132，-cpu max 才过；
+zba/zbb/zbs/prefetch 均过）——摘除 zicond 的决定对新老 QEMU 一并
+成立，证据追加于 profile/evidence/qemu-compat/RESULT.txt。

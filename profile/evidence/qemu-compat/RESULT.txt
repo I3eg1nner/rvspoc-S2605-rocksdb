@@ -10,3 +10,12 @@ zicbop (prefetch.r): OK (ORI-hint encoding, no-op without the extension)
 # Consequence: old delivery binary carried 418 czero insns -> would SIGILL
 # under the recommended env. Delivery march changed to
 # rv64gcv_zba_zbb_zbs_zicbop (zicond dropped), V2Z rebuild + headline rerun.
+
+# Follow-up (2026-08-30): QEMU 11.1.1 (latest stable) built FROM SOURCE
+# in the s2605-rvv-ci container (--target-list=riscv64-linux-user),
+# same binary, contest cmdline -cpu rv64,v=true,vlen=256:
+zba OK / zbb OK / zbs OK / prefetch OK
+zicond (czero.eqz): SIGILL rc=132   <-- STILL off by default in 11.1.1
+-cpu max: zicond OK
+# Verdict: dropping zicond from the delivery march is required for the
+# recommended test env on BOTH the distro QEMU (8.2) and latest (11.1.1).
