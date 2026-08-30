@@ -71,8 +71,7 @@ restart sidecar（P3）权重上调，bisect 后立即实现
 - [x] 最终 db_bench vs 基线（终版 2026-08-30，S0 stock 等价直接
       配对）：read t1 **+31.6%**（达标）/ read t8 +26.1% / seek t1
       +24.3% / seek t8 +21.1% / fill +4.0%；P99 read t8 −18.6%。
-      最严口径（三项各自≥30%）read t1 过线、其余未及——口径澄清
-      在 docs/ORGANIZER-QUESTIONS.md。交付配置 = V2（RVA23 必选
+      最严口径（三项各自≥30%）read t1 过线、其余未及。交付配置 = V2（RVA23 必选
       子集 march + O3 + 现场新鲜 PGO + 裁决 kernel 集）
 
 ## 阶段 3 — RocketMQ
@@ -92,8 +91,7 @@ restart sidecar（P3）权重上调，bisect 后立即实现
 - [ ] **PR 维持 HOLD（用户 2026-08-30 再次确认）**：全部前置已就绪
       ——base 11.1.fb 已验证（= v11.1.1，fast-forward 干净落底）、
       上游 CLAUDE.md 已恢复（M1 完成，任务指令转 CLAUDE.local.md
-      gitignored）、PR 正文 docs/PR-BODY.md、澄清函
-      docs/ORGANIZER-QUESTIONS.md。开 PR 命令（用户确认后执行）：
+      gitignored）、PR 正文 docs/PR-BODY.md。开 PR 命令（用户确认后执行）：
       gh pr create --repo rv2036/rvspoc-S2605-rocksdb --base 11.1.fb \
         --head I3eg1nner:s2605-rvv --title "S2605: RocksDB v11.1.1 \
         RV64GCV port + RVV optimizations" --body-file docs/PR-BODY.md

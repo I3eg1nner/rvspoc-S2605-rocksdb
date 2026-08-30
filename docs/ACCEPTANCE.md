@@ -47,7 +47,7 @@ idle=100、二进制 sha 锁定；生数据 benchmark.csv `headline-final`）**�
 30% 最严口径（三项各自 ≥30%）判定：readrandom t1 **达标**；
 readrandom t8 +26.1%、seekrandom +21~24% 未及；fillrandom +4.0%
 差距大（访存延迟主导 + PGO 已收割写路径主要收益）。若口径为
-综合或单项，读侧已过线——已列入向主办方的澄清问题。
+综合或单项，读侧已过线。
 
 **历史参考表：O2 三档（2026-08-24，PGO 前）**——
 S = 标量基线；F = gcv+zicbop 档；R = RVA23 子集档：
