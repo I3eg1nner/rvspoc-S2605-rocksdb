@@ -156,6 +156,18 @@ kernel 单点加速 8 倍，在此类负载中折算到端到端仅 1~2%。写�
 **PGO 的现场性**：headline 依赖评测机上现场训练；若评测流程不允许
 现场训练，退化幅度可由归因表的 GP 行估计（−3~−10 个点）。
 
+**RocketMQ 5.5.0 的 JNI 部署**（赛题硬性要求）：这一步不是打包
+动作而是移植工作——RocketMQ 5.5.0 的 DefaultMessageStore 无条件
+初始化 RocksDB 存储，而其捆绑的 rocketmq-rocksdb-1.0.6.jar **不含
+riscv64 原生库，broker 在 riscv64 上无法启动**。解法：用本树
+`make rocksdbjava` 构建 rocksdbjni-11.1.1（RVV 档，含全部分派阶梯）
+整包替换 lib/ 下的捆绑 jar，另对 JDK21 做脚本适配（runbroker/
+runserver 压堆、去 JDK8 时代 flags、小内存板上
+MaxDirectMemorySize 压到 2g）。部署步骤在 REPRODUCE.md，jar 的
+sha256 身份链逐格记录在 profile/rmq-matrix/jar-identity.txt。下文
+全部 RocketMQ 数据都跑在这套部署之上——broker 能在 riscv64 上带
+RocksDB 存储启动并扛过压测，本身就是该要求的验收证据。
+
 **RocketMQ 的 TPS 与 P99**（赛题指定的最终评测指标）：
 
 60 分钟高压测试（RVV 档 rocksdbjni，单 broker，K3）：avg Send TPS
