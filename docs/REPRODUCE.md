@@ -26,8 +26,12 @@ PORTABLE=1 RISCV_NO_RVV_CRC32C=1 DISABLE_WARNING_AS_ERROR=1 \
 # objdump -d db_bench | grep -c vsetvli  # 必须 =0
 # 交付 RVV 构建（全程序 -march=rv64gcv_zicbop + 运行时分派的 Zvbc CRC）
 PORTABLE=1 RISCV_RVV=1 DISABLE_WARNING_AS_ERROR=1 make -j6 db_bench DEBUG_LEVEL=0
-# RVA23 必选扩展子集档（非完整 profile；评审机保证集：+zba/zbb/zbs/zicbop/zicond，启用 zbb-varint）
-PORTABLE=1 RISCV_RVV=1 RISCV_RVV_MARCH=rv64gcv_zba_zbb_zbs_zicbop_zicond \
+# RVA23 必选扩展子集档（非完整 profile；+zba/zbb/zbs/zicbop，启用 zbb-varint）
+# 注意不含 zicond：赛题推荐测试环境 QEMU `-cpu rv64,v=true,vlen=256`
+# 默认关闭 zicond，含 czero 指令的二进制会 SIGILL（实测证据
+# profile/evidence/qemu-compat/）。LX5000 真硬件（RVA23 必含 Zicond）
+# 上可选加回：RISCV_RVV_MARCH=rv64gcv_zba_zbb_zbs_zicbop
+PORTABLE=1 RISCV_RVV=1 RISCV_RVV_MARCH=rv64gcv_zba_zbb_zbs_zicbop \
   DISABLE_WARNING_AS_ERROR=1 make -j6 db_bench DEBUG_LEVEL=0
 # RocksJava（RocketMQ 用）
 JAVA_HOME=<jdk21> PORTABLE=1 RISCV_RVV=1 DISABLE_WARNING_AS_ERROR=1 make -j6 rocksdbjava DEBUG_LEVEL=0
@@ -45,7 +49,7 @@ headline 数字不是上面 O2 构建的产物。交付配置完整配方（脚�
 `rvv-ci/final_assembly_job.sh` 的 `pgo_build`，在板上原生执行）：
 
 ```bash
-MARCH=rv64gcv_zba_zbb_zbs_zicbop_zicond
+MARCH=rv64gcv_zba_zbb_zbs_zicbop
 # 1) instrument 构建
 find . -name '*.o' -delete; rm -f db_bench librocksdb.a; mkdir -p /root/pgo-G
 RISCV_RVV=1 RISCV_RVV_MARCH=$MARCH PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 \
