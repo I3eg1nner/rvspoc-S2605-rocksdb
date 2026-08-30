@@ -11,14 +11,14 @@ vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。
 | 条款 | 状态 | 证据 |
 |---|---|---|
 | CRC32C 向量化 | ✅ | vclmul 多流折叠 + GF(2) 运行时常数推导 + hwprobe 分派；差分 4438/0（板）+ QEMU 矩阵绿；微基准 **8.1x**（7319 vs 903 MB/s @4KB，K3 空载） |
-| bloom 位图查找向量化 | ✅（实现+验证+裁决：K3 配对 NEUTRAL-KEEP，Aseek −0.03%/Bread −0.37% 均在 ±1% 内，默认启用） | AVX2 路径 RVV 镜像；板+QEMU 603990/0；QEMU vlen=128 抓到 vsetvl 授予 bug 并修复 |
+| bloom 位图查找向量化 | ✅（实现+验证+裁决：K3 配对 NEUTRAL-KEEP，Aseek −0.03%/Bread −0.37% 均在 ±1% 内，默认启用） | AVX2 路径 RVV 镜像；板 603990/0（早期 harness）+ QEMU 现版 606990/0（后续补充未对齐用例，两版本量级一致）；QEMU vlen=128 抓到 vsetvl 授予 bug 并修复 |
 | SST 序列化/反序列化加速 | ✅ | CRC（块尾校验）+ Slice::compare/difference_offset 向量化 + XXH3（kv 校验/缓存键）+ 全程序自动向量化层（RISCV_RVV=1，可选） |
 | ≥90% NEON 算子有 RVV 版 | ✅ **100%**（审计表见下） | v11.1.1 全树 ARM 优化面逐条盘点，RVV/RISC-V 对位实现 6/6 |
 | VLEN 128/256/512 自适应 | ✅ | 全部 vsetvl 驱动；QEMU 三 VLEN + 敌意 flags 矩阵全绿；无任何编译期 VLEN 假设 |
 | `#ifdef __riscv_vector` 隔离 / x86 ARM 不变 | ✅ | aarch64 g++ 预处理输出 token 级一致（slice/xxhash/bloom）；新 TU 非 riscv 下零代码 |
 | 禁第三方 RISC-V 适配代码 | ✅ | 全部第一方（rvv-wiki 自有工件移植 + 本会话新写）；常数运行时推导非拷贝 |
 | make check / db_test 全过 | ✅（标量参考树） | 38934 项：18 失败全部归因并修复/排除——16×range_locking = v11.1.1 上游 bug（用户态 rdcycle SIGILL→rdtime 修复，17/17 过）；options_settable = padding 计数脆弱（offsetof 可移植排除，4/4 过）；prefetch_test 过载 flaky（串行 104/104 过）。**RVV 构建全量 check ✅（2026-08-24 第三轮）：38934 项全过**——首轮 161 失败系 gcc 15.2 对 XXH3 RVV 混 SEW 模式的错误代码生成（已修复并三工具链复验），第三轮仅余 2 项报告失败且均系环境残留/负载 flaky（串行复跑全绿）。⚠ 证据链已重建（原第三轮日志随构建目录在磁盘清理中丢失，"38934"口径无法复推、就此作废）：**check3 留痕重跑（board2，HEAD 树 23285a41，2026-08-29）——并行段 29589/29589 用例跑完，唯一失败 prefetch_test**；分诊：同板同树**纯标量构建以逐位相同的断言值 + 相同析构段错误同样失败**（profile/evidence/check3/prefetch-scalar-control.log）⇒ 环境/上游敏感断言（compaction readahead 统计对内核/存储行为敏感；该用例在主板曾串行通过），**与 RVV 移植无关**。check 尾部：check_all_python ✅、ldb_test ✅、dump_test ✅（board2 初次失败系缺 gflags 致工具 stub，装库重建后 RC=0）。gnu_parallel joblog 全量归档 profile/evidence/check3/ |
-| RocketMQ 5.5.0 60min 压测 | ✅ **PASS**（2026-08-24） | 交付树 rocksdbjni-11.1.1（RVV 档）：全程 60min 持续负载，avg Send TPS **6056** / Consume TPS **6117**（各 361×10s 采样）；**Send/Response/Consume Failed 全 0**（零丢失零损坏）；broker RSS 1.9→3.0G 无 OOM；put/get TPS 收支平衡。生数据 profile/rmq-{samples.csv,stress-run.log} |
+| RocketMQ 5.5.0 60min 压测 | ✅ **PASS**（2026-08-24） | 交付树 rocksdbjni-11.1.1（RVV 档）：全程 60min 持续负载，avg Send TPS **6056** / Consume TPS **6117**（当时运行输出的 361×10s 采样均值；⚠ 可核性边界：完整 TPS 采样序列未归档，profile/rmq-stress-run.log 仅存 tail、rmq-samples.csv 为 61 行 RSS/健康采样——**可复核的硬指标是失败计数器全 0 与 RSS 无 OOM**，均值数字属文档声称）；**Send/Response/Consume Failed 全 0**（零丢失零损坏）；broker RSS 1.9→3.0G 无 OOM |
 | AI 披露 | ✅ | 本工作区 git 历史 + rvv-wiki 页引用轨迹（draft.md 逐候选记录页 id/置信度）+ wiki 回灌记录 |
 
 ## 二、性能（K3，中位数，seed=20260822，空载+performance governor）
@@ -158,7 +158,7 @@ put = 300s 测量窗精确记账差）**：
 | 1K backlog | v5b | −1.45% | +0.24% | ✅ |
 | 16K normal | v6.1/6.2 | −0.15% | **−1.50%** | ✅ |
 | 16K backlog | v6.1/6.2 | **+5.93%** | +0.35% | ✅ |
-| 128K normal | v6.2 | +0.37% | +0.54% | ✅ |
+| 128K normal | v6.2 | +0.37% | +0.54% | ✅※2 |
 | 128K backlog | v6.3(w4) | 不稳定※ | **−3.85%** | ✅ |
 
 按 put 口径如实概括：**六场景中三个小幅回退**（1K normal −0.66%、
