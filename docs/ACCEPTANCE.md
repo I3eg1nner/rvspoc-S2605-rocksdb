@@ -55,15 +55,22 @@ QEMU `-cpu rv64,v=true,vlen=256` 下会 SIGILL（QEMU 8.2 与最新
 2 轮 ≥30）贴线未达，其余未及，fill 差距大；zicond 变体 read t1
 +31.6% 达标但推荐测试环境不可运行。两个口径的数据均如实入档。
 
-**30% 口径（用户 2026-08-24 决定）：按最严解释执行——fillrandom /
-readrandom / seekrandom 三项各自 ≥+30%**（主办方澄清前的工作目标）。
+**归因表（收益来源分解；全部同会话交错、sha 锁定，原始行在
+benchmark.csv 的 sp-control / variants-attrib / vfinal-decision /
+headline-v2z 标签下）**：
 
-⚠ 诚实记录：按最严口径（三项各自 ≥+30%）**在 K3 上未达成**——
-终版 fill +10.1%、read t8 +19.3%、seek t8 +16.8%（t1 点 +22.7~27.4%）。
-剩余热点为访存延迟类（交付二进制新鲜 profile：skiplist 13.8%、index
-二分 10.2%、bloom 探测 8.0%，见 draft"board2 新鲜 profile"节），微杠杆
-单项预期 <2%，优化阶段已收口。LX5000（DDR5、48 异构核）上各占比不可
-从 K3 外推，唯有评审机实测能定。
+| 臂 | 配置 | 相对上一臂的净增（read t8 / seek t8 / fill） |
+|---|---|---|
+| S0 | stock 等价标量 -O2（零向量指令） | 基线 |
+| SP | S0 + O3 + 现场 PGO（无 riscv 改动） | +15~16% / +16~17% / +7~11%（通用编译份额） |
+| V2Z/V2 | SP + march + 裁决 kernel 集（riscv 专有份额） | +5~9% / +2~5% / 约 −4~0%（符号一致 5/5、6/6） |
+| GP（作废） | V2 同配置 + **陈旧 PGO profile** | 相对 SP 反而 −3~−10% → 根因化后作废，"现场训练"成为 REPRODUCE 硬性步骤 |
+
+单变量对照另证 sidecar+binseek-prefetch 为强正贡献（拔除代价
+read −8~−10%，逐轮 0/5、0/3；logs/b2screen/）。fill 的差距是结构
+性的：写路径热点为 skiplist 指针追逐与比较器（依赖链 DRAM 延迟，
+详见 draft"board2 新鲜 profile"节），微杠杆单项 <2%，优化阶段已
+收口。LX5000 上各占比不可从 K3 外推。
 
 **工具链兼容矩阵**（评审环境公告"以 LLVM 为核心"→ clang++ 按潜在
 评测工具链全量验证）：

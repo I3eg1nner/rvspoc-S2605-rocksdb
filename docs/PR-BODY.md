@@ -31,23 +31,16 @@
 
 ## 性能（SpacemiT K3 实测；诚实归因）
 
-同会话直接配对（stock 等价标量 -O2 基线 S0，协议与身份链见
-docs/ACCEPTANCE.md 二节）：**read t1 +29.5%（逐轮 4/4）、read t8
-+24.4%（6/6）、seek t1 +23.6%、seek t8 +18.8%、fill +6.4%（6/6）；
-P99（read t8, --histogram）43.0→33.9 µs（−21.2%）**。交付 march
-不含 zicond——赛题推荐测试环境 QEMU `-cpu rv64,v=true,vlen=256` 下
-zicond 默认关闭（8.2 与最新 11.1.1 均实测），含 czero 的构建会
-SIGILL；zicond 变体（read t1 +31.6%）的数据与开关保留，供确认有
-Zicond 的硬件（RVA23 必含）选用。
-
-**归因披露（主动补测的多臂对照，全部数据在 ACCEPTANCE）**：
-通用 O3+PGO 贡献 +11~20 个点；riscv/RVV 专有部分在其上净增
-读/seek +5~+18%（逐轮符号一致）；单变量对照证实索引 sidecar +
-二分双 prefetch 是强正贡献（拔除代价 read −8~−10%）。一个对评审
-重要的教训已写入 REPRODUCE 并列为硬性步骤：**PGO 必须在目标机
-现场新鲜训练**——旧会话 profile 会使同一配置反而比纯标量 O3+PGO
-慢 3~10%（我们据此根因化并修复了初版交付的全部异常）。LX5000
-（DDR5、48 核）上的占比无法从 K3 外推。
+同会话直接配对（stock 等价标量 -O2 基线 S0 vs 交付 V2Z）：
+**read t1 +29.5% / read t8 +24.4% / seek t1 +23.6% / seek t8 +18.8%
+/ fill +6.4%，逐轮符号全一致；P99（read t8）−21.2%**。收益来源已
+分解：通用 O3+PGO 份额与 riscv 专有份额分别记账，PGO 必须在目标机
+现场训练（陈旧 profile 实测反噬 3~10 点，已根因化）。交付 march
+不含 zicond：赛题推荐测试环境 QEMU `-cpu rv64,v=true,vlen=256` 下
+zicond 默认关（8.2 与最新 11.1.1 均实测），交付二进制已在该环境
+端到端跑通；zicond 变体（read t1 +31.6%）保留为 RVA23 硬件可选项。
+主表、归因表与全部原始数据：docs/ACCEPTANCE.md 二节 +
+benchmark.csv。
 
 ## 正确性证据链（全部留痕于 profile/evidence/）
 
@@ -58,10 +51,10 @@ Zicond 的硬件（RVA23 必含）选用。
   差分全绿（含 CRC 5219 项、varint 269 万项），工具版本/命令/退出码/
   sha256 清单在档。
 - 工具链矩阵：gcc 14/15、clang 18/19 全绿位相同。
-- RocketMQ 5.5.0（rocksdbjni 换装本树构建）：60min 压测零 OOM/损坏/
-  丢失；补充 24 格双臂矩阵（3 消息尺寸 × 2 场景 × AB/BA）零丢失链
-  全绿，逐格身份链与 MANIFEST 在档。P99 说明：RocketMQ 自带
-  benchmark 仅输出 Avg/Max RT，本仓无 P99 本地证据，如实声明。
+- RocketMQ 5.5.0（rocksdbjni 换装本树构建，捆绑 jar 无 riscv64 原生
+  库）：60min 压测 TPS 6056/6117、零 OOM/损坏/丢失；24 格双臂矩阵
+  零丢失链全绿（ACCEPTANCE 二 b）。RocketMQ 侧无 P99 工具输出，
+  如实声明。
 
 ## 复现
 

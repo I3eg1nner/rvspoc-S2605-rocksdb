@@ -193,34 +193,17 @@ sha256 身份链逐格记录在 profile/rmq-matrix/jar-identity.txt。下文
 全部 RocketMQ 数据都跑在这套部署之上——broker 能在 riscv64 上带
 RocksDB 存储启动并扛过压测，本身就是该要求的验收证据。
 
-**RocketMQ 的 TPS 与 P99**（赛题指定的最终评测指标）：
-
-60 分钟高压测试（RVV 档 rocksdbjni，单 broker，K3）：avg Send TPS
-**6056** / avg Consume TPS **6117**（各 361 个 10 秒采样，原始日志
-全量归档于 profile/rmq-stress/，均值经独立复算一致），Send/Response/
-Consume Failed 全程为 0，broker RSS 1.9→3.0 GB 无 OOM。
-
-24 格双臂矩阵（scalar 档 vs RVV 档 rocksdbjni，3 消息尺寸 × 2 场景
-× AB/BA 顺序轮换，每格 300 秒 + 排空到零）的 send TPS 中位数：
-
-| 消息尺寸 × 场景 | RVV 档 TPS | 对 scalar 档 Δ（send / 精确 put 记账） |
-|---|---|---|
-| 1K normal / backlog | ~4911 / ~4798 | −0.5% / −1.5%；put −0.7% / +0.2% |
-| 16K normal / backlog | ~3656 / ~3296 | −0.2% / **+5.9%**；put −1.5% / +0.3% |
-| 128K normal / backlog(w4) | ~1372 / — | +0.4% / 中位数不稳※；put +0.5% / −3.9% |
-
-※128K backlog 的 send TPS 中位数受强顺序效应支配（消费者中场加入
-造成双峰分布），以精确 put 记账为准。读法：两臂 TPS 总体在 ±1.5%
-噪声带内（RocksDB 不是 1K/128K 消息路径的瓶颈），16K backlog——
-写入与排空并发、存储压力最大的场景——RVV 档 +5.9% 为唯一显著优项，
-128K 饱和场景 put −3.9% 为唯一显著劣项，均如实入表。因此矩阵支撑
-的硬结论是稳定性（零 OOM/损坏/丢失、每格排空到零），TPS 上不主张
-系统性优势。
-
-P99：本仓的分位数证据来自 db_bench 直方图（上表 read t8 P99
-41.6→33.9 µs，−18.6%）；RocketMQ 自带 benchmark 工具只输出
-Avg/Max RT、不输出分位数，故 RocketMQ 侧无 P99 本地数据，此空缺
-如实声明。
+**RocketMQ 的 TPS 与 P99**（赛题指定的最终评测指标）：60 分钟高压
+测试 avg Send/Consume TPS = **6056 / 6117**（361×10s 采样全量归档、
+独立复算一致），失败计数器全程 0、无 OOM。24 格双臂矩阵（3 尺寸 ×
+2 场景 × AB/BA）显示两臂 TPS 总体在 ±1.5% 噪声带内——RocksDB 不是
+1K/128K 消息路径的瓶颈；16K backlog（写入与排空并发、存储压力最大）
+RVV 档 send TPS **+5.9%** 为唯一显著优项，128K 饱和场景精确 put
+记账 **−3.9%** 为唯一显著劣项。因此矩阵支撑的硬结论是稳定性（零
+丢失链全绿），TPS 上不主张系统性优势；逐场景数表与 24 格 MANIFEST
+在 ACCEPTANCE 二 b。P99 的本地证据来自 db_bench 直方图（上表
+−21.2%）；RocketMQ 自带 benchmark 不输出分位数，RocketMQ 侧无 P99
+数据，如实声明。
 
 **样本量**：每测点 3~6 轮配对，稳健性以逐轮符号一致性表述而非
 置信区间；原始行全部在 benchmark.csv，独立审计 agent 已复算一遍，
