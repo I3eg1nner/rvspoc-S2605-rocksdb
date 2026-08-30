@@ -26,53 +26,34 @@ vlen=128/256/512 × 敌意 rvv_ta_all_1s/rvv_ma_all_1s。
 标量基线（PORTABLE=1 rv64gc，objdump 零向量指令验证）：见
 benchmark.csv `scalar-baseline` 行。
 
-**主表（终版，2026-08-30 headline-final：S0 = stock 等价标量 -O2
-基线【全部工作区 riscv 路径编译期禁用 + CRC 运行时禁用 + objdump 零
-向量指令】 vs V2 = 交付配置【RVA23 必选子集 march + -O3 + 现场新鲜
-PGO + 裁决后 kernel 默认集】；同会话直接配对、顺序轮换、静板
-idle=100、二进制 sha 锁定；生数据 benchmark.csv `headline-final`）**：
+**主表（终版 V2Z，2026-08-30 headline-v2z：S0 = stock 等价标量 -O2
+基线【零向量指令，objdump 验证】 vs V2Z = 交付配置
+【march rv64gcv_zba_zbb_zbs_zicbop（无 zicond）+ -O3 + 现场新鲜
+PGO + 裁决 kernel 集，czero=0 验证】；同会话直接配对、顺序轮换、
+静板、sha 锁定；生数据 benchmark.csv `headline-v2z`）**：
 
-| 测点 | S0 (ops/s) | V2 | Δ | 逐轮符号 |
+| 测点 | S0 (ops/s) | V2Z | Δ | 逐轮符号 |
 |---|---|---|---|---|
-| B readrandom t1 | 62662 | 82455 | **+31.6%** | 4/4（+29.7~+38.2） |
-| B readrandom t8 | 449171 | 566262 | **+26.1%** | 6/6（+24.0~+30.2） |
-| A seekrandom t1 | 12740 | 15837 | **+24.3%** | 4/4 |
-| A seekrandom t8 | 89100 | 107906 | **+21.1%** | 6/6 |
-| B fillrandom t1 | 68499 | 71258 | **+4.0%** | 4/6（混合） |
+| B readrandom t1 | 62676 | 81160 | **+29.5%** | 4/4（+28.5~+32.1，两轮 ≥30） |
+| B readrandom t8 | 445190 | 553838 | **+24.4%** | 6/6 |
+| A seekrandom t1 | 12697 | 15699 | **+23.6%** | 4/4 |
+| A seekrandom t8 | 88540 | 105179 | **+18.8%** | 6/6 |
+| B fillrandom t1 | 70717 | 75265 | **+6.4%** | **6/6** |
 
-**P99 延迟证据（readrandom t8, --histogram）**：S0 P50/P99 =
-11.86/41.64 µs → V2 = 8.23/**33.88** µs（P99 改善 **−18.6%**、P50
-−30.6%）。原始直方图行在 profile/evidence/headline/hl.log。
+**P99（readrandom t8, --histogram）**：S0 P50/P99 = 11.85/42.99 µs
+→ V2Z = 8.31/**33.88** µs（P99 改善 **−21.2%**、P50 −29.9%）。
 
-30% 最严口径（三项各自 ≥30%）判定：readrandom t1 **达标**；
-readrandom t8 +26.1%、seekrandom +21~24% 未及；fillrandom +4.0%
-差距大（访存延迟主导 + PGO 已收割写路径主要收益）。若口径为
-综合或单项，读侧已过线。
+**zicond 变体（仅限确认有 Zicond 的硬件，如 RVA23 的 LX5000）**：
+march 加回 `_zicond` 的 V2 同协议实测 read t1 +31.6%（4/4）/
+read t8 +26.1% / seek +21~24% / fill +4.0%（benchmark.csv
+`headline-final` 行）——含 418 条 czero 指令，在赛题推荐测试环境
+QEMU `-cpu rv64,v=true,vlen=256` 下会 SIGILL（QEMU 8.2 与最新
+11.1.1 实测 zicond 默认均关，证据 profile/evidence/qemu-compat/），
+故**默认交付不含 zicond**，该变体作为 REPRODUCE 中的可选覆盖项。
 
-**历史参考表：O2 三档（2026-08-24，PGO 前）**——
-S = 标量基线；F = gcv+zicbop 档；R = RVA23 子集档：
-
-| 测点 | S (ops/s) | F | R | F-Δ | R-Δ |
-|---|---|---|---|---|---|
-| A fillrandom | 78745 | 88733 | 86687 | **+12.7%** | +10.1% |
-| A readrandom t8 | 162377 | 165084 | 166240 | +1.7% | +2.4% |
-| A seekrandom t8 | 90764 | 91109 | 93123 | +0.4% | +2.6% |
-| A readrandom t1 | 24181 | 25121 | 25249 | +3.9% | +4.4% |
-| A seekrandom t1 | 13232 | 13511 | 13745 | +2.1% | +3.9% |
-| B fillrandom | 80666 | 85300 | 82370 | +5.7% | +2.1% |
-| B readrandom t8 | 451588 | 481238 | 481740 | +6.6% | **+6.7%** |
-| B seekrandom t8 | 164728 | 170328 | 172453 | +3.4% | +4.7% |
-| B readrandom t1 | 65041 | 69196 | 70378 | +6.4% | **+8.2%** |
-| B seekrandom t1 | 20948 | 21970 | 22094 | +4.9% | +5.5% |
-
-判读：**两档全部 10 点为正、零回退**；R 在全部读/seek 点 ≥ F
-（zbb-varint 的贡献可见）；A fill +12.7% 为 zicbop 真预取 + 内联路径
-的最高单点。样本量：t8 每臂 5、t1 每臂 3、fill 每臂 2（生数据齐存
-benchmark.csv `interleaved-3arm` 行）。
-候选 #10（IterKey 微拷贝，归因 memmove 14.7% 大头）已判决
-**REJECT 并 revert**：交替协议 A-fill -3.7% / A-read -1.0% /
-B-read 0.0%（正确性差分曾全绿，纯性能否决；candidates.jsonl 存档）。
-CRC 微基准：7319–7327 vs 902–903 MB/s（**8.1x**，@4KB，多轮复现）。
+30% 最严口径判定（三项各自 ≥30%）：V2Z 的 read t1 +29.5%（4 轮中
+2 轮 ≥30）贴线未达，其余未及，fill 差距大；zicond 变体 read t1
++31.6% 达标但推荐测试环境不可运行。两个口径的数据均如实入档。
 
 **30% 口径（用户 2026-08-24 决定）：按最严解释执行——fillrandom /
 readrandom / seekrandom 三项各自 ≥+30%**（主办方澄清前的工作目标）。
