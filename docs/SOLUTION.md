@@ -139,21 +139,29 @@ profile 足以使同一配置从领先变为落后 3~10 个点**。该结论产�
 
 ### 3.3 终版数字
 
-终版对比为 S0 对 V2 的同会话直接配对（非链式换算）。S0：零向量
-指令、全部工程路径禁用的 stock 等价基线；V2：RVA23 必选扩展子集
-march + O3 + 现场新鲜 PGO + 裁决后 kernel 集。
+终版对比为 S0 对 V2Z 的同会话直接配对（非链式换算）。S0：零向量
+指令、全部工程路径禁用的 stock 等价基线；V2Z：march
+rv64gcv_zba_zbb_zbs_zicbop + O3 + 现场新鲜 PGO + 裁决后 kernel 集。
+march 不含 zicond 是被实测逼出来的取舍：赛题推荐测试环境 QEMU
+`-cpu rv64,v=true,vlen=256` 下 zicond 默认关闭（发行版 8.2 与源码
+自建的最新 11.1.1 均实测确认），含 zicond 的构建携带 418 条 czero
+指令、在该环境直接非法指令。摘除代价约 2 个点（含 zicond 的变体
+数据在档，read t1 +31.6%，供确认有 Zicond 的硬件选用——RVA23 必含
+Zicond，LX5000 属此类）；交付二进制已在 QEMU 11.1.1 按赛题原样
+命令行端到端跑通三 workload（profile/evidence/qemu-compat/）。
 
-| 测点 | S0 → V2 | 逐轮符号 |
+| 测点 | S0 → V2Z | 逐轮符号 |
 |---|---|---|
-| readrandom t1 | **+31.6%** | 4/4 |
-| readrandom t8 | **+26.1%** | 6/6 |
-| seekrandom t1 | +24.3% | 4/4 |
-| seekrandom t8 | +21.1% | 6/6 |
-| fillrandom t1 | +4.0% | 4/6（混合） |
-| P99（read t8，--histogram） | 41.6 → 33.9 µs（**−18.6%**） | 直方图在档 |
+| readrandom t1 | **+29.5%** | 4/4（两轮 ≥30） |
+| readrandom t8 | **+24.4%** | 6/6 |
+| seekrandom t1 | +23.6% | 4/4 |
+| seekrandom t8 | +18.8% | 6/6 |
+| fillrandom t1 | +6.4% | 6/6 |
+| P99（read t8，--histogram） | 43.0 → 33.9 µs（**−21.2%**） | 直方图在档 |
 
-按"三项各自 ≥30%"的最严口径：readrandom t1 达标，readrandom t8
-与 seekrandom 未及，fillrandom 差距显著。
+按"三项各自 ≥30%"的最严口径：readrandom t1 贴线（29.5%；zicond
+变体 31.6%），readrandom t8 与 seekrandom 未及，fillrandom 差距
+显著。
 
 fillrandom 的差距可以从火焰图直接解释：写路径的最大热点是
 skiplist 指针追逐（13.8%）与比较器（15.1%），二者的开销是依赖链

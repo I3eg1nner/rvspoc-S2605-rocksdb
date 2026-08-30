@@ -19,3 +19,12 @@ zicond (czero.eqz): SIGILL rc=132   <-- STILL off by default in 11.1.1
 -cpu max: zicond OK
 # Verdict: dropping zicond from the delivery march is required for the
 # recommended test env on BOTH the distro QEMU (8.2) and latest (11.1.1).
+
+# End-to-end smoke (2026-08-30): actual delivery binary db_bench.V2Z
+# (sha d01cd1ec..., czero=0) under qemu-riscv64 11.1.1
+# -cpu rv64,v=true,vlen=256, with czero-free Ubuntu-ports riscv64 libs:
+#   fillrandom/readrandom/seekrandom all completed, rc=0.
+# Note: Bianbu (K3-targeted) distro libs DO carry czero (libgflags 14,
+# liblz4 24, libbz2 15, ...) and SIGILL under this env regardless of
+# application code - dependency libs must match the test CPU's
+# extension set; this is an environment property, not a source defect.
