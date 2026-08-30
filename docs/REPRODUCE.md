@@ -1,13 +1,6 @@
 # S2605 RocksDB v11.1.1 RV64GCV + RVV 复现文档
 
-分支 `s2605-rvv`（基线 tag `v11.1.1` = upstream `11.1.fb`）。
-验证硬件：SpacemiT K3 Pico-ITX（8×X100，VLEN 256，rv64imafdcv +
-zvbb/zvbc，Bianbu Linux，gcc 15.2.0）。评测目标 LX5000 的 VLEN/扩展
-未知——V 之外的扩展路径（Zvbc/Zbc CRC）均 riscv_hwprobe(2) 运行时
-探测、探测失败回退标量；向量 kernel 内部 vsetvl 自适应任意 VLEN。
-注意：RVV 构建整体以 `-march=rv64gcv` 编译（赛题目标即 RV64GCV），
-编译器可在任意位置生成 V 指令——**该二进制要求硬件有 V**；"无 V 硬
-件回退"只适用于按 TU 隔离、探测门控的 Zvbc/Zbc 两个 CRC 档。
+分支 `s2605-rvv`（基线 tag `v11.1.1` = upstream `11.1.fb`）。验证硬件：SpacemiT K3 Pico-ITX（8×X100，VLEN 256，rv64imafdcv + zvbb/zvbc，Bianbu Linux，gcc 15.2.0）。评测目标 LX5000 的 VLEN/扩展未知——V 之外的扩展路径（Zvbc/Zbc CRC）均 riscv_hwprobe(2) 运行时探测、探测失败回退标量；向量 kernel 内部 vsetvl 自适应任意 VLEN。注意：RVV 构建整体以 `-march=rv64gcv` 编译（赛题目标即 RV64GCV），编译器可在任意位置生成 V 指令——**该二进制要求硬件有 V**；"无 V 硬件回退"只适用于按 TU 隔离、探测门控的 Zvbc/Zbc 两个 CRC 档。
 
 ## 构建
 
@@ -51,13 +44,9 @@ JAVA_HOME=<jdk21> PORTABLE=1 RISCV_RVV=1 DISABLE_WARNING_AS_ERROR=1 make -j6 roc
 ## 交付（headline）构建 = RVA23 子集 march + **O3 + 现场新鲜 PGO**
 
 **硬性要求：PGO 训练必须在评测目标机上、紧邻评测现场执行。**
-我们实测（ACCEPTANCE 二节归因表）：同一配置用数天前旧会话训练的
-profile 构建，会比纯标量 O3+PGO 反而慢 3~10%；现场重训后同配置
-变为全面领先（读/seek +5~+18%）。profile 陈旧化是本工程测到的
-最大单一陷阱。
+我们实测（ACCEPTANCE 二节归因表）：同一配置用数天前旧会话训练的profile 构建，会比纯标量 O3+PGO 反而慢 3~10%；现场重训后同配置变为全面领先（读/seek +5~+18%）。profile 陈旧化是本工程测到的最大单一陷阱。
 
-headline 数字不是上面 O2 构建的产物。交付配置完整配方（脚本化于
-`rvv-ci/final_assembly_job.sh` 的 `pgo_build`，在板上原生执行）：
+headline 数字不是上面 O2 构建的产物。交付配置完整配方（脚本化于`rvv-ci/final_assembly_job.sh` 的 `pgo_build`，在板上原生执行）：
 
 ```bash
 MARCH=rv64gcv_zba_zbb_zbs_zicbop_zicond
@@ -85,32 +74,16 @@ RISCV_RVV=1 RISCV_RVV_MARCH=$MARCH PORTABLE=1 DISABLE_WARNING_AS_ERROR=1 \
 
 对比口径声明：A/B 的**运行参数**（seed/num/threads/flags）完全相同；
 **编译配置**（march/O3/PGO/kernel 默认开关）不同——编译配置正是被测
-变量。为把"通用 O3+PGO 收益"与"RISC-V/RVV 专有收益"分离，另有
-S0（stock 等价 O2）/ SP（S0 源 + O3+PGO 同训练集）/ GP（初版交付、陈旧 PGO，后作废）三臂
-对照（`rvv-ci/scalar_pgo_control_job.sh`，结果见 ACCEPTANCE 二节）。
+变量。为把"通用 O3+PGO 收益"与"RISC-V/RVV 专有收益"分离，另有S0（stock 等价 O2）/ SP（S0 源 + O3+PGO 同训练集）/ GP（初版交付、陈旧 PGO，后作废）三臂对照（`rvv-ci/scalar_pgo_control_job.sh`，结果见 ACCEPTANCE 二节）。
 
 **双工具链**（评审环境公告"以 LLVM 为核心"）：以上配方对 gcc 与
-clang 均适用——clang 用 `CC=clang CXX=clang++`（交叉再加
-`--target=riscv64-linux-gnu` 与 sysroot）。已验证矩阵：gcc 14.2/15.2
-六内核差分全绿；clang 18/19 五内核全绿位相同、CRC Zvbc TU 因
-clang≤19 无 `__riscv_vclmul_*` intrinsics 被 Makefile 的 intrinsic
-探测**自动优雅排除**（分派回 slice-by-8，构建不会失败；clang 20+/
-gcc 14+ 自动启用）。切换 march/工具链后务必
-`find . -name '*.o' -delete`——Makefile 依赖不追踪 flag 变化，旧对象
-会被静默复用。
+clang 均适用——clang 用 `CC=clang CXX=clang++`（交叉再加`--target=riscv64-linux-gnu` 与 sysroot）。已验证矩阵：gcc 14.2/15.2六内核差分全绿；clang 18/19 五内核全绿位相同、CRC Zvbc TU 因clang≤19 无 `__riscv_vclmul_*` intrinsics 被 Makefile 的 intrinsic探测**自动优雅排除**（分派回 slice-by-8，构建不会失败；clang 20+/ gcc 14+ 自动启用）。切换 march/工具链后务必`find . -name '*.o' -delete`——Makefile 依赖不追踪 flag 变化，旧对象会被静默复用。
 
 要点：
-- **交叉构建注意**：Makefile 用 `MACHINE ?= $(uname -m)` 判定 riscv64
-  ——交叉编译时必须显式传 `MACHINE=riscv64`，否则 CRC TU 与 RVV 层
-  静默失活（板上原生构建不受影响）。CMake 路径未接入 RVV（构建可用
-  但纯标量）——评测请用 Makefile。
-- `PORTABLE=1` 在 riscv64 钉 `-march=rv64gc`。不加则 Bianbu gcc 默认
-  arch 含 V，"标量基线"会被静默向量化（用
-  `objdump -d db_bench | grep -c vsetvli` 验证：标量=0）。
-- `RISCV_RVV=1` 追加全局 `-march=rv64gcv`（Makefile 中必须位于
-  PLATFORM_CXXFLAGS 之后，gcc 取最后一个 -march）。
-- `util/crc32c_riscv64.cc` 单 TU 由 Makefile 注入
-  `-march=rv64gcv_zvbc`；进入向量路径前 riscv_hwprobe(2) 探测 V+Zvbc。
+- **交叉构建注意**：Makefile 用 `MACHINE ?= $(uname -m)` 判定 riscv64——交叉编译时必须显式传 `MACHINE=riscv64`，否则 CRC TU 与 RVV 层静默失活（板上原生构建不受影响）。CMake 路径未接入 RVV（构建可用但纯标量）——评测请用 Makefile。
+- `PORTABLE=1` 在 riscv64 钉 `-march=rv64gc`。不加则 Bianbu gcc 默认arch 含 V，"标量基线"会被静默向量化（用`objdump -d db_bench | grep -c vsetvli` 验证：标量=0）。
+- `RISCV_RVV=1` 追加全局 `-march=rv64gcv`（Makefile 中必须位于PLATFORM_CXXFLAGS 之后，gcc 取最后一个 -march）。
+- `util/crc32c_riscv64.cc` 单 TU 由 Makefile 注入`-march=rv64gcv_zvbc`；进入向量路径前 riscv_hwprobe(2) 探测 V+Zvbc。
 
 ## 向量化改动清单（全部 `#if defined(__riscv)`/`__riscv_vector` 隔离）
 
@@ -123,12 +96,9 @@ gcc 14+ 自动启用）。切换 march/工具链后务必
 | 全程序自动向量化 | RISCV_RVV=1 | 编译期 |
 
 riscv64 移植修复（非向量）：
-- toku_time.h：rdcycle → rdtime（Linux ≥6.6 用户态 rdcycle SIGILL，
-  修复 16 个 range_locking_test 失败）。
-- options_settable_test：padding hole 用 offsetof 可移植排除
-  （riscv64 上构造函数 store-merging 写 padding 导致计数不稳）。
-- build_detect_platform 存在 RISC_ISA/RISCV_ISA 笔误（上游 bug，
-  非 PORTABLE 的 riscv -march 分支为死代码；本工程用显式 flag 绕过）。
+- toku_time.h：rdcycle → rdtime（Linux ≥6.6 用户态 rdcycle SIGILL，修复 16 个 range_locking_test 失败）。
+- options_settable_test：padding hole 用 offsetof 可移植排除（riscv64 上构造函数 store-merging 写 padding 导致计数不稳）。
+- build_detect_platform 存在 RISC_ISA/RISCV_ISA 笔误（上游 bug，非 PORTABLE 的 riscv -march 分支为死代码；本工程用显式 flag 绕过）。
 
 ## 正确性验证
 
@@ -149,9 +119,7 @@ TEST_TMPDIR=$HOME/rocksdb-test-tmp PORTABLE=1 [RISCV_RVV=1] make -j6 J=6 check
 
 ## 基准（rvv-measure 纪律：固定 seed、中位数、环境快照、空载+performance governor）
 
-见 benchmark.csv（生数据逐行）与 profile/env-board-*.txt。命令模板见
-rvv-ci/ 下的作业脚本（board_final_job.sh、scalar_pgo_control_job.sh、
-vfinal_job.sh——同会话交错/静板门/顺序轮换协议已脚本化）。
+见 benchmark.csv（生数据逐行）与 profile/env-board-*.txt。命令模板见rvv-ci/ 下的作业脚本（board_final_job.sh、scalar_pgo_control_job.sh、vfinal_job.sh——同会话交错/静板门/顺序轮换协议已脚本化）。
 
 ## 异构多核（32P+16E，LX5000）调度优化
 
@@ -163,9 +131,7 @@ ROCKSDB_BG_LOW_CPUS=<E核列表>  ROCKSDB_BG_HIGH_CPUS=<E核列表>  ./db_bench 
 # 前台（db_bench worker / RocketMQ broker JVM）绑性能核：
 taskset -c <P核列表> ...
 ```
-原理：compaction/flush 与前台争抢核与内存带宽；将其迁往 E 核后
-P 核专事前台 Get/Put——直接服务 RocketMQ P99 门槛。变量不设 = 行为
-与原版完全一致；非 riscv 构建逐字节不变（预处理输出已验证）。
+原理：compaction/flush 与前台争抢核与内存带宽；将其迁往 E 核后P 核专事前台 Get/Put——直接服务 RocketMQ P99 门槛。变量不设 = 行为与原版完全一致；非 riscv 构建逐字节不变（预处理输出已验证）。
 
 **评测机 P/E 编号发现**（LX5000 上先跑）：
 ```bash
@@ -175,38 +141,24 @@ done   # max_freq 高的一簇 = P 核；亦可对照 /proc/cpuinfo 的 uarch/ma
 ```
 
 **测量告诫**：t=1 基准若不绑核可能落到 E 核，基线与优化档双向失真
-——所有单线程点必须 `taskset` 绑 P 核（K3 上 A100 簇被内核保留、
-进程天然只落 X100，故 K3 历史数据无此风险；实测记录见 draft.md）。
+——所有单线程点必须 `taskset` 绑 P 核（K3 上 A100 簇被内核保留、进程天然只落 X100，故 K3 历史数据无此风险；实测记录见 draft.md）。
 
 ## 开关一览（kill switches）
 
 构建期（make 变量 / 宏）：
-- `RISCV_RVV=1`：启用 RVV 层；`RISCV_RVV_MARCH=<串>` 显式钉 march
-  （不给则原生自适应，见上）
-- `RISCV_RVV_XXHASH=1` / `RISCV_RVV_SHORTKEY=1`：重开被 K3 配对
-  裁决默认关闭的 XXH3-RVV / 16B 内联短 key 比较
-- `RISCV_NO_RVV_CRC32C=1`：连 Zvbc CRC TU 一起摘除（构建零向量
-  指令的 stock 等价基线用）
-- S0 基线宏集：`-DROCKSDB_DISABLE_{SHORTKEY_CMP,INDEX_SIDECAR,
-  BINSEEK_PREFETCH,RISCV_PAUSE,ZBB_VARINT,RVV_MEMCMP,RVV_XXHASH,
-  RVV_BLOOM}`（见上文 S0DIS）
-运行期（环境变量）：
-- `ROCKSDB_RVV_CRC32C=0/1`、`ROCKSDB_ZBC_CRC32C=0/1`：CRC 阶梯
-  两级的强制关/开（=1 仍需硬件位）
-- `ROCKSDB_BG_{LOW,HIGH,BOTTOM}_CPUS=<核列表>`：后台线程池亲和
-  （异构调度，见下节；不设 = 原版行为）
+- `RISCV_RVV=1`：启用 RVV 层；`RISCV_RVV_MARCH=<串>` 显式钉 march（不给则原生自适应，见上）
+- `RISCV_RVV_XXHASH=1` / `RISCV_RVV_SHORTKEY=1`：重开被 K3 配对裁决默认关闭的 XXH3-RVV / 16B 内联短 key 比较
+- `RISCV_NO_RVV_CRC32C=1`：连 Zvbc CRC TU 一起摘除（构建零向量指令的 stock 等价基线用）
+- S0 基线宏集：`-DROCKSDB_DISABLE_{SHORTKEY_CMP,INDEX_SIDECAR, BINSEEK_PREFETCH,RISCV_PAUSE,ZBB_VARINT,RVV_MEMCMP,RVV_XXHASH, RVV_BLOOM}`（见上文 S0DIS）运行期（环境变量）：
+- `ROCKSDB_RVV_CRC32C=0/1`、`ROCKSDB_ZBC_CRC32C=0/1`：CRC 阶梯两级的强制关/开（=1 仍需硬件位）
+- `ROCKSDB_BG_{LOW,HIGH,BOTTOM}_CPUS=<核列表>`：后台线程池亲和（异构调度，见下节；不设 = 原版行为）
 
 ## RocketMQ 5.5.0（riscv64）
 
 1. `apt install openjdk-21-jdk`；下载 rocketmq-all-5.5.0-bin-release。
 2. 捆绑的 rocketmq-rocksdb-1.0.6.jar 无 riscv64 原生库（broker 起不来，
-   DefaultMessageStore 无条件初始化 RocksDB 存储）→ 用本工程
-   `make rocksdbjava` 产出的 rocksdbjni-11.1.1 jar 整包替换 lib/ 下
-   该 jar。
+   DefaultMessageStore 无条件初始化 RocksDB 存储）→ 用本工程`make rocksdbjava` 产出的 rocksdbjni-11.1.1 jar 整包替换 lib/ 下该 jar。
 3. JVM 脚本适配（JDK21）：runserver/runbroker 压堆
-   （512m/1g，7.7GB 板）；**runbroker 的 `-XX:MaxDirectMemorySize=15g`
-   必须压到 2g**（小内存板上大消息场景的稳定性隐患）；
-   benchmark/runclass.sh 去 JDK8 flags
-   （PermSize/CMS/UseConcMarkSweepGC/java.ext.dirs→classpath 通配）。
+   （512m/1g，7.7GB 板）；**runbroker 的 `-XX:MaxDirectMemorySize=15g`必须压到 2g**（小内存板上大消息场景的稳定性隐患）；benchmark/runclass.sh 去 JDK8 flags（PermSize/CMS/UseConcMarkSweepGC/java.ext.dirs→classpath 通配）。
 4. 压测：benchmark/{producer,consumer}.sh 60 分钟，监控 RSS/丢失/
    损坏（记录见 benchmark.csv 与验收报告）。
